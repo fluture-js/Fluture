@@ -690,31 +690,14 @@ describe('Future', () => {
 
   });
 
-  describe('#promise()', () => {
+  describe('#then()', () => {
 
     it('throws when invoked out of context', () => {
-      const f = () => Future.of(1).promise.call(null);
+      const f = () => Future.of(1).then.call(null);
       expect(f).to.throw(TypeError, /Future/);
     });
 
-    it('returns a Promise', () => {
-      const actual = Future.of(1).promise();
-      expect(actual).to.be.an.instanceof(Promise);
-    });
-
-    it('resolves if the Future resolves', done => {
-      Future.of(1).promise().then(
-        x => (expect(x).to.equal(1), done()),
-        done
-      );
-    });
-
-    it('rejects if the Future rejects', done => {
-      Future.reject(1).promise().then(
-        () => done(new Error('It resolved')),
-        x => (expect(x).to.equal(1), done())
-      );
-    });
+    require('promises-aplus-tests').mocha(require('./promise-adapter'));
 
   });
 

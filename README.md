@@ -1,6 +1,8 @@
 # Fluture
 
-[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" width="116" height="116" alt="Fantasy Land" />][1]
+[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" width="82" height="82" alt="Fantasy Land" />][1]
+
+[<img src="http://promises-aplus.github.com/promises-spec/assets/logo-small.png" align="right" width="82" height="82" alt="Promises/A+" />][16]
 
 [![NPM Version](https://badge.fury.io/js/fluture.svg)](https://www.npmjs.com/package/fluture)
 [![Dependencies](https://david-dm.org/avaq/fluture.svg)](https://david-dm.org/avaq/fluture)
@@ -72,6 +74,8 @@ all types used within these signatures follows:
   [Fantasy Land Chain specification][13].
 - **Apply** - Any object with an `ap` method which satisfies the
   [Fantasy Land Apply specification][14].
+- **Promise** - Any object with a `then` method which satisfies the
+  [Promise/A+ specification][16].
 
 ### Constructors
 
@@ -375,15 +379,19 @@ Future.reject(new Error('It broke'))
 //> Left([Error: It broke])
 ```
 
-#### `promise :: Future a b ~> Promise b a`
+#### `then :: Future a b ~> (b -> v) | Void, (a -> r) | Void -> Promise r v`
 
-An alternative way to `fork` the Future. This eagerly forks the Future and
-returns a Promise of the result. This is useful if some API wants you to give it
-a Promise. It's the only method which forks the Future without a forced way to
-handle the rejection branch, which means it's considered dangerous to use.
+An alternative way to `fork` the Future, compatible with [Promise/A+][16]. This
+eagerly forks the Future and returns a Promise. Unlike `fork`, when this method
+is called multiple times on the same Future, the underlying computation is only
+ever executed once. Another difference is that both arguments to `then` are
+optional. The existence of this method allows instances of Future to be passed
+to APIs that expect Promises. It's also the only method which forks the Future
+without a forced way to handle the rejection branch, which means it's
+considered dangerous to use.
 
 ```js
-Future.of('Hello').promise().then(console.log);
+Future.of('Hello').then(console.log, console.error);
 //> "Hello"
 ```
 
@@ -486,7 +494,6 @@ readFile('README.md', 'utf8')
 * [ ] Implement Future#and
 * [x] Implement Future#or
 * [ ] Implement Future.predicate
-* [x] Implement Future#promise
 * [x] Implement Future.cast
 * [x] Implement Future.encase
 * [ ] Implement [Profunctor][8] (and possibly rename `chainRej -> lchain`)
@@ -531,3 +538,4 @@ means butterfly in Romanian; A creature you might expect to see in Fantasy Land.
 [13]: https://github.com/fantasyland/fantasy-land#chain
 [14]: https://github.com/fantasyland/fantasy-land#apply
 [15]: https://github.com/Avaq/Fluture/wiki/Comparison-of-Future-Implementations
+[16]: https://promisesaplus.com/
