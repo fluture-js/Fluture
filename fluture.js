@@ -132,8 +132,8 @@
     if(!isFunction(f)) error$invalidArgument('Future#value', 0, 'be a function', f);
   }
 
-  function check$promise(it){
-    if(!isFluture(it)) error$invalidContext('Future#promise', it);
+  function check$then(it){
+    if(!isFluture(it)) error$invalidContext('Future#then', it);
   }
 
   function check$cache(m){
@@ -309,12 +309,12 @@
     );
   }
 
-  function Future$promise(){
-    check$promise(this);
-    const _this = this;
-    return new Promise(function Future$promise$do(resolve, reject){
-      _this.fork(reject, resolve);
-    });
+  function Future$then(onResolve, onReject){
+    check$then(this);
+    const cached = this._cached || (this._cached = Future.cache(this));
+    return new Promise(function Future$then$do(resolve, reject){
+      cached.fork(reject, resolve);
+    }).then(onResolve, onReject);
   }
 
   //Give Future a prototype.
@@ -336,7 +336,7 @@
     or: Future$or,
     fold: Future$fold,
     value: Future$value,
-    promise: Future$promise
+    then: Future$then
   };
 
   //Expose `of` statically as well.
