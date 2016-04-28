@@ -717,14 +717,16 @@
 
   Future.do = function Future$do(f){
     check$do(f);
-    const g = f();
-    check$do$g(g);
-    const next = function Future$do$next(x){
-      const o = g.next(x);
-      check$do$next(o);
-      return o.done ? Future$of(o.value) : o.value.chain(next);
-    };
-    return next();
+    return new FutureClass(function Future$do$fork(rej, res){
+      const g = f();
+      check$do$g(g);
+      const next = function Future$do$next(x){
+        const o = g.next(x);
+        check$do$next(o);
+        return o.done ? Future$of(o.value) : o.value.chain(Future$do$next);
+      };
+      return next().fork(rej, res);
+    });
   };
 
   return Future;

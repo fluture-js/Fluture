@@ -98,8 +98,8 @@ all types used within these signatures follows:
 
 The Future constructor. Creates a new instance of Future by taking a single
 parameter `fork`: A function which takes two callbacks. Both are continuations
-for an asynchronous computation. The first is `reject`, commonly abreviated to
-`rej`. The second `resolve`, which abreviates to `res`. The `fork` function is
+for an asynchronous computation. The first is `reject`, commonly abbreviated to
+`rej`. The second `resolve`, which abbreviates to `res`. The `fork` function is
 expected to call `rej` once an error occurs, or `res` with the result of the
 asynchronous computation.
 
@@ -362,7 +362,7 @@ Future.of(x => x + 1)
 
 #### `race :: Future a b ~> Future a b -> Future a b`
 
-Race two Futures against eachother. Creates a new Future which resolves or
+Race two Futures against each other. Creates a new Future which resolves or
 rejects with the resolution or rejection value of the first Future to settle.
 
 ```js
@@ -376,7 +376,7 @@ Future.after(100, 'hello')
 
 Logical or for Futures.
 
-Returns a new Future which either resolves with the first resolutation value, or
+Returns a new Future which either resolves with the first resolution value, or
 rejects with the last rejection value once and if both Futures reject.
 
 This behaves analogues to how JavaScript's or operator does, except both
@@ -578,7 +578,10 @@ Returns true for [Forkables](#type-signatures) and false for everything else.
 #### `do :: (() -> Iterator) -> Future a b`
 
 A specialized version of [fantasy-do][19] which works only for Futures, but has
-the advantage of type-checking and not having to pass `Future.of`.
+the advantage of type-checking and not having to pass `Future.of`. Another
+advantage is that the returned Future can be forked multiple times, as opposed
+to with a general `fantasy-do` solution, where forking the Future a second time
+behaves erroneously.
 
 Takes a function which returns an [Iterator](#type-signatures), commonly a
 generator-function, and chains every produced Future over the previous.

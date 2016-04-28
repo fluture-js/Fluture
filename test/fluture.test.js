@@ -1500,19 +1500,21 @@ describe('Other', () => {
 
     it('throws TypeError when the given function does not return an interator', () => {
       const xs = [NaN, {}, [], 1, 'a', new Date, undefined, null, () => {}, {next: 'hello'}];
-      const fs = xs.map(x => () => Future.do(() => x));
+      const fs = xs.map(x => () => Future.do(() => x).fork(noop, noop));
       fs.forEach(f => expect(f).to.throw(TypeError, /Future/));
     });
 
     it('throws TypeError when the returned iterator does not return a valid iteration', () => {
       const xs = [null, '', {}, {done: true}, {value: 1, done: 1}];
-      const fs = xs.map(x => () => Future.do(() => ({next: () => x})));
+      const fs = xs.map(x => () => Future.do(() => ({next: () => x})).fork(noop, noop));
       fs.forEach(f => expect(f).to.throw(TypeError, /Future/));
     });
 
     it('throws TypeError when the returned iterator produces something other than a Future', () => {
       const xs = [NaN, {}, [], 1, 'a', new Date, undefined, null];
-      const fs = xs.map(x => () => Future.do(() => ({next: () => ({done: false, value: x})})));
+      const fs = xs.map(x => () =>
+        Future.do(() => ({next: () => ({done: false, value: x})})).fork(noop, noop)
+      );
       fs.forEach(f => expect(f).to.throw(TypeError, /Future/));
     });
 
@@ -1522,7 +1524,10 @@ describe('Other', () => {
         const b = yield Future.of(2);
         return a + b;
       });
-      return assertResolved(actual, 3);
+      return Promise.all([
+        assertResolved(actual, 3),
+        assertResolved(actual, 3)
+      ]);
     });
 
   });
