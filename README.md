@@ -17,21 +17,45 @@ are *lazy* and *logical* by design. They have a predictable API governed by the
 
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [Usage](#usage)
 - [Motivation and Features](#motivation-and-features)
 - [Documentation](#documentation)
-  - [Type signatures](#type-signatures)
-  - [Creation](#creation)
-  - [Method API](#method-api)
-  - [Dispatcher API](#dispatcher-api)
-  - [Utility functions](#utility-functions)
-  - [Futurization](#futurization)
+  1. [Type signatures](#type-signatures)
+  1. [Creating Futures](#creating-futures)
+    * [Future](#future)
+    * [of](#of)
+    * [reject](#reject)
+    * [after](#after)
+    * [cast](#cast)
+    * [try](#try)
+    * [encase](#encase)
+    * [node](#node)
+  1. [Consuming Futures](#consuming-futures)
+    * [fork](#fork)
+    * [value](#value)
+    * [promise](#promise)
+  1. [Transforming Futures](#transforming-futures)
+    * [map](#map)
+    * [mapRej](#maprej)
+    * [bimap](#bimap)
+    * [chain](#chain)
+    * [chainRej](#chainrej)
+    * [ap](#ap)
+    * [fold](#fold)
+  1. [Parallelism](#parallelism)
+    * [race](#race)
+    * [or](#or)
+    * [parallel](#parallel)
+  1. [Utility functions](#utility-functions)
+    * [isFuture](#isfuture)
+    * [isForkable](#isforkable)
+    * [do](#do)
+  1. [Futurization](#futurization)
 - [Benchmarks](#benchmarks)
 - [The name](#the-name)
 
 ## Usage
-
-Using the low level, high performance [method API](#method-api):
 
 ```js
 const Future = require('fluture');
@@ -44,30 +68,13 @@ program('package.json');
 //> "fluture"
 ```
 
-Or use the high level, fully curried, [functional dispatch API](#dispatcher-api)
-for function composition using composers like [`S.pipe`][2]:
-
-```js
-const {node, chain, encase, map, fork} = require('fluture');
-const program = S.pipe([
-  file => node(fs.readFile.bind(fs, file, 'utf8')),
-  chain(encase(JSON.parse)),
-  map(x => x.name),
-  fork(console.error, console.log)
-]);
-program('package.json')
-//> "fluture"
-```
-
 ## Motivation and Features
 
 Existing implementations of Future are a pain to debug. This library was made in
 an effort to provide **great error messages** when something goes wrong. Other
 features include:
 
-* Plenty of async control utilites like
-  [Future.parallel](#parallel--positiveinteger---future-a-b---future-a-b) and
-  [Future#race](#race--future-a-b--future-a-b---future-a-b).
+* Plenty of async control utilites like [Future.parallel](#parallel) and [Future#race](#race).
 * High performance.
 
 To learn more about the differences between Fluture and other Future
@@ -92,9 +99,10 @@ all types used within these signatures follows:
   [Fantasy Land Apply specification][14].
 - **Iterator** - Any object which conforms to the [Iterator protocol][18].
 
-### Creation
+### Creating Futures
 
-#### `Future :: ((a -> Void), (b -> Void) -> Void) -> Future a b`
+#### Future
+##### `Future :: ((a -> Void), (b -> Void) -> Void) -> Future a b`
 
 The Future constructor. Creates a new instance of Future by taking a single
 parameter `fork`: A function which takes two callbacks. Both are continuations
@@ -115,7 +123,8 @@ eventualThing.fork(
 //> "Hello world!"
 ```
 
-#### `of :: a -> Future _ a`
+#### of
+##### `.of :: a -> Future _ a`
 
 Creates a Future which immediately resolves with the given value. This function
 is compliant with the [Fantasy Land Applicative specification][16] and is
@@ -130,12 +139,14 @@ eventualThing.fork(
 //> "Hello world!"
 ```
 
-#### `reject :: a -> Future a _`
+#### reject
+##### `.reject :: a -> Future a _`
 
 Creates a Future which immediately rejects with the given value. Just like `of`
 but for the rejection branch.
 
-#### `after :: Number -> b -> Future a b`
+#### after
+##### `.after :: Number -> b -> Future a b`
 
 Creates a Future which resolves with the given value after n milliseconds.
 
@@ -145,7 +156,8 @@ eventualThing.fork(console.error, thing => console.log(`Hello ${thing}!`));
 //> "Hello world!"
 ```
 
-#### `cast :: Forkable a b -> Future a b`
+#### cast
+##### `.cast :: Forkable a b -> Future a b`
 
 Cast any [Forkable](#type-signatures) to a [Future](#type-signatures).
 
@@ -154,7 +166,8 @@ Future.cast(require('data.task').of('hello')).value(console.log);
 //> "hello"
 ```
 
-#### `try :: (Void -> !a | b) -> Future a b`
+#### try
+##### `.try :: (Void -> !a | b) -> Future a b`
 
 Creates a Future which resolves with the result of calling the given function,
 or rejects with the error thrown by the given function.
@@ -168,7 +181,10 @@ Future.try(() => data.foo.bar.baz)
 //> [TypeError: Cannot read property 'baz' of undefined]
 ```
 
-#### `encase :: (a -> !e | r) -> a -> Future e r`
+#### encase
+##### `.encase :: (a -> !e | r) -> a -> Future e r`
+##### `.encase2 :: (a, b -> !e | r) -> a -> b -> Future e r`
+##### `.encase3 :: (a, b, c -> !e | r) -> a -> b -> c -> Future e r`
 
 Creates a Future which resolves with the result of calling the given function
 with the given value, or rejects with the error thrown by the function.
@@ -180,15 +196,8 @@ parseJson('a').fork(console.error, console.log)
 //> [SyntaxError: Unexpected token =]
 ```
 
-#### `encase2 :: (a, b -> !e | r) -> a -> b -> Future e r`
-
-Binary version of `Future.encase`.
-
-#### `encase3 :: (a, b, c -> !e | r) -> a -> b -> c -> Future e r`
-
-Ternary version of `Future.encase`.
-
-#### `node :: ((a, b -> Void) -> Void) -> Future a b`
+#### node
+##### `.node :: ((a, b -> Void) -> Void) -> Future a b`
 
 Creates a Future which rejects with the first argument given to the function,
 or resolves with the second if the first is not present.
@@ -203,7 +212,251 @@ Future.node(done => fs.readFile('package.json', 'utf8', done))
 //> "{...}"
 ```
 
-#### `parallel :: PositiveInteger -> Array (Future a b) -> Future a (Array b)`
+### Consuming Futures
+
+#### fork
+##### `#fork :: Future a b ~> (a -> Void), (b -> Void) -> Void`
+##### `.fork :: (a -> Void) -> (b -> Void) -> Future a b -> Void`
+
+Execute the Future by calling the `fork` function that was passed to it at
+[construction](#creation) with the `reject` and `resolve` callbacks. Futures are
+*lazy*, which means even if you've `map`ped or `chain`ed over them, they'll do
+*nothing* if you don't eventually fork them.
+
+```js
+Future.of('world').fork(
+  err => console.log(`Oh no! ${err.message}`),
+  thing => console.log(`Hello ${thing}!`)
+);
+//> "Hello world!"
+
+Future.reject(new Error('It broke!')).fork(
+  err => console.log(`Oh no! ${err.message}`),
+  thing => console.log(`Hello ${thing}!`)
+);
+//> "Oh no! It broke!"
+
+const consoleFork = Future.fork(console.error, console.log);
+consoleFork(Future.of('Hello'));
+//> "Hello"
+```
+
+#### value
+##### `#value :: Future a b ~> (b -> Void) -> Void`
+##### `.value :: (b -> Void) -> Future a b -> Void`
+
+Extracts the value from a resolved Future by forking it. Only use this function
+if you are sure the Future is going to be resolved, for example; after using
+`.fold()`. If the Future rejects and `value` was used, an (likely uncatchable)
+`Error` will be thrown.
+
+```js
+Future.reject(new Error('It broke'))
+.fold(S.Left, S.Right)
+.value(console.log)
+//> Left([Error: It broke])
+```
+
+#### promise
+##### `#promise :: Future a b ~> Promise b a`
+##### `.promise :: Future a b -> Promise b a`
+
+An alternative way to `fork` the Future. This eagerly forks the Future and
+returns a Promise of the result. This is useful if some API wants you to give it
+a Promise. It's the only method which forks the Future without a forced way to
+handle the rejection branch, which means it's considered dangerous to use.
+
+```js
+Future.of('Hello').promise().then(console.log);
+//> "Hello"
+```
+
+### Transforming Futures
+
+#### map
+##### `#map :: Future a b ~> (b -> c) -> Future a c`
+##### `.map :: Functor m => (a -> b) -> m a -> m b`
+
+Transforms the resolution value inside the Future, and returns a new Future with
+the transformed value. This is like doing `promise.then(x => x + 1)`, except
+that it's lazy, so the transformation will not be applied before the Future is
+forked. The transformation is only applied to the resolution branch. So if the
+Future is rejected, the transformation is ignored. To learn more about the exact
+behaviour of `map`, check out its [spec][12].
+
+```js
+Future.of(1)
+.map(x => x + 1)
+.fork(console.error, console.log);
+//> 2
+```
+
+#### mapRej
+##### `#mapRej :: Future a b ~> (a -> c) -> Future c b`
+##### `.mapRej :: (a -> b) -> Future a c -> Future b c`
+
+Map over the **rejection** reason of the Future. This is like `map`, but for the
+rejection branch.
+
+```js
+Future.reject(new Error('It broke!')).mapRej(err => {
+  return new Error('Some extra info: ' + err.message);
+})
+.fork(console.error, console.log)
+//! [Some extra info: It broke!]
+```
+
+#### bimap
+##### `#bimap :: Future a b ~> (a -> c) -> (b -> d) -> Future c d`
+##### `.bimap :: Bifunctor m => (a -> b) -> (c -> d) -> m a c -> m b d`
+
+Maps the left function over the rejection value, or the right function over the
+resolution value, depending on which is present.
+
+```js
+Future.of(1)
+.bimap(x => x + '!', x => x + 1)
+.fork(console.error, console.log);
+//> 2
+
+Future.reject('error')
+.bimap(x => x + '!', x => x + 1)
+.fork(console.error, console.log);
+//> "error!"
+```
+
+#### chain
+##### `#chain :: Future a b ~> (b -> Future a c) -> Future a c`
+##### `.chain :: Chain m => (a -> m b) -> m a -> m b`
+
+Allows the creation of a new Future based on the resolution value. This is like
+doing `promise.then(x => Promise.resolve(x + 1))`, except that it's lazy, so the
+new Future will not be created until the other one is forked. The function is
+only ever applied to the resolution value, so is ignored when the Future was
+rejected. To learn more about the exact behaviour of `chain`, check out its [spec][13].
+
+```js
+Future.of(1)
+.chain(x => Future.of(x + 1))
+.fork(console.error, console.log);
+//> 2
+```
+
+#### chainRej
+##### `#chainRej :: Future a b ~> (a -> Future a c) -> Future a c`
+##### `.chainRej :: (a -> Future a c) -> Future a b -> Future a c`
+
+Chain over the **rejection** reason of the Future. This is like `chain`, but for
+the rejection branch.
+
+```js
+Future.reject(new Error('It broke!')).chainRej(err => {
+  console.error(err);
+  return Future.of('All is good')
+})
+.fork(console.error, console.log)
+//> "All is good"
+```
+
+#### ap
+##### `#ap :: Future a (b -> c) ~> Future a b -> Future a c`
+##### `.ap :: Apply m => m (a -> b) -> m a -> m b`
+
+Apply the resolution value, which is expected to be a function (as in
+`Future.of(a_function)`), to the resolution value in the given Future. Both
+Futures involved will run in parallel, and if one rejects the resulting Future
+will also be rejected. To learn more about the exact behaviour of `ap`, check
+out its [spec][14].
+
+```js
+Future.of(x => x + 1)
+.ap(Future.of(1))
+.fork(console.error, console.log);
+//> 2
+```
+
+#### fold
+##### `#fold :: Future a b ~> (a -> c), (b -> c) -> Future _ c`
+##### `.fold :: (a -> c) -> (b -> c) -> Future a b -> Future _ c`
+
+Applies the left function to the rejection value, or the right function to the
+resolution value, depending on which is present, and resolves with the result.
+
+This provides a convenient means to ensure a Future is always resolved. It can
+be used with other type constructors, like [`S.Either`][7], to maintain a
+representataion of failures:
+
+```js
+Future.of('hello')
+.fold(S.Left, S.Right)
+.value(console.log);
+//> Right('hello')
+
+Future.reject('it broke')
+.fold(S.Left, S.Right)
+.value(console.log);
+//> Left('it broke')
+```
+
+### Parallelism
+
+#### race
+##### `#race :: Future a b ~> Future a b -> Future a b`
+##### `.race :: Future a b -> Future a b -> Future a b`
+
+Race two Futures against each other. Creates a new Future which resolves or
+rejects with the resolution or rejection value of the first Future to settle.
+
+```js
+Future.after(100, 'hello')
+.race(Future.after(50, 'bye'))
+.fork(console.error, console.log)
+//> "bye"
+
+const first = futures => futures.reduce(race);
+first([
+  after(100, 'hello'),
+  after(50, 'bye'),
+  Future(rej => setTimeout(rej, 25, 'nope'))
+])
+.fork(console.error, console.log)
+//! "nope"
+```
+
+#### or
+##### `#or :: Future a b ~> Future a b -> Future a b`
+##### `.or :: Future a b -> Future a b -> Future a b`
+
+Logical or for Futures.
+
+Returns a new Future which either resolves with the first resolution value, or
+rejects with the last rejection value once and if both Futures reject.
+
+This behaves analogues to how JavaScript's or operator does, except both
+Futures run simultaneously, so it is *not* short-circuited. That means that
+if the second has side-effects, they will run even if the first resolves.
+
+```js
+//An asynchronous version of:
+//const result = planA() || planB();
+const result = planA().or(planB());
+
+const program = S.pipe([
+  reject,
+  or(of('second chance')),
+  value(console.log)
+]);
+program('first chance')
+> "second chance"
+```
+
+In the example, assume both plans return Futures. Both plans are executed in
+parallel. If `planA` resolves, the returned Future will resolve with its value.
+If `planA` fails there is always `planB`. If both plans fail then the returned
+Future will also reject using the rejection reason of `planB`.
+
+#### parallel
+##### `.parallel :: PositiveInteger -> Array (Future a b) -> Future a (Array b)`
 
 Creates a Future which when forked runs all Futures in the given `array` in
 parallel, ensuring no more than `limit` Futures are running at once.
@@ -228,7 +481,7 @@ Future.parallel(Infinity, tenFutures).fork(console.error, console.log);
 ```
 
 If you want to settle all Futures, even if some may fail, you can use this in
-combination with [fold](#fold--future-a-b--a---c-b---c---future-_-c):
+combination with [fold](#fold):
 
 ```js
 const fourInstableFutures = Array.from(Array(4).keys()).map(
@@ -247,176 +500,34 @@ Future.parallel(2, stabalizedFutures).fork(console.error, console.log);
 //> [ Right(0), Left("failed"), Right(2), Right(3) ]
 ```
 
-### Method API
+### Utility functions
 
-#### `fork :: Future a b ~> (a -> Void), (b -> Void) -> Void`
+#### isFuture
+##### `.isFuture :: a -> Boolean`
 
-Execute the Future by calling the `fork` function that was passed to it at
-[construction](#creation) with the `reject` and `resolve` callbacks. Futures are
-*lazy*, which means even if you've `map`ped or `chain`ed over them, they'll do
-*nothing* if you don't eventually fork them.
-
-```js
-Future.of('world').fork(
-  err => console.log(`Oh no! ${err.message}`),
-  thing => console.log(`Hello ${thing}!`)
-);
-//> "Hello world!"
-
-Future.reject(new Error('It broke!')).fork(
-  err => console.log(`Oh no! ${err.message}`),
-  thing => console.log(`Hello ${thing}!`)
-);
-//> "Oh no! It broke!"
-```
-
-#### `map :: Future a b ~> (b -> c) -> Future a c`
-
-Transforms the resolution value inside the Future, and returns a new Future with
-the transformed value. This is like doing `promise.then(x => x + 1)`, except
-that it's lazy, so the transformation will not be applied before the Future is
-forked. The transformation is only applied to the resolution branch. So if the
-Future is rejected, the transformation is ignored. To learn more about the exact
-behaviour of `map`, check out its [spec][12].
+Returns true for [Futures](#type-signatures) and false for everything else. This
+function (and [`S.is`][17]) also return `true` for instances of Future that were
+created within other contexts. It is therefore recommended to use this over
+`instanceof`, unless your intent is to explicitly check for Futures created
+using the exact `Future` constructor you're testing against.
 
 ```js
-Future.of(1)
-.map(x => x + 1)
-.fork(console.error, console.log);
-//> 2
+const Future1 = require('/path/to/fluture');
+const Future2 = require('/other/path/to/fluture');
+
+const m1 = Future1(noop);
+Future1.isFuture(m1) === (m1 instanceof Future1);
+
+const m2 = Future2(noop);
+Future1.isFuture(m2) !== (m2 instanceof Future1);
 ```
 
-#### `mapRej :: Future a b ~> (a -> c) -> Future c b`
+#### isForkable
+##### `.isForkable :: a -> Boolean`
 
-Map over the **rejection** reason of the Future. This is like `map`, but for the
-rejection branch.
+Returns true for [Forkables](#type-signatures) and false for everything else.
 
-```js
-Future.reject(new Error('It broke!')).mapRej(err => {
-  return new Error('Some extra info: ' + err.message);
-})
-.fork(console.error, console.log)
-//! [Some extra info: It broke!]
-```
-
-#### `bimap :: Future a b ~> (a -> c) -> (b -> d) -> Future c d`
-
-Maps the left function over the rejection value, or the right function over the
-resolution value, depending on which is present.
-
-```js
-Future.of(1)
-.bimap(x => x + '!', x => x + 1)
-.fork(console.error, console.log);
-//> 2
-
-Future.reject('error')
-.bimap(x => x + '!', x => x + 1)
-.fork(console.error, console.log);
-//> "error!"
-```
-
-#### `chain :: Future a b ~> (b -> Future a c) -> Future a c`
-
-Allows the creation of a new Future based on the resolution value. This is like
-doing `promise.then(x => Promise.resolve(x + 1))`, except that it's lazy, so the
-new Future will not be created until the other one is forked. The function is
-only ever applied to the resolution value, so is ignored when the Future was
-rejected. To learn more about the exact behaviour of `chain`, check out its [spec][13].
-
-```js
-Future.of(1)
-.chain(x => Future.of(x + 1))
-.fork(console.error, console.log);
-//> 2
-```
-
-#### `chainRej :: Future a b ~> (a -> Future a c) -> Future a c`
-
-Chain over the **rejection** reason of the Future. This is like `chain`, but for
-the rejection branch.
-
-```js
-Future.reject(new Error('It broke!')).chainRej(err => {
-  console.error(err);
-  return Future.of('All is good')
-})
-.fork(console.error, console.log)
-//> "All is good"
-```
-
-#### `ap :: Future a (b -> c) ~> Future a b -> Future a c`
-
-Apply the resolution value, which is expected to be a function (as in
-`Future.of(a_function)`), to the resolution value in the given Future. Both
-Futures involved will run in parallel, and if one rejects the resulting Future
-will also be rejected. To learn more about the exact behaviour of `ap`, check
-out its [spec][14].
-
-```js
-Future.of(x => x + 1)
-.ap(Future.of(1))
-.fork(console.error, console.log);
-//> 2
-```
-
-#### `race :: Future a b ~> Future a b -> Future a b`
-
-Race two Futures against each other. Creates a new Future which resolves or
-rejects with the resolution or rejection value of the first Future to settle.
-
-```js
-Future.after(100, 'hello')
-.race(Future.after(50, 'bye'))
-.fork(console.error, console.log)
-//> "bye"
-```
-
-#### `or :: Future a b ~> Future a b -> Future a b`
-
-Logical or for Futures.
-
-Returns a new Future which either resolves with the first resolution value, or
-rejects with the last rejection value once and if both Futures reject.
-
-This behaves analogues to how JavaScript's or operator does, except both
-Futures run simultaneously, so it is *not* short-circuited. That means that
-if the second has side-effects, they will run even if the first resolves.
-
-```js
-//An asynchronous version of:
-//const result = planA() || planB();
-
-const result = planA().or(planB());
-```
-
-In the example, assume both plans return Futures. Both plans are executed in
-parallel. If `planA` resolves, the returned Future will resolve with its value.
-If `planA` fails there is always `planB`. If both plans fail then the returned
-Future will also reject using the rejection reason of `planB`.
-
-#### `fold :: Future a b ~> (a -> c), (b -> c) -> Future _ c`
-
-Applies the left function to the rejection value, or the right function to the
-resolution value, depending on which is present, and resolves with the result.
-
-This provides a convenient means to ensure a Future is always resolved. It can
-be used with other type constructors, like [`S.Either`][7], to maintain a
-representataion of failures:
-
-```js
-Future.of('hello')
-.fold(S.Left, S.Right)
-.value(console.log);
-//> Right('hello')
-
-Future.reject('it broke')
-.fold(S.Left, S.Right)
-.value(console.log);
-//> Left('it broke')
-```
-
-#### `cache :: Future a b -> Future a b`
+##### `.cache :: Future a b -> Future a b`
 
 Returns a Future which caches the resolution value of the given Future so that
 whenever it's forked, it can load the value from cache rather than reexecuting
@@ -438,144 +549,8 @@ eventualPackage.fork(console.error, console.log);
 //> "{...}"
 ```
 
-#### `value :: Future a b ~> (b -> Void) -> Void`
-
-Extracts the value from a resolved Future by forking it. Only use this function
-if you are sure the Future is going to be resolved, for example; after using
-`.fold()`. If the Future rejects and `value` was used, an (likely uncatchable)
-`Error` will be thrown.
-
-```js
-Future.reject(new Error('It broke'))
-.fold(S.Left, S.Right)
-.value(console.log)
-//> Left([Error: It broke])
-```
-
-#### `promise :: Future a b ~> Promise b a`
-
-An alternative way to `fork` the Future. This eagerly forks the Future and
-returns a Promise of the result. This is useful if some API wants you to give it
-a Promise. It's the only method which forks the Future without a forced way to
-handle the rejection branch, which means it's considered dangerous to use.
-
-```js
-Future.of('Hello').promise().then(console.log);
-//> "Hello"
-```
-
-### Dispatcher API
-
-#### `fork :: (a -> Void) -> (b -> Void) -> Future a b -> Void`
-
-Dispatches the first and second arguments to the `fork` method of the third argument.
-
-```js
-const consoleFork = fork(console.error, console.log);
-consoleFork(of('Hello'));
-//> "Hello"
-```
-
-#### `map :: Functor m => (a -> b) -> m a -> m b`
-
-Dispatches the first argument to the `map` method of the second argument.
-Has the same effect as [`R.map`][3].
-
-#### `mapRej :: (a -> b) -> Future a c -> Future b c`
-
-Dispatches the first argument to the `mapRej` method of the second argument.
-
-#### `bimap :: Bifunctor m => (a -> b) -> (c -> d) -> m a c -> m b d`
-
-Dispatches the first two arguments to the `bimap` method of the third argument.
-
-#### `chain :: Chain m => (a -> m b) -> m a -> m b`
-
-Dispatches the first argument to the `chain` method of the second argument.
-Has the same effect as [`R.chain`][4].
-
-#### `chainRej :: (a -> Future a c) -> Future a b -> Future a c`
-
-Dispatches the first argument to the `chainRej` method of the second argument.
-
-#### `ap :: Apply m => m (a -> b) -> m a -> m b`
-
-Dispatches the second argument to the `ap` method of the first argument.
-Has the same effect as [`R.ap`][5].
-
-#### `race :: Future a b -> Future a b -> Future a b`
-
-Dispatches the first argument to the `race` method of the second argument.
-
-```js
-const first = futures => futures.reduce(race);
-first([
-  after(100, 'hello'),
-  after(50, 'bye'),
-  Future(rej => setTimeout(rej, 25, 'nope'))
-])
-.fork(console.error, console.log)
-//> [Error nope]
-```
-
-#### `or :: Future a b -> Future a b -> Future a b`
-
-Dispatches the first argument to the `or` method of the second argument.
-
-```js
-const program = S.pipe([
-  reject,
-  or(of('second chance')),
-  value(console.log)
-]);
-
-program('first chance')
-> "second chance"
-```
-
-#### `fold :: (a -> c) -> (b -> c) -> Future a b -> Future _ c`
-
-Dispatches the first and second arguments to the `fold` method of the third argument.
-
-#### `value :: (b -> Void) -> Future a b -> Void`
-
-Dispatches the first argument to the `value` method of the second argument.
-
-#### `promise :: Future a b -> Promise b a`
-
-Dispatches to the `promise` method.
-
-```js
-Future.promise(Future.after(300, 'Hello')).then(console.log);
-//> "Hello"
-```
-
-### Utility functions
-
-#### `isFuture :: a -> Boolean`
-
-Returns true for [Futures](#type-signatures) and false for everything else. This
-function (and [`S.is`][17]) also return `true` for instances of Future that were
-created within other contexts. It is therefore recommended to use this over
-`instanceof`, unless your intent is to explicitly check for Futures created
-using the exact `Future` constructor you're testing against.
-
-```js
-const Future1 = require('/path/to/fluture');
-const Future2 = require('/other/path/to/fluture');
-
-const m1 = Future1(noop);
-Future1.isFuture(m1) === (m1 instanceof Future1);
-
-const m2 = Future2(noop);
-Future1.isFuture(m2) !== (m2 instanceof Future1);
-```
-
-#### `isForkable :: a -> Boolean`
-
-Returns true for [Forkables](#type-signatures) and false for everything else.
-
-#### `do :: (() -> Iterator) -> Future a b`
+#### do
+##### `.do :: (() -> Iterator) -> Future a b`
 
 A specialized version of [fantasy-do][19] which works only for Futures, but has
 the advantage of type-checking and not having to pass `Future.of`. Another
