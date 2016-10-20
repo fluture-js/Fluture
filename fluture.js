@@ -331,8 +331,8 @@
     if(!isFunction(f)) error$invalidArgument('Future#value', 0, 'be a function', f);
   }
 
-  function check$promise(it){
-    if(!isFuture(it)) error$invalidContext('Future#promise', it);
+  function check$then(it){
+    if(!isFuture(it)) error$invalidContext('Future#then', it);
   }
 
   function check$cache(it){
@@ -519,12 +519,13 @@
       );
     },
 
-    promise: function Future$promise(){
-      check$promise(this);
-      const _this = this;
-      return new Promise(function Future$promise$do(resolve, reject){
-        _this._f(reject, resolve);
-      });
+    then: function Future$then(resolve, reject){
+      check$then(this);
+      const then = new FutureThen(this, resolve, reject);
+      const deferred = new CachedFuture(then);
+      then.setGuard(deferred);
+      setImmediate(function Future$then$eager(){ deferred.run() });
+      return deferred;
     }
 
   };
@@ -547,7 +548,6 @@
   Future.hook = createInvertedBinaryDispatcher('hook');
   Future.finally = createUnaryDispatcher('finally');
   Future.value = createUnaryDispatcher('value');
-  Future.promise = createNullaryDispatcher('promise');
   Future.cache = createNullaryDispatcher('cache');
   Future.Future = Future;
   Future.isFuture = isFuture;
@@ -816,7 +816,7 @@
 
   CachedFuture.prototype.reset = function CachedFuture$reset(){
     if(this._state === Cold) return;
-    if(this._state > Pending) this._cancel();
+    this._cancel();
     this._cancel = noop;
     this._queue = [];
     this._queued = 0;
@@ -849,6 +849,87 @@
 
   CachedFuture.prototype.toString = function CachedFuture$toString(){
     return `${this._pure.toString()}.cache()`;
+  }
+
+  //----------
+
+  function FutureThen(parent, onResolve, onReject){
+    this._parent = parent;
+    this._onResolve = onResolve;
+    this._onReject = onReject;
+    this._guard = null;
+  }
+
+  FutureThen.prototype = Object.create(Future.prototype);
+
+  FutureThen.prototype.setGuard = function FutureThen$setGuard(guard){
+    this._guard = guard;
+  }
+
+  FutureThen.prototype._f = function FutureThen$fork(rej, res){
+    const _this = this, onReject = _this._onReject, onResolve = _this._onResolve;
+    const setResolved = x => setImmediate(res, x);
+    const setRejected = x => setImmediate(rej, x);
+    const settle = function FutureThen$fork$settle(inner){
+      let locked = false;
+      function deeper(x){
+        if(locked) return;
+        locked = true;
+        FutureThen$fork$settle(x);
+      }
+      function reject(x){
+        if(locked) return;
+        locked = true;
+        setRejected(x);
+      }
+      if(inner === _this._guard){
+        throw new TypeError('Cannot return the same Future to Future.then');
+      }
+      if(inner === null || typeof inner !== 'object' && typeof inner !== 'function'){
+        return void setResolved(inner);
+      }
+      let then;
+      try{
+        then = inner.then;
+      }catch(error){
+        return void reject(error);
+      }
+      if(typeof then === 'function') try{
+        return void then.call(inner, deeper, reject);
+      }catch(error){
+        return void reject(error);
+      }
+      setResolved(inner);
+    };
+    return _this._parent._f(function FutureThen$fork$rej(reason){
+      if(typeof onReject === 'function'){
+        setImmediate(() => {
+          try{
+            settle(onReject(reason));
+          }catch(error){
+            setRejected(error);
+          }
+        })
+      }else{
+        setRejected(reason);
+      }
+    }, function FutureThen$fork$res(value){
+      if(typeof onResolve === 'function'){
+        setImmediate(() => {
+          try{
+            settle(onResolve(value));
+          }catch(error){
+            setRejected(error);
+          }
+        })
+      }else{
+        setResolved(value);
+      }
+    });
+  }
+
+  FutureThen.prototype.toString = function FutureThen$toString(){
+    return `${this._parent.toString()}.then(${show(this._onResolve)}, ${show(this._onReject)})`;
   }
 
   //----------
