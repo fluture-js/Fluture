@@ -79,7 +79,7 @@ getPackageName('package.json')
   1. [Consuming Futures](#consuming-futures)
     * [fork](#fork)
     * [value](#value)
-    * [promise](#promise)
+    * [then](#then)
   1. [Parallelism](#parallelism)
     * [race](#race)
     * [or](#or)
@@ -95,7 +95,8 @@ getPackageName('package.json')
 
 ## Interoperability
 
-[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" width="82" height="82" alt="Fantasy Land" />][1]
+[<img src="https://promisesaplus.com/assets/logo-small.png" align="right" height="82" alt="Promises/A+" />][1]
+[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" height="82" alt="Fantasy Land" />][27]
 [<img src="https://raw.githubusercontent.com/rpominov/static-land/master/logo/logo.png" align="right" height="82" alt="Static Land" />][25]
 
 Fluture implements [FantasyLand 1.x][1] and [Static Land][25] compatible
@@ -570,18 +571,36 @@ Future.after(300, 'hello').value(console.log)();
 //Nothing will happen. The Future was cancelled before it could settle.
 ```
 
-#### promise
-##### `#promise :: Future a b ~> Promise b a`
-##### `.promise :: Future a b -> Promise b a`
+#### then
+##### `#then :: Future a b ~> PromiseCallback -> PromiseCallback -> Future a b`
 
-An alternative way to `fork` the Future. This eagerly forks the Future and
-returns a Promise of the result. This is useful if some API wants you to give it
-a Promise. It's the only method which forks the Future without a forced way to
-handle the rejection branch, so I recommend against using it for anything else.
+Returns a [cached Future](#cache) which is automatically run in the next tick.
+Optionally takes a rejection handler and/or a resolution handler whose return
+values influence the state of the returned Future according to the
+[Promises/A+][27] specification.
+
+Its intended use is to provide a standardized interface for extracting the value
+of the Future, allowing third-parties to extract the value without having to
+know about `fork`. **It is not** the proper way to extract the Future value as
+it takes away many benefits of using Futures:
+
+* Using this method puts the Future in *eager* mode, losing all benefits of
+  laziness in all derived Futures.
+* It causes the Future and all derived Futures to run their effects without
+  enforcing a way to handle the continuations.
+* The ability to *immediately* cancel is lost, as `then` will cause the Future
+  to run in the next tick.
+* PromiseCallbacks will be called regardless of the Future having been canceled.
+
+On other words; The method only really exists to make Fluture compatible with
+`Promises/A+`-expecting API's and should not be used manually.
 
 ```js
-Future.of('Hello').promise().then(console.log);
+Promise.resolve().then(() => Future.of('Hello')).then(console.log);
 //> "Hello"
+
+Future.reject(new Error('Kaputt!!!')).then(console.log);
+/* sound of silence */
 ```
 
 ### Parallelism
@@ -842,3 +861,4 @@ means butterfly in Romanian; A creature you might expect to see in Fantasy Land.
 [24]: https://github.com/fantasyland/fantasy-land#bifunctor
 [25]: https://github.com/rpominov/static-land
 [26]: https://github.com/fantasyland/fantasy-land#chainrec
+[27]: https://promisesaplus.com/
