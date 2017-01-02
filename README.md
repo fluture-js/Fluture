@@ -1,5 +1,7 @@
 # Fluture
 
+[![Join the chat at https://gitter.im/Avaq/Fluture](https://badges.gitter.im/Avaq/Fluture.svg)](https://gitter.im/Avaq/Fluture?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![NPM Version](https://badge.fury.io/js/fluture.svg)](https://www.npmjs.com/package/fluture)
 [![Dependencies](https://david-dm.org/avaq/fluture.svg)](https://david-dm.org/avaq/fluture)
 [![Build Status](https://travis-ci.org/Avaq/Fluture.svg?branch=master)](https://travis-ci.org/Avaq/Fluture)
