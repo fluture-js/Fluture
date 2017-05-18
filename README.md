@@ -1,5 +1,7 @@
 # [![Fluture](logo.png)](#butterfly)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/fluture-js/Fluture.svg)](https://greenkeeper.io/)
+
 [![Chat](https://badges.gitter.im/fluture-js/Fluture.svg)](https://gitter.im/fluture-js/Fluture)
 [![NPM Version](https://badge.fury.io/js/fluture.svg)](https://www.npmjs.com/package/fluture)
 [![Dependencies](https://david-dm.org/fluture-js/Fluture.svg)](https://david-dm.org/fluture-js/Fluture)
