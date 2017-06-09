@@ -29,7 +29,7 @@ export default function interpretor(rej, res){
   function settle(m){
     settled = true;
     future = m;
-    if(future._spawn){
+    if(future && future._spawn){
       for(let i = future._actions.length - 1; i >= 0; i--) cold.unshift(future._actions[i]);
       future = future._spawn;
     }
@@ -40,14 +40,14 @@ export default function interpretor(rej, res){
   //It will tell the current action that the future rejected, and it will
   //settle the current tick with the action's answer to that.
   function rejected(x){
-    settle(action.rejected(x));
+    settle(action && action.rejected(x));
   }
 
   //This function serves as a resolution handler for our current future.
   //It will tell the current action that the future resolved, and it will
   //settle the current tick with the action's answer to that.
   function resolved(x){
-    settle(action.resolved(x));
+    settle(action && action.resolved(x));
   }
 
   //This function is passed into actions when they are "warmed up".
