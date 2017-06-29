@@ -61,7 +61,7 @@
     "codecov": "^2.2.0",
     "data.task": "^3.0.0",
     "eslint": "^4.0.0",
-    "eslint-config-warp": "^1.2.0",
+    "eslint-config-warp": "^2.0.0",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
     "fantasy-land": "^3.0.0",
     "fantasy-states": "^0.2.1",
