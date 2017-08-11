@@ -6,3 +6,4 @@ export const isUnsigned = n => (n === Infinity || isNumber(n) && n > 0 && n % 1 
 export const isObject = o => o !== null && typeof o === 'object';
 export const isIterator = i => isObject(i) && isFunction(i.next);
 export const isArray = Array.isArray;
+export const isStream = s => isObject(s) && typeof s.pipe === 'function';

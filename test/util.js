@@ -64,11 +64,11 @@ export const assertResolved = (m, x) => new Promise((res, rej) => {
   assertIsFuture(m);
   forkAndGuard(m,
     e => rej(new Error(`Expected the Future to resolve. Instead rejected with: ${Z.toString(e)}`)),
-    y => Z.equals(x, y) ? res() : rej(new AssertionError({
-      expected: x,
-      actual: y,
-      message: `Expected the Future to resolve with ${Z.toString(x)}; got: ${Z.toString(y)}`
-    }))
+    y => Z.equals(x, Buffer.isBuffer(y) ? y.toString() : y) ? res() : rej(new AssertionError({
+        expected: x,
+        actual: y,
+        message: `Expected the Future to resolve with ${Z.toString(x)}; got: ${Z.toString(y)}`
+      }))
   );
 });
 

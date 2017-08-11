@@ -50,6 +50,7 @@
     "sequential"
   ],
   "dependencies": {
+    "concat-stream": "^1.6.0",
     "concurrify": "^1.0.0",
     "denque": "^1.1.1",
     "inspect-f": "^1.2.0",
@@ -81,6 +82,7 @@
     "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-multi-entry": "^2.0.1",
     "source-map-support": "^0.4.14",
+    "through2": "^2.0.3",
     "xyz": "^2.0.1"
   }
 }
