@@ -9,7 +9,7 @@ const external =
   .concat(['assert']);
 
 export default {
-  entry: 'test/*.test.js',
+  input: 'test/*.test.js',
   plugins: [
     entry({exports: false}),
     istanbul({
@@ -18,7 +18,6 @@ export default {
     })
   ],
   external: external,
-  format: 'cjs',
-  dest: 'index.test.js',
-  sourceMap: 'inline'
+  sourcemap: 'inline',
+  output: {format: 'cjs', file: 'index.test.js'}
 };

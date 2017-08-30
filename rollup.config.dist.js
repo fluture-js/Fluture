@@ -12,10 +12,9 @@ const banner = `/**
 `;
 
 export default {
-  entry: 'src/index.js',
+  input: 'src/index.js',
   plugins: [buble(), node(), commonjs({include: 'node_modules/**'})],
   banner: banner,
-  format: 'iife',
-  moduleName: 'Fluture',
-  dest: 'dist/bundle.js'
+  name: 'Fluture',
+  output: {format: 'iife', file: 'dist/bundle.js'}
 };
