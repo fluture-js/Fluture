@@ -70,7 +70,7 @@
     "istanbul": "^0.4.5",
     "jsverify": "^0.8.3",
     "lodash.curry": "^4.1.1",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.0",
     "ramda": "^0.24.0",
     "ramda-fantasy": "^0.8.0",
     "remark-cli": "^4.0.0",
