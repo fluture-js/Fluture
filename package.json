@@ -64,7 +64,7 @@
     "@std/esm": "0.12.1",
     "benchmark": "^2.1.0",
     "chai": "^4.1.2",
-    "codecov": "^2.2.0",
+    "codecov": "^3.0.0",
     "data.task": "^3.0.0",
     "eslint": "^4.7.2",
     "eslint-config-warp": "^2.0.0",
