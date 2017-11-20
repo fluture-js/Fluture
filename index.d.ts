@@ -271,6 +271,24 @@ declare module 'fluture' {
   export function or<L, R>(left: Future<L, R>): (right: Future<L, R>) => Future<L, R>
 
   /** Run an Array of Futures in parallel, under the given concurrency limit. See https://github.com/fluture-js/Fluture#parallel */
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>, Future<L, R9>, Future<L, R10>]): Future<L, [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>, Future<L, R9>, Future<L, R10>]) => Future<L, [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8, R9>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>, Future<L, R9>]): Future<L, [R1, R2, R3, R4, R5, R6, R7, R8, R9]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8, R9>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>, Future<L, R9>]) => Future<L, [R1, R2, R3, R4, R5, R6, R7, R8, R9]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>]): Future<L, [R1, R2, R3, R4, R5, R6, R7, R8]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7, R8>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>, Future<L, R8>]) => Future<L, [R1, R2, R3, R4, R5, R6, R7, R8]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>]): Future<L, [R1, R2, R3, R4, R5, R6, R7]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6, R7>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>, Future<L, R7>]) => Future<L, [R1, R2, R3, R4, R5, R6, R7]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>]): Future<L, [R1, R2, R3, R4, R5, R6]>
+  export function parallel<L, R1, R2, R3, R4, R5, R6>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>, Future<L, R6>]) => Future<L, [R1, R2, R3, R4, R5, R6]>
+  export function parallel<L, R1, R2, R3, R4, R5>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>]): Future<L, [R1, R2, R3, R4, R5]>
+  export function parallel<L, R1, R2, R3, R4, R5>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>, Future<L, R5>]) => Future<L, [R1, R2, R3, R4, R5]>
+  export function parallel<L, R1, R2, R3, R4>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>]): Future<L, [R1, R2, R3, R4]>
+  export function parallel<L, R1, R2, R3, R4>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>, Future<L, R4>]) => Future<L, [R1, R2, R3, R4]>
+  export function parallel<L, R1, R2, R3>(concurrency: number, values: [Future<L, R1>, Future<L, R2>, Future<L, R3>]): Future<L, [R1, R2, R3]>    
+  export function parallel<L, R1, R2, R3>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>, Future<L, R3>]) => Future<L, [R1, R2, R3]>  
+  export function parallel<L, R1, R2>(concurrency: number, values: [Future<L, R1>, Future<L, R2>]): Future<L, [R1, R2]>
+  export function parallel<L, R1, R2>(concurrency: number): (values: [Future<L, R1>, Future<L, R2>]) => Future<L, [R1, R2]>
   export function parallel<L, R>(concurrency: number, futures: Array<Future<L, R>>): Future<L, Array<R>>
   export function parallel<L, R>(concurrency: number): (futures: Array<Future<L, R>>) => Future<L, Array<R>>
 
