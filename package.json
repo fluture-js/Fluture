@@ -62,7 +62,7 @@
     "sanctuary-type-identifiers": "^2.0.0"
   },
   "devDependencies": {
-    "@std/esm": "0.19.5",
+    "@std/esm": "0.19.6",
     "benchmark": "^2.1.0",
     "chai": "^4.1.2",
     "codecov": "^3.0.0",
