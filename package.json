@@ -79,7 +79,7 @@
     "nyc": "^11.2.1",
     "ramda": "^0.25.0",
     "ramda-fantasy": "^0.8.0",
-    "remark-cli": "^4.0.0",
+    "remark-cli": "^5.0.0",
     "remark-validate-links": "^7.0.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.54.0",
