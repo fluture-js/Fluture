@@ -75,7 +75,7 @@
     "fantasy-states": "^0.2.1",
     "jsverify": "^0.8.3",
     "mocha": "^5.0.2",
-    "nyc": "^11.4.1",
+    "nyc": "^12.0.1",
     "ramda": "^0.25.0",
     "remark-cli": "^5.0.0",
     "remark-validate-links": "^7.0.0",
