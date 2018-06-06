@@ -59,7 +59,7 @@
     "concurrify": "^1.0.0",
     "denque": "^1.1.1",
     "inspect-f": "^1.2.0",
-    "sanctuary-type-classes": "^8.0.0",
+    "sanctuary-type-classes": "^9.0.0",
     "sanctuary-type-identifiers": "^2.0.0"
   },
   "devDependencies": {
