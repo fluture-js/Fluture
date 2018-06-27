@@ -68,7 +68,7 @@
     "codecov": "^3.0.0",
     "es-check": "^2.0.2",
     "eslint": "^4.7.2",
-    "eslint-config-warp": "^2.0.0",
+    "eslint-config-warp": "^3.0.0",
     "eslint-plugin-markdown": "^1.0.0-beta.7",
     "fantasy-land": "^3.0.0",
     "fantasy-laws": "^1.0.1",
