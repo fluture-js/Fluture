@@ -67,6 +67,7 @@ declare module 'fluture' {
 
     /** Use the resolution value in this Future to create the next Future. See https://github.com/fluture-js/Fluture#chain */
     chain<RB>(mapper: (value: R) => Future<L, RB>): Future<L, RB>
+    chain<LB, RB>(mapper: (value: R) => Future<LB, RB>): Future<L | LB, RB>
 
     /** Use the rejection reason in this Future to create the next Future. See https://github.com/fluture-js/Fluture#chainrej */
     chainRej<LB>(mapper: (reason: L) => Future<LB, R>): Future<LB, R>
@@ -157,6 +158,8 @@ declare module 'fluture' {
   /** Create a Future using the resolution value of the given Future. See https://github.com/fluture-js/Fluture#chain */
   export function chain<L, RA, RB>(mapper: (value: RA) => Future<L, RB>, source: Future<L, RA>): Future<L, RB>
   export function chain<L, RA, RB>(mapper: (value: RA) => Future<L, RB>): (source: Future<L, RA>) => Future<L, RB>
+  export function chain<LA, LB, RA, RB>(mapper: (value: RA) => Future<LB, RB>, source: Future<LA, RA>): Future<LA | LB, RB>
+  export function chain<LA, LB, RA, RB>(mapper: (value: RA) => Future<LB, RB>): (source: Future<LA, RA>) => Future<LA | LB, RB>
 
   /** Create a Future using the rejection reason of the given Future. See https://github.com/fluture-js/Fluture#chain */
   export function chainRej<LA, LB, R>(mapper: (reason: LA) => Future<LA, R>, source: Future<LA, R>): Future<LB, R>
