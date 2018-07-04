@@ -6,7 +6,7 @@ import {
   invalidArgument,
   invalidContext,
   invalidFuture,
-  someError
+  valueToError
 } from '../src/internal/error';
 
 describe('error', function (){
@@ -126,18 +126,39 @@ describe('error', function (){
 
   });
 
-  describe('someError', function (){
+  describe('valueToError', function (){
 
-    it('produces an error', function (){
-      eq(someError('testing', new Error('It broke')), new Error('Error came up while testing:\n  It broke\n'));
-      eq(someError('testing', new TypeError('It broke')), new Error('TypeError came up while testing:\n  It broke\n'));
+    it('Converts any value to an Error object', function (){
 
-      eq(someError('testing', 'It broke'), new Error('An error came up while testing:\n  It broke\n'));
-      eq(someError('testing', 'It broke'), new Error('An error came up while testing:\n  It broke\n'));
+      eq(valueToError(new Error('test')), new Error(
+        'Error occurred while running a computation for a Future:\n\n' +
+        '  test'
+      ));
 
-      eq(someError('testing', {toString: false}), new Error('Something came up while testing, but it could not be converted to string\n'));
+      eq(valueToError(new TypeError('test')), new Error(
+        'TypeError occurred while running a computation for a Future:\n\n' +
+        '  test'
+      ));
 
-      eq(someError('testing', 'It broke', 'the hood'), new Error('An error came up while testing:\n  It broke\n\n  In: the hood\n'));
+      eq(valueToError('test'), new Error(
+        'Non-Error occurred while running a computation for a Future:\n\n' +
+        '  "test"'
+      ));
+
+      eq(valueToError({foo: 'bar'}), new Error(
+        'Non-Error occurred while running a computation for a Future:\n\n' +
+        '  {"foo": "bar"}'
+      ));
+
+      const evilValue = {};
+      evilValue.__defineGetter__('name', () => { throw new Error });
+      evilValue.__defineGetter__('stack', () => { throw new Error });
+
+      eq(valueToError(evilValue), new Error(
+        'Something occurred while running a computation for a Future:\n\n' +
+        '  <The value which was thrown could not be converted to string>'
+      ));
+
     });
 
   });

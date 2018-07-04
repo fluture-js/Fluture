@@ -19,11 +19,7 @@ describe('cache()', function (){
   describe('#_interpret()', function (){
 
     it('crashes if the underlying computation crashes', function (){
-      return U.assertCrashed(cache(F.crashed), new Error(
-        'Error came up while Future.cache was running the cached Future:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future(function(){ throw new Error ("Intentional error for unit testing") })\n'
-      ));
+      return U.assertCrashed(cache(F.crashed), U.error);
     });
 
     it('resolves with the resolution value of the given Future', function (){
@@ -43,19 +39,9 @@ describe('cache()', function (){
 
     it('crashes all consumers once a delayed crash happens', function (){
       var m = cache(F.crashedSlow);
-      var e = new Error(
-        'Error came up while Future.cache was running the cached Future:\n' +
-        '  Error came up while interpreting a Future:\n' +
-        '    Intentional error for unit testing\n' +
-        '  \n' +
-        '    In: Future.after(20, null)' +
-        '.and(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n\n' +
-        '  In: Future.after(20, null)' +
-        '.and(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n'
-      );
-      var a = U.assertCrashed(m, e);
-      var b = U.assertCrashed(m, e);
-      var c = U.assertCrashed(m, e);
+      var a = U.assertCrashed(m, U.error);
+      var b = U.assertCrashed(m, U.error);
+      var c = U.assertCrashed(m, U.error);
       return Promise.all([a, b, c]);
     });
 
@@ -78,11 +64,7 @@ describe('cache()', function (){
     it('crashes all new consumers after a crash happened', function (){
       var m = cache(F.crashed);
       m._interpret(U.noop, U.noop, U.noop);
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future.cache was running the cached Future:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future(function(){ throw new Error ("Intentional error for unit testing") })\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('rejects all new consumers after a rejection happened', function (){

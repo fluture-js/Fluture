@@ -17,23 +17,11 @@ var testInstance = function (pap){
     describe('(Crashed, Resolved)', function (){
 
       it('crashes if left settles first', function (){
-        return U.assertCrashed(pap(F.crashed, mapf(F.resolvedSlow)), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.after(20, "resolvedSlow")' +
-          '.map(function (x){ return function (y){ return [x, y] } })' +
-          '._parallelAp(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n'
-        ));
+        return U.assertCrashed(pap(F.crashed, mapf(F.resolvedSlow)), U.error);
       });
 
       it('crashes if left settles last', function (){
-        return U.assertCrashed(pap(F.crashedSlow, mapf(F.resolved)), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.of("resolved")' +
-          '.map(function (x){ return function (y){ return [x, y] } })' +
-          '._parallelAp(Future.after(20, null).and(Future(function(){ throw new Error ("Intentional error for unit testing") })))\n'
-        ));
+        return U.assertCrashed(pap(F.crashedSlow, mapf(F.resolved)), U.error);
       });
 
     });
@@ -41,13 +29,7 @@ var testInstance = function (pap){
     describe('(Crashed, Rejected)', function (){
 
       it('crashes if left settles first', function (){
-        return U.assertCrashed(pap(F.crashed, mapf(F.rejectedSlow)), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.rejectAfter(20, "rejectedSlow")' +
-          '.map(function (x){ return function (y){ return [x, y] } })' +
-          '._parallelAp(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n'
-        ));
+        return U.assertCrashed(pap(F.crashed, mapf(F.rejectedSlow)), U.error);
       });
 
       it('rejects if left settles last', function (){
@@ -59,14 +41,7 @@ var testInstance = function (pap){
     describe('(Resolved, Crashed)', function (){
 
       it('crashes if left settles first', function (){
-        return U.assertCrashed(pap(F.resolved, mapf(F.crashedSlow)), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.after(20, null)' +
-          '.and(Future(function(){ throw new Error ("Intentional error for unit testing") }))' +
-          '.map(function (x){ return function (y){ return [x, y] } })' +
-          '._parallelAp(Future.of("resolved"))\n'
-        ));
+        return U.assertCrashed(pap(F.resolved, mapf(F.crashedSlow)), U.error);
       });
 
       it('crashes if left settles last', function (){
@@ -141,11 +116,9 @@ var testInstance = function (pap){
 
     it('crashes when the other does not resolve to a Function', function (){
       var m = pap(of(1), of(null));
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while interpreting a Future:\n' +
-        '  Future#ap expects its first argument to be a Future of a Function\n' +
-        '    Actual: Future.of(null)\n\n' +
-        '  In: Future.of(null)._parallelAp(Future.of(1))\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future#ap expects its first argument to be a Future of a Function\n' +
+        '  Actual: Future.of(null)'
       ));
     });
 

@@ -31,10 +31,7 @@ describe('ChainRec', function (){
 
     it('crashes if the iterator throws', function (){
       var m = Future.chainRec(function (){ throw U.error });
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future.chainRec was calling its iterator:\n' +
-        '  Intentional error for unit testing\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('does not break if the iteration does not contain a value key', function (){

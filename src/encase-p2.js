@@ -1,7 +1,7 @@
 import {Core} from './core';
 import {noop, show, showf, partial1, partial2} from './internal/fn';
 import {isThenable, isFunction} from './internal/is';
-import {someError, typeError} from './internal/error';
+import {typeError} from './internal/error';
 import {throwInvalidArgument} from './internal/throw';
 
 function invalidPromise(p, f, a, b){
@@ -26,11 +26,11 @@ EncaseP2.prototype._interpret = function EncaseP2$interpret(rec, rej, res){
   try{
     p = fn(a, b);
   }catch(e){
-    rec(someError('Future.encaseP2 was generating its Promise', e));
+    rec(e);
     return noop;
   }
   if(!isThenable(p)){
-    rec(someError('Future.encaseP2 was generating its Promise', invalidPromise(p, fn, a, b)));
+    rec(invalidPromise(p, fn, a, b));
     return noop;
   }
   p.then(function EncaseP2$res(x){

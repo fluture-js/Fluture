@@ -38,44 +38,32 @@ describe('hook()', function (){
 
     it('crashes when the first function does not return Future', function (){
       var m = hook(F.resolved, function (){ return 1 }, function (){ return F.resolved });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while trying to dispose resources for a hooked Future:\n' +
-        '  Future.hook expects the first function it\'s given to return a Future.\n' +
-        '    Actual: 1 :: Number\n' +
-        '    From calling: function (){ return 1 }\n' +
-        '    With: "resolved"\n\n' +
-        '  In: Future.hook(Future.of("resolved"), function (){ return 1 }, function (){ return F.resolved })\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future.hook expects the first function it\'s given to return a Future.\n' +
+        '  Actual: 1 :: Number\n' +
+        '  From calling: function (){ return 1 }\n' +
+        '  With: "resolved"'
       ));
     });
 
     it('crashes when the first function throws', function (){
       var m = hook(F.resolved, function (){ throw U.error }, function (){ return F.resolved });
-      return U.assertCrashed(m, new Error(
-        'Error came up while trying to dispose resources for a hooked Future:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future.hook(Future.of("resolved"), function (){ throw U.error }, function (){ return F.resolved })\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('crashes when the second function does not return Future', function (){
       var m = hook(F.resolved, function (){ return F.resolved }, function (){ return 1 });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while trying to consume resources for a hooked Future:\n' +
-        '  Future.hook expects the second function it\'s given to return a Future.\n' +
-        '    Actual: 1 :: Number\n' +
-        '    From calling: function (){ return 1 }\n' +
-        '    With: "resolved"\n\n' +
-        '  In: Future.hook(Future.of("resolved"), function (){ return F.resolved }, function (){ return 1 })\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future.hook expects the second function it\'s given to return a Future.\n' +
+        '  Actual: 1 :: Number\n' +
+        '  From calling: function (){ return 1 }\n' +
+        '  With: "resolved"'
       ));
     });
 
     it('crashes when the second function throws', function (){
       var m = hook(F.resolved, function (){ return F.resolved }, function (){ throw U.error });
-      return U.assertCrashed(m, new Error(
-        'Error came up while trying to consume resources for a hooked Future:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future.hook(Future.of("resolved"), function (){ return F.resolved }, function (){ throw U.error })\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('runs the first computation after the second, both with the resource', function (done){

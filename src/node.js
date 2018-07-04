@@ -2,7 +2,6 @@ import {Core} from './core';
 import {showf, noop} from './internal/fn';
 import {isFunction} from './internal/is';
 import {throwInvalidArgument} from './internal/throw';
-import {someError} from './internal/error';
 
 export function Node(fn){
   this._fn = fn;
@@ -26,7 +25,7 @@ Node.prototype._interpret = function Node$interpret(rec, rej, res){
       }
     });
   }catch(e){
-    rec(someError('Future.node was executing its operation', e));
+    rec(e);
     open = false;
     return noop;
   }

@@ -105,10 +105,7 @@ describe('EncaseN', function (){
 
       it('crashes when the function throws', function (){
         var m = node(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.node was executing its operation:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('rejects when the callback is called with (err)', function (){
@@ -146,10 +143,7 @@ describe('EncaseN', function (){
 
       it('crashes when the function throws', function (){
         var m = encaseN(function (){ throw U.error }, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseN was executing its operation:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('rejects when the callback is called with (err)', function (){
@@ -187,10 +181,7 @@ describe('EncaseN', function (){
 
       it('crashes when the function throws', function (){
         var m = encaseN2(function (){ throw U.error }, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseN2 was executing its operation:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('rejects when the callback is called with (err)', function (){
@@ -228,10 +219,7 @@ describe('EncaseN', function (){
 
       it('crashes when the function throws', function (){
         var m = encaseN3(function (){ throw U.error }, 1, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseN3 was executing its operation:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('rejects when the callback is called with (err)', function (){

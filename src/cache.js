@@ -1,7 +1,6 @@
 import {Core, isFuture} from './core';
-import {noop, show} from './internal/fn';
+import {noop} from './internal/fn';
 import {throwInvalidFuture} from './internal/throw';
-import {someError} from './internal/error';
 
 var Cold = Cached.Cold = 0;
 var Pending = Cached.Pending = 1;
@@ -71,7 +70,7 @@ Cached.prototype._drainQueue = function Cached$drainQueue(){
 
 Cached.prototype.crash = function Cached$crash(error){
   if(this._state > Pending) return;
-  this._value = someError('Future.cache was running the cached Future', error, show(this._pure));
+  this._value = error;
   this._state = Crashed;
   this._drainQueue();
 };

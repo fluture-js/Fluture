@@ -21,11 +21,7 @@ var testInstance = function (both){
       });
 
       it('crashes if left settles last', function (){
-        return U.assertCrashed(both(F.crashedSlow, F.resolved), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.after(20, null).and(Future(function(){ throw new Error ("Intentional error for unit testing") })).both(Future.of("resolved"))\n'
-        ));
+        return U.assertCrashed(both(F.crashedSlow, F.resolved), U.error);
       });
 
     });
@@ -33,9 +29,7 @@ var testInstance = function (both){
     describe('(Crashed, Rejected)', function (){
 
       it('crashes if left settles first', function (){
-        return U.assertCrashed(both(F.crashed, F.rejectedSlow), new Error(
-          'Intentional error for unit testing'
-        ));
+        return U.assertCrashed(both(F.crashed, F.rejectedSlow), U.error);
       });
 
       it('rejects if left settles last', function (){
@@ -47,22 +41,11 @@ var testInstance = function (both){
     describe('(Resolved, Crashed)', function (){
 
       it('crashes if left settles first', function (){
-        return U.assertCrashed(both(F.resolved, F.crashedSlow), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.after(20, null)' +
-          '.and(Future(function(){ throw new Error ("Intentional error for unit testing") }))' +
-          '.map(function Resolved$both$mapper(right){\n      return [left, right];\n    })\n'
-        ));
+        return U.assertCrashed(both(F.resolved, F.crashedSlow), U.error);
       });
 
       it('crashes if left settles last', function (){
-        return U.assertCrashed(both(F.resolvedSlow, F.crashed), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.after(20, "resolvedSlow")' +
-          '.both(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n'
-        ));
+        return U.assertCrashed(both(F.resolvedSlow, F.crashed), U.error);
       });
 
     });
@@ -74,12 +57,7 @@ var testInstance = function (both){
       });
 
       it('crashes if left settles last', function (){
-        return U.assertCrashed(both(F.rejectedSlow, F.crashed), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.rejectAfter(20, "rejectedSlow")' +
-          '.both(Future(function(){ throw new Error ("Intentional error for unit testing") }))\n'
-        ));
+        return U.assertCrashed(both(F.rejectedSlow, F.crashed), U.error);
       });
 
     });

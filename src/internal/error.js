@@ -1,4 +1,4 @@
-import {show} from './fn';
+import {show, indent} from './fn';
 import {ordinal, namespace, name, version} from './const';
 import type from 'sanctuary-type-identifiers';
 
@@ -54,23 +54,23 @@ export function invalidFuture(it, at, m, s){
   );
 }
 
-function indent(s){
-  return '  ' + s;
-}
-
-export function someError(action, e, s){
-  var context = typeof s === 'string' ? '\n\n  In: ' + s : '';
+export function valueToError(x){
+  var name, message;
   try{
-    var name = e && e.name ? String(e.name) : 'An error';
-    var errorMessage = (
-      e && e.message ? String(e.message) :
-      e && typeof e.toString === 'function' ? e.toString() :
-      String(e)
-    );
-    var message = errorMessage.trim().split('\n').map(indent).join('\n');
-    return error(name + ' came up while ' + action + ':\n' + message + context + '\n');
-  }catch(_){
-    return error('Something came up while ' + action + ', ' +
-                 'but it could not be converted to string' + context + '\n');
+    if(x && typeof x.name === 'string' && typeof x.message === 'string'){
+      name = x.name;
+      message = x.message;
+    }else{
+      name = 'Non-Error';
+      message = show(x);
+    }
+  }catch (_){
+    name = 'Something';
+    message = '<The value which was thrown could not be converted to string>';
   }
+  var e = error(
+    name + ' occurred while running a computation for a Future:\n\n' +
+    message.split('\n').map(indent).join('\n')
+  );
+  return e;
 }

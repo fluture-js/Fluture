@@ -42,20 +42,14 @@ describe('Computation', function (){
 
     it('crashes when the computation throws an error', function (){
       var m = Future(function (){ throw U.error });
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future was running its computation:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future(function (){ throw U.error })\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('crashes when the computation returns nonsense', function (){
       var m = Future(function (){ return 1 });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while Future ran its computation:\n' +
-        '  The computation was expected to return a nullary function or void\n' +
-        '    Actual: 1\n\n' +
-        '  In: Future(function (){ return 1 })\n'
+      return U.assertCrashed(m, new TypeError(
+        'The computation was expected to return a nullary function or void\n' +
+        '  Actual: 1'
       ));
     });
 

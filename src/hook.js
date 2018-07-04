@@ -3,7 +3,7 @@
 import {Core, isFuture} from './core';
 import {noop, show, showf, partial1, partial2} from './internal/fn';
 import {isFunction} from './internal/is';
-import {invalidFuture, someError} from './internal/error';
+import {invalidFuture} from './internal/error';
 import {throwInvalidArgument, throwInvalidFuture} from './internal/throw';
 
 function invalidDisposal(m, f, x){
@@ -34,7 +34,7 @@ Hook.prototype = Object.create(Core);
 
 Hook.prototype._interpret = function Hook$interpret(rec, rej, res){
 
-  var _this = this, _acquire = this._acquire, _dispose = this._dispose, _consume = this._consume;
+  var _acquire = this._acquire, _dispose = this._dispose, _consume = this._consume;
   var cancel, cancelConsume = noop, resource, value, cont = noop;
 
   function Hook$done(){
@@ -51,11 +51,7 @@ Hook.prototype._interpret = function Hook$interpret(rec, rej, res){
     rej = noop;
     rec = noop;
     Hook$dispose();
-    rec_(someError('trying to consume resources for a hooked Future', e, _this.toString()));
-  }
-
-  function Hook$disposalException(e){
-    rec(someError('trying to dispose resources for a hooked Future', e, _this.toString()));
+    rec_(e);
   }
 
   function Hook$dispose(){
@@ -63,12 +59,12 @@ Hook.prototype._interpret = function Hook$interpret(rec, rej, res){
     try{
       disposal = _dispose(resource);
     }catch(e){
-      return Hook$disposalException(e);
+      return rec(e);
     }
     if(!isFuture(disposal)){
-      return Hook$disposalException(invalidDisposal(disposal, _dispose, resource));
+      return rec(invalidDisposal(disposal, _dispose, resource));
     }
-    disposal._interpret(Hook$disposalException, Hook$reject, Hook$done);
+    disposal._interpret(rec, Hook$reject, Hook$done);
     cancel = Hook$cancelDisposal;
   }
 

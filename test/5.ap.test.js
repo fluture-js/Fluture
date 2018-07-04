@@ -15,11 +15,9 @@ var testInstance = function (ap){
 
     it('crashes when the other does not resolve to a Function', function (){
       var m = ap(of(1), of(null));
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while interpreting a Future:\n' +
-        '  Future#ap expects its first argument to be a Future of a Function\n' +
-        '    Actual: Future.of(null)\n\n' +
-        '  In: Future.of(null).ap(Future.of(1))\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future#ap expects its first argument to be a Future of a Function\n' +
+        '  Actual: Future.of(null)'
       ));
     });
 

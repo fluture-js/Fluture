@@ -2,7 +2,6 @@ import {Core} from './core';
 import {show, showf, partial1, partial2, partial3, noop} from './internal/fn';
 import {isFunction} from './internal/is';
 import {throwInvalidArgument} from './internal/throw';
-import {someError} from './internal/error';
 
 export function EncaseN3(fn, a, b, c){
   this._fn = fn;
@@ -29,7 +28,7 @@ EncaseN3.prototype._interpret = function EncaseN3$interpret(rec, rej, res){
       }
     });
   }catch(e){
-    rec(someError('Future.encaseN3 was executing its operation', e));
+    rec(e);
     open = false;
     return noop;
   }

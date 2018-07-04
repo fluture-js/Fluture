@@ -64,11 +64,9 @@ describe('Par()', function (){
 
     it('throws TypeError when the Future does not resolve to a Function', function (){
       var m = seq(ap(Par(of(1)), Par(F.resolved)));
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while interpreting a Future:\n' +
-        '  Future#ap expects its first argument to be a Future of a Function\n' +
-        '    Actual: Future.of(1)\n\n' +
-        '  In: Future.of(1)._parallelAp(Future.of("resolved"))\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future#ap expects its first argument to be a Future of a Function\n' +
+        '  Actual: Future.of(1)'
       ));
     });
 

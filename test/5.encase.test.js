@@ -115,11 +115,7 @@ describe('Encase', function (){
 
       it('does not swallow errors from subsequent maps and such', function (){
         var m = attempt(function (x){ return x }).map(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.try(function (x){ return x }).map(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
     });
@@ -138,11 +134,7 @@ describe('Encase', function (){
 
       it('does not swallow errors from subsequent maps and such', function (){
         var m = encase(function (x){ return x }, 1).map(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.encase(function (x){ return x }, 1).map(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
     });
@@ -161,11 +153,7 @@ describe('Encase', function (){
 
       it('does not swallow errors from subsequent maps and such', function (){
         var m = encase2(function (x){ return x }, 1, 1).map(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.encase2(function (x){ return x }, 1, 1).map(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
     });
@@ -184,11 +172,7 @@ describe('Encase', function (){
 
       it('does not swallow errors from subsequent maps and such', function (){
         var m = encase3(function (x){ return x }, 1, 1, 1).map(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.encase3(function (x){ return x }, 1, 1, 1).map(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
     });

@@ -231,7 +231,10 @@ describe('Future', function (){
       var mock = Object.create(F.mock);
       mock._interpret = function (rec){ rec(U.error) };
       var f = function (){ return mock.fork(U.noop, U.noop) };
-      expect(f).to.throw(U.error);
+      expect(f).to.throw(Error, (
+        'Error occurred while running a computation for a Future:\n\n' +
+        '  Intentional error for unit testing'
+      ));
     });
 
     it('dispatches to #_interpret()', function (done){

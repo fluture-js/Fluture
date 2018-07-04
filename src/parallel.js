@@ -1,6 +1,4 @@
 import {Core, Resolved, isFuture} from './core';
-import {ordinal} from './internal/const';
-import {someError} from './internal/error';
 import {throwInvalidFuture, throwInvalidArgument} from './internal/throw';
 import {noop, show, partial1} from './internal/fn';
 import {isUnsigned, isArray} from './internal/is';
@@ -29,12 +27,7 @@ Parallel.prototype._interpret = function Parallel$interpret(rec, rej, res){
     cancels[idx] = _futures[idx]._interpret(function Parallel$rec(e){
       cancels[idx] = noop;
       Parallel$cancel();
-      rec(someError(
-        'Future.parallel was running ' +
-        (ordinal[idx] ? 'the ' + ordinal[idx] + ' future' : 'future ' + (idx + 1)),
-        e,
-        _futures[idx].toString()
-      ));
+      rec(e);
     }, function Parallel$rej(reason){
       cancels[idx] = noop;
       Parallel$cancel();

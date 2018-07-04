@@ -41,11 +41,7 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the mapper throws', function (){
-        return assertCrashed(dummy.map(throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.of("resolved").map(function (){ throw error })\n'
-        ));
+        return assertCrashed(dummy.map(throwing), error);
       });
 
       it('runs the action', function (){
@@ -71,19 +67,11 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the left mapper throws', function (){
-        return assertCrashed(rejectedDummy.bimap(throwing, noop), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.reject("rejected").bimap(function (){ throw error }, function (){})\n'
-        ));
+        return assertCrashed(rejectedDummy.bimap(throwing, noop), error);
       });
 
       it('crashes if the right mapper throws', function (){
-        return assertCrashed(dummy.bimap(noop, throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.of("resolved").bimap(function (){}, function (){ throw error })\n'
-        ));
+        return assertCrashed(dummy.bimap(noop, throwing), error);
       });
 
       it('runs the action', function (){
@@ -109,11 +97,7 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the mapper throws', function (){
-        return assertCrashed(dummy.chain(throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.of("resolved").chain(function (){ throw error })\n'
-        ));
+        return assertCrashed(dummy.chain(throwing), error);
       });
 
       it('runs the action', function (){
@@ -139,11 +123,7 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the mapper throws', function (){
-        return assertCrashed(rejectedDummy.mapRej(throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.reject("rejected").mapRej(function (){ throw error })\n'
-        ));
+        return assertCrashed(rejectedDummy.mapRej(throwing), error);
       });
 
       it('runs the action', function (){
@@ -169,11 +149,7 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the mapper throws', function (){
-        return assertCrashed(rejectedDummy.chainRej(throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.reject("rejected").chainRej(function (){ throw error })\n'
-        ));
+        return assertCrashed(rejectedDummy.chainRej(throwing), error);
       });
 
       it('runs the action', function (){
@@ -341,19 +317,11 @@ describe('Sequence', function (){
     describe('#_interpret()', function (){
 
       it('crashes if the left mapper throws', function (){
-        return assertCrashed(rejectedDummy.fold(throwing, noop), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.reject("rejected").fold(function (){ throw error }, function (){})\n'
-        ));
+        return assertCrashed(rejectedDummy.fold(throwing, noop), error);
       });
 
       it('crashes if the right mapper throws', function (){
-        return assertCrashed(dummy.fold(noop, throwing), new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.of("resolved").fold(function (){}, function (){ throw error })\n'
-        ));
+        return assertCrashed(dummy.fold(noop, throwing), error);
       });
 
       it('runs the action', function (){

@@ -2,7 +2,6 @@
 
 import Denque from 'denque';
 import {noop} from './fn';
-import {someError} from './error';
 import {nil, cons} from './list';
 
 export default function interpretSequence(seq, rec, rej, res){
@@ -99,7 +98,7 @@ export default function interpretSequence(seq, rec, rej, res){
   //This function is called when an exception is caught.
   function exception(e){
     Sequence$cancel();
-    rec(someError('interpreting a Future', e, seq.toString()));
+    rec(e);
   }
 
   //This function serves to kickstart concurrent computations.

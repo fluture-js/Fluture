@@ -2,7 +2,6 @@ import {Core} from './core';
 import {Next, Done} from './internal/iteration';
 import {Undetermined, Synchronous, Asynchronous} from './internal/timing';
 import {show, showf, noop} from './internal/fn';
-import {someError} from './internal/error';
 
 export function ChainRec(step, init){
   this._step = step;
@@ -29,7 +28,7 @@ ChainRec.prototype._interpret = function ChainRec$interpret(rec, rej, res){
       try{
         var m = _step(Next, Done, state.value);
       }catch(e){
-        rec(someError('Future.chainRec was calling its iterator', e));
+        rec(e);
         return;
       }
 

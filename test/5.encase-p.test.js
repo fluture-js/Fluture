@@ -108,19 +108,15 @@ describe('EncaseP', function (){
 
       it('crashes when the Promise generator throws', function (){
         var m = tryP(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.tryP was generating its Promise:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('crashes when the Promise generator does not return a Promise', function (){
         var m = tryP(U.noop);
-        return U.assertCrashed(m, new Error(
-          'TypeError came up while Future.tryP was generating its Promise:\n' +
-          '  Future.tryP expects the function it\'s given to return a Promise/Thenable\n' +
-          '    Actual: undefined\n' +
-          '    From calling: function (){}\n'
+        return U.assertCrashed(m, new TypeError(
+          'Future.tryP expects the function it\'s given to return a Promise/Thenable\n' +
+          '  Actual: undefined\n' +
+          '  From calling: function (){}'
         ));
       });
 
@@ -148,20 +144,12 @@ describe('EncaseP', function (){
 
       it('crashes with errors that occur in rejection continuation', function (){
         var m = tryP(function (){ return Promise.resolve(1) }).map(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.tryP(function (){ return Promise.resolve(1) }).map(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('crashes with errors that occur in resolution continuation', function (){
         var m = tryP(function (){ return Promise.reject(1) }).mapRej(function (){ throw U.error });
-        return U.assertCrashed(m, new Error(
-          'Error came up while interpreting a Future:\n' +
-          '  Intentional error for unit testing\n\n' +
-          '  In: Future.tryP(function (){ return Promise.reject(1) }).mapRej(function (){ throw U.error })\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
     });
@@ -170,20 +158,16 @@ describe('EncaseP', function (){
 
       it('crashes when the Promise generator throws', function (){
         var m = encaseP(function (){ throw U.error }, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseP was generating its Promise:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('crashes when the Promise generator does not return a Promise', function (){
         var m = encaseP(U.noop, 1);
-        return U.assertCrashed(m, new Error(
-          'TypeError came up while Future.encaseP was generating its Promise:\n' +
-          '  Future.encaseP expects the function it\'s given to return a Promise/Thenable\n' +
-          '    Actual: undefined\n' +
-          '    From calling: function (){}\n' +
-          '    With: 1\n'
+        return U.assertCrashed(m, new TypeError(
+          'Future.encaseP expects the function it\'s given to return a Promise/Thenable\n' +
+          '  Actual: undefined\n' +
+          '  From calling: function (){}\n' +
+          '  With: 1'
         ));
       });
 
@@ -215,21 +199,17 @@ describe('EncaseP', function (){
 
       it('crashes when the Promise generator throws', function (){
         var m = encaseP2(function (){ throw U.error }, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseP2 was generating its Promise:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('crashes when the Promise generator does not return a Promise', function (){
         var m = encaseP2(U.noop, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'TypeError came up while Future.encaseP2 was generating its Promise:\n' +
-          '  Future.encaseP2 expects the function it\'s given to return a Promise/Thenable\n' +
-          '    Actual: undefined\n' +
-          '    From calling: function (){}\n' +
-          '    With 1: 1\n' +
-          '    With 2: 1\n'
+        return U.assertCrashed(m, new TypeError(
+          'Future.encaseP2 expects the function it\'s given to return a Promise/Thenable\n' +
+          '  Actual: undefined\n' +
+          '  From calling: function (){}\n' +
+          '  With 1: 1\n' +
+          '  With 2: 1'
         ));
       });
 
@@ -261,22 +241,18 @@ describe('EncaseP', function (){
 
       it('crashes when the Promise generator throws', function (){
         var m = encaseP3(function (){ throw U.error }, 1, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'Error came up while Future.encaseP3 was generating its Promise:\n' +
-          '  Intentional error for unit testing\n'
-        ));
+        return U.assertCrashed(m, U.error);
       });
 
       it('crashes when the Promise generator does not return a Promise', function (){
         var m = encaseP3(U.noop, 1, 1, 1);
-        return U.assertCrashed(m, new Error(
-          'TypeError came up while Future.encaseP3 was generating its Promise:\n' +
-          '  Future.encaseP3 expects the function it\'s given to return a Promise/Thenable\n' +
-          '    Actual: undefined\n' +
-          '    From calling: function (){}\n' +
-          '    With 1: 1\n' +
-          '    With 2: 1\n' +
-          '    With 3: 1\n'
+        return U.assertCrashed(m, new TypeError(
+          'Future.encaseP3 expects the function it\'s given to return a Promise/Thenable\n' +
+          '  Actual: undefined\n' +
+          '  From calling: function (){}\n' +
+          '  With 1: 1\n' +
+          '  With 2: 1\n' +
+          '  With 3: 1'
         ));
       });
 

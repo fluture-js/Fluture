@@ -4,7 +4,7 @@ import {FL, $$type} from './internal/const';
 import interpret from './internal/interpreter';
 import {nil, cons} from './internal/list';
 import type from 'sanctuary-type-identifiers';
-import {error, typeError, invalidFuture, someError} from './internal/error';
+import {error, typeError, invalidFuture, valueToError} from './internal/error';
 import {throwInvalidArgument, throwInvalidContext, throwInvalidFuture} from './internal/throw';
 
 function Future$value$rej(x){
@@ -12,6 +12,10 @@ function Future$value$rej(x){
     'Future#value was called on a rejected Future\n' +
     '  Actual: Future.reject(' + show(x) + ')'
   ));
+}
+
+function Future$onCrash(x){
+  raise(valueToError(x));
 }
 
 export function Future(computation){
@@ -134,19 +138,19 @@ Future.prototype.fork = function Future$fork(rej, res){
   if(!isFuture(this)) throwInvalidContext('Future#fork', this);
   if(!isFunction(rej)) throwInvalidArgument('Future#fork', 0, 'to be a Function', rej);
   if(!isFunction(res)) throwInvalidArgument('Future#fork', 1, 'to be a Function', res);
-  return this._interpret(raise, rej, res);
+  return this._interpret(Future$onCrash, rej, res);
 };
 
 Future.prototype.value = function Future$value(res){
   if(!isFuture(this)) throwInvalidContext('Future#value', this);
   if(!isFunction(res)) throwInvalidArgument('Future#value', 0, 'to be a Function', res);
-  return this._interpret(raise, Future$value$rej, res);
+  return this._interpret(Future$onCrash, Future$value$rej, res);
 };
 
 Future.prototype.done = function Future$done(callback){
   if(!isFuture(this)) throwInvalidContext('Future#done', this);
   if(!isFunction(callback)) throwInvalidArgument('Future#done', 0, 'to be a Function', callback);
-  return this._interpret(raise,
+  return this._interpret(Future$onCrash,
                          function Future$done$rej(x){ callback(x) },
                          function Future$done$res(x){ callback(null, x) });
 };
@@ -154,7 +158,7 @@ Future.prototype.done = function Future$done(callback){
 Future.prototype.promise = function Future$promise(){
   var _this = this;
   return new Promise(function Future$promise$computation(res, rej){
-    _this._interpret(raise, rej, res);
+    _this._interpret(Future$onCrash, rej, res);
   });
 };
 
@@ -264,14 +268,14 @@ Computation.prototype._interpret = function Computation$interpret(rec, rej, res)
     }) || noop;
   }catch(e){
     open = false;
-    rec(someError('Future was running its computation', e, show(this)));
+    rec(e);
     return noop;
   }
   if(!(isFunction(cancel) && cancel.length === 0)){
-    rec(someError('Future ran its computation', typeError(
+    rec(typeError(
       'The computation was expected to return a nullary function or void\n' +
       '  Actual: ' + show(cancel)
-    ), show(this)));
+    ));
   }
   cont();
   return function Computation$cancel(){
@@ -446,10 +450,6 @@ Crashed.prototype._race = moop;
 Crashed.prototype._interpret = function Crashed$interpret(rec){
   rec(this._error);
   return noop;
-};
-
-Crashed.prototype.toString = function Crashed$toString(){
-  return 'Future(function(){ throw ' + show(this._error) + ' })';
 };
 
 function Eager(future){

@@ -19,57 +19,42 @@ describe('Go', function (){
 
     it('crashes when the given function throws an error', function (){
       var m = go(function (){ throw U.error });
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future.do was spawning an iterator:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: function (){ throw U.error }\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('crashes when the given function does not return an interator', function (){
       var m = go(function (){ return null });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while Future.do about to consume the created iterator:\n' +
-        '  Future.do expects its first argument to return an iterator, maybe you forgot the "*"\n' +
-        '    Actual: null\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future.do expects its first argument to return an iterator, maybe you forgot the "*"\n' +
+        '  Actual: null'
       ));
     });
 
     it('crashes when iterator.next() throws an error', function (){
       var m = go(function (){ return {next: function (){ throw U.error }} });
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future.do was passing control to the iterator:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: function (){ throw U.error }\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('crashes when the returned iterator does not return a valid iteration', function (){
       var m = go(function (){ return {next: function (){ return null }} });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while Future.do was obtaining the next Future:\n' +
-        '  The iterator did not return a valid iteration from iterator.next()\n' +
-        '    Actual: null\n'
+      return U.assertCrashed(m, new TypeError(
+        'The iterator did not return a valid iteration from iterator.next()\n' +
+        '  Actual: null'
       ));
     });
 
     it('crashes when the returned iterator produces something other than a Future', function (){
       var m = go(function (){ return {next: function (){ return {done: false, value: null} }} });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while Future.do was about to consume the next Future:\n' +
-        '  Future.do expects the iterator to produce only valid Futures.\n' +
-        '    Actual: null :: Null\n' +
-        '    Tip: If you\'re using a generator, make sure you always yield a Future\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future.do expects the iterator to produce only valid Futures.\n' +
+        '  Actual: null :: Null\n' +
+        '  Tip: If you\'re using a generator, make sure you always yield a Future'
       ));
     });
 
     it('crashes when the yielded Future crashes', function (){
       var m = go(function*(){ yield F.crashed });
-      return U.assertCrashed(m, new Error(
-        'Error came up while Future.do was consuming a generated Future:\n' +
-        '  Intentional error for unit testing\n\n' +
-        '  In: Future(function(){ throw new Error ("Intentional error for unit testing") })\n'
-      ));
+      return U.assertCrashed(m, U.error);
     });
 
     it('handles synchronous Futures', function (){

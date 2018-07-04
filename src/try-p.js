@@ -1,7 +1,7 @@
 import {Core} from './core';
 import {noop, show, showf} from './internal/fn';
 import {isThenable, isFunction} from './internal/is';
-import {typeError, someError} from './internal/error';
+import {typeError} from './internal/error';
 import {throwInvalidArgument} from './internal/throw';
 
 function invalidPromise(p, f){
@@ -22,11 +22,11 @@ TryP.prototype._interpret = function TryP$interpret(rec, rej, res){
   try{
     p = fn();
   }catch(e){
-    rec(someError('Future.tryP was generating its Promise', e));
+    rec(e);
     return noop;
   }
   if(!isThenable(p)){
-    rec(someError('Future.tryP was generating its Promise', invalidPromise(p, fn)));
+    rec(invalidPromise(p, fn));
     return noop;
   }
   p.then(function TryP$res(x){

@@ -14,13 +14,11 @@ var testInstance = function (chain){
 
     it('throws TypeError when the given function does not return Future', function (){
       var m = chain(F.resolved, function (){ return null });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while interpreting a Future:\n' +
-        '  Future#chain expects the function it\'s given to return a Future.\n' +
-        '    Actual: null :: Null\n' +
-        '    From calling: function (){ return null }\n' +
-        '    With: "resolved"\n\n' +
-        '  In: Future.of("resolved").chain(function (){ return null })\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future#chain expects the function it\'s given to return a Future.\n' +
+        '  Actual: null :: Null\n' +
+        '  From calling: function (){ return null }\n' +
+        '  With: "resolved"'
       ));
     });
 

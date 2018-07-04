@@ -14,13 +14,11 @@ var testInstance = function (chainRej){
 
     it('crashes when the given function does not return Future', function (){
       var m = chainRej(F.rejected, function (){ return null });
-      return U.assertCrashed(m, new Error(
-        'TypeError came up while interpreting a Future:\n' +
-        '  Future#chainRej expects the function it\'s given to return a Future.\n' +
-        '    Actual: null :: Null\n' +
-        '    From calling: function (){ return null }\n' +
-        '    With: "rejected"\n\n' +
-        '  In: Future.reject("rejected").chainRej(function (){ return null })\n'
+      return U.assertCrashed(m, new TypeError(
+        'Future#chainRej expects the function it\'s given to return a Future.\n' +
+        '  Actual: null :: Null\n' +
+        '  From calling: function (){ return null }\n' +
+        '  With: "rejected"'
       ));
     });
 
