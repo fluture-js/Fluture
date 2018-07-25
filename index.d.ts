@@ -1,5 +1,9 @@
 declare module 'fluture' {
 
+  export interface RecoverFunction {
+    (exception: Error): void
+  }
+
   export interface RejectFunction<L> {
     (error: L): void
   }
@@ -91,6 +95,9 @@ declare module 'fluture' {
 
     /** Fork the Future into the two given continuations. See https://github.com/fluture-js/Fluture#fork */
     fork(reject: RejectFunction<L>, resolve: ResolveFunction<R>): Cancel
+
+    /** Fork with exception recovery. See https://github.com/fluture-js/Fluture#forkCatch */
+    forkCatch(recover: RecoverFunction, reject: RejectFunction<L>, resolve: ResolveFunction<R>): Cancel
 
     /** Set up a cleanup Future to run after this one is done. See https://github.com/fluture-js/Fluture#finally */
     lastly(cleanup: Future<L, any>): Future<L, R>
@@ -226,6 +233,12 @@ declare module 'fluture' {
   export function fork<L, R>(reject: RejectFunction<L>, resolve: ResolveFunction<R>, source: Future<L, R>): Cancel
   export function fork<L, R>(reject: RejectFunction<L>, resolve: ResolveFunction<R>): (source: Future<L, R>) => Cancel
   export function fork<L, R>(reject: RejectFunction<L>): AwaitingTwo<ResolveFunction<R>, Future<L, R>, Cancel>
+
+  /** Fork with exception recovery. See https://github.com/fluture-js/Fluture#forkCatch */
+  export function forkCatch<L, R>(recover: RecoverFunction, reject: RejectFunction<L>, resolve: ResolveFunction<R>, source: Future<L, R>): Cancel
+  export function forkCatch<L, R>(recover: RecoverFunction, reject: RejectFunction<L>, resolve: ResolveFunction<R>): (source: Future<L, R>) => Cancel
+  export function forkCatch<L, R>(recover: RecoverFunction, reject: RejectFunction<L>): AwaitingTwo<ResolveFunction<R>, Future<L, R>, Cancel>
+  export function forkCatch<L, R>(recover: RecoverFunction): AwaitingThree<RejectFunction<L>, ResolveFunction<R>, Future<L, R>, Cancel>
 
   /** Build a coroutine using Futures. See https://github.com/fluture-js/Fluture#go */
   export function go<L, R>(generator: Generator<Future<L, any>, R>): Future<L, R>

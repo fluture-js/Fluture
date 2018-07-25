@@ -171,6 +171,7 @@ sponsoring the project.
 <details><summary>Consuming/forking Futures</summary>
 
 - [`fork`: Standard way to run a Future and get at its result](#fork)
+- [`forkCatch`: Fork with exception recovery](#forkcatch)
 - [`value`: Shorter variant of `fork` for Futures sure to succeed](#value)
 - [`done`: Nodeback style `fork`](#done)
 - [`promise`: Convert a Future to a Promise](#promise)
@@ -1016,6 +1017,37 @@ var fut = Future.after(300, 'hello');
 var cancel = fut.fork(console.error, console.log);
 cancel();
 //Nothing will happen. The Future was cancelled before it could settle.
+```
+#### forkCatch
+
+<details><summary><code>forkCatch :: (Error -> Any) -> (a -> Any) -> (b -> Any) -> Future a b -> Cancel</code></summary>
+
+```hs
+forkCatch                  ::               (Error -> Any) -> (a -> Any) -> (b -> Any) -> Future a b -> Cancel
+Future.prototype.forkCatch :: Future a b ~> (Error -> Any,     a -> Any,     b -> Any)               -> Cancel
+```
+
+</details>
+
+An advanced version of [fork](#fork) that allows you to recover from exceptions
+that were thrown during the executation of the computation.
+
+**Using this function is a trade-off;**
+
+Generally it's best to let a program crash and restart when an unexpected
+exception occurs. Restarting is the surest way to restore the memory that was
+allocated by the program to an expected state.
+
+By using `forkCatch`, you might be able to keep your program alive longer,
+which can be very beneficial when the program is being used by multiple
+clients. However, you also forego the certainty that your program will be in a
+valid state after this happens. The more isolated the memory consumed by the
+particular computation was, the more certain you will be that recovery is safe.
+
+```js
+var fut = Future.after(300, null).map(x => x.foo);
+fut.forkCatch(console.error, console.error, console.log);
+//! TypeError: Cannot read property 'foo' of null
 ```
 
 #### value

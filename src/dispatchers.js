@@ -18,6 +18,7 @@ export {fold} from './dispatchers/fold';
 
 export {done} from './dispatchers/done';
 export {fork} from './dispatchers/fork';
+export {forkCatch} from './dispatchers/fork-catch';
 export {promise} from './dispatchers/promise';
 export {value} from './dispatchers/value';
 

@@ -6,6 +6,7 @@ import {
   Future,
   isFuture,
   fork,
+  forkCatch,
   value,
   done,
   promise,
@@ -73,6 +74,57 @@ describe('Future', function (){
       };
 
       fork(a, b, mock);
+    });
+
+  });
+
+  describe('.forkCatch()', function (){
+
+    it('is a curried quaternary function', function (){
+      expect(forkCatch).to.be.a('function');
+      expect(forkCatch.length).to.equal(4);
+      expect(forkCatch(U.noop)).to.be.a('function');
+      expect(forkCatch(U.noop, U.noop)).to.be.a('function');
+      expect(forkCatch(U.noop)(U.noop)).to.be.a('function');
+      expect(forkCatch(U.noop)(U.noop, U.noop)).to.be.a('function');
+      expect(forkCatch(U.noop, U.noop)(U.noop)).to.be.a('function');
+      expect(forkCatch(U.noop)(U.noop)(U.noop)).to.be.a('function');
+    });
+
+    it('throws when not given a Function as first argument', function (){
+      var f = function (){ return forkCatch(1) };
+      expect(f).to.throw(TypeError, /Future.*first/);
+    });
+
+    it('throws when not given a Function as second argument', function (){
+      var f = function (){ return forkCatch(U.add(1), 1) };
+      expect(f).to.throw(TypeError, /Future.*second/);
+    });
+
+    it('throws when not given a Function as third argument', function (){
+      var f = function (){ return forkCatch(U.add(1), U.add(1), 1) };
+      expect(f).to.throw(TypeError, /Future.*third/);
+    });
+
+    it('throws when not given a Future as fourth argument', function (){
+      var f = function (){ return forkCatch(U.add(1), U.add(1), U.add(1), 1) };
+      expect(f).to.throw(TypeError, /Future.*fourth/);
+    });
+
+    it('dispatches to #_interpret()', function (done){
+      var a = function (){};
+      var b = function (){};
+      var c = function (){};
+      var mock = Object.create(F.mock);
+
+      mock._interpret = function (rec, rej, res){
+        expect(rec).to.equal(a);
+        expect(rej).to.equal(b);
+        expect(res).to.equal(c);
+        done();
+      };
+
+      forkCatch(a, b, c, mock);
     });
 
   });
@@ -250,6 +302,56 @@ describe('Future', function (){
       };
 
       mock.fork(a, b);
+    });
+
+  });
+
+  describe('#forkCatch()', function (){
+
+    it('throws when invoked out of context', function (){
+      var f = function (){ return Future.prototype.forkCatch.call(null, U.noop, U.noop, U.noop) };
+      expect(f).to.throw(TypeError, /Future/);
+    });
+
+    it('throws TypeError when first argument is not a function', function (){
+      var xs = [NaN, {}, [], 1, 'a', new Date, undefined, null];
+      var fs = xs.map(function (x){ return function (){ return F.mock.forkCatch(x, U.noop) } });
+      fs.forEach(function (f){ return expect(f).to.throw(TypeError, /Future/) });
+    });
+
+    it('throws TypeError when second argument is not a function', function (){
+      var xs = [NaN, {}, [], 1, 'a', new Date, undefined, null];
+      var fs = xs.map(function (x){ return function (){ return F.mock.forkCatch(U.noop, x) } });
+      fs.forEach(function (f){ return expect(f).to.throw(TypeError, /Future/) });
+    });
+
+    it('throws TypeError when third argument is not a function', function (){
+      var xs = [NaN, {}, [], 1, 'a', new Date, undefined, null];
+      var fs = xs.map(function (x){ return function (){ return F.mock.forkCatch(U.noop, U.noop, x) } });
+      fs.forEach(function (f){ return expect(f).to.throw(TypeError, /Future/) });
+    });
+
+    it('does not throw when all arguments are functions', function (){
+      var mock = Object.create(F.mock);
+      mock._interpret = U.noop;
+      var f = function (){ return mock.forkCatch(U.noop, U.noop, U.noop) };
+      expect(f).to.not.throw();
+    });
+
+    it('dispatches to #_interpret()', function (done){
+      var a = function (){};
+      var b = function (){};
+      var c = function (){};
+      var mock = Object.create(F.mock);
+
+      mock._interpret = function (rec, rej, res){
+        expect(rec).to.equal(a);
+        expect(rej).to.equal(b);
+        expect(res).to.equal(c);
+        done();
+      };
+
+      mock.forkCatch(a, b, c);
     });
 
   });
