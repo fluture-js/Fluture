@@ -6,6 +6,7 @@ export {chain} from './chain';
 
 export {mapRej} from './map-rej';
 export {chainRej} from './chain-rej';
+export {assume} from './assume';
 
 export {and} from './and';
 export {both} from './both';

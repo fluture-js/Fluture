@@ -616,6 +616,11 @@ defineBimapperAction('fold', {
   rejected: function FoldAction$rejected(x){ return mapWith(this.lmapper, resolve, x) }
 });
 
+defineOtherAction('assume', {
+  rejected: returnOther,
+  resolved: returnOther
+});
+
 defineOtherAction('and', {
   resolved: returnOther
 });

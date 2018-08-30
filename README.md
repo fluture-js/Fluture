@@ -179,6 +179,7 @@ for sponsoring the project.
 - [`ap`: Combine the success values of multiple Futures using a function](#ap)
 - [`and`: Logical *and* for Futures](#and)
 - [`or`: Logical *or* for Futures](#or)
+- [`assume`: Continue with another Future after the previous settles](#assume)
 - [`race`: Race two Futures against each other](#race)
 - [`both`: Await both success values from two Futures](#both)
 - [`parallel`: Await all success values from many Futures](#parallel)
@@ -1035,7 +1036,7 @@ Returns a new Future which either rejects with the first rejection reason, or
 resolves with the last resolution value once and if both Futures resolve. We
 can use it if we want a computation to run only after another has succeeded.
 
-See also [`or`](#or).
+See also [`or`](#or) and [`assume`](#assume).
 
 ```js
 Future.after(300, null)
@@ -1071,7 +1072,7 @@ Returns a new Future which either resolves with the first resolution value, or
 rejects with the last rejection value once and if both Futures reject. We can
 use it if we want a computation to run only if another has failed.
 
-See also [`and`](#and).
+See also [`and`](#and) and [`assume`](#assume).
 
 ```js
 Future.rejectAfter(300, new Error('Failed'))
@@ -1088,6 +1089,47 @@ to reject.
 var any = ms => ms.reduce(Future.or, Future.reject('empty list'));
 any([Future.reject(1), Future.after(20, 2), Future.of(3)]).value(console.log);
 //> 2
+```
+
+#### assume
+
+<details><summary><code>assume :: Future c d -> Future a b -> Future c d</code></summary>
+
+```hs
+assume                  ::               Future c d -> Future a b -> Future c d
+Future.prototype.assume :: Future a b ~> Future c d               -> Future c d
+```
+
+</details>
+
+Run a second Future after the first settles (successfully or unsuccessfully),
+assuming its state.
+
+See also [`and`](#and) and [`or`](#or).
+
+```js
+Future.of('Hello')
+.assume(Future.of('World!'))
+.fork(console.error, console.log);
+//> "World!"
+
+Future.reject('Hello')
+.assume(Future.of('World!'))
+.fork(console.error, console.log);
+//> "World!"
+```
+
+Note that the *first* Future is given as the *last* argument to `Future.assume()`:
+
+```js
+var program = S.pipe([
+  Future.of,
+  Future.assume(Future.of('World!')),
+  Future.fork(console.error, console.log)
+]);
+
+program('Hello');
+//> "World!"
 ```
 
 ### Consuming Futures

@@ -87,6 +87,9 @@ declare module 'fluture' {
     /** Attempt to extract the resolution value. See https://github.com/fluture-js/Fluture#extractright */
     extractRight(): Array<R>
 
+    /** Continue with another Future after this one settles. See https://github.com/fluture-js/Fluture#assume */
+    assume<LB, RB>(other: FutureInstance<LB, RB>): FutureInstance<LB, RB>
+
     /** Fold both branches into the resolution branch. See https://github.com/fluture-js/Fluture#fold */
     fold<L, RB>(lmapper: (reason: L) => RB, rmapper: (value: R) => RB): FutureInstance<L, RB>
 
@@ -247,6 +250,10 @@ declare module 'fluture' {
 
   /** Returns true for Futures that will certainly never settle. See https://github.com/fluture-js/Fluture#isnever */
   export function isNever(value: any): boolean
+
+  /** Continue with another Future after the previous settles. See https://github.com/fluture-js/Fluture#assume */
+  export function assume<L, R>(other: FutureInstance<L, R>, source: FutureInstance<any, any>): FutureInstance<L, R>
+  export function assume<L, R>(other: FutureInstance<L, R>): (source: FutureInstance<any, any>) => FutureInstance<L, R>
 
   /** Map over the resolution value of the given Future. See https://github.com/fluture-js/Fluture#map */
   export function map<L, RA, RB>(mapper: (value: RA) => RB, source: FutureInstance<L, RA>): FutureInstance<L, RB>
