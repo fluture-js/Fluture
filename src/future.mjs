@@ -616,16 +616,10 @@ defineBimapperAction('fold', {
   rejected: function FoldAction$rejected(x){ return mapWith(this.lmapper, resolve, x) }
 });
 
-var finallyAction = {
-  cancel: function FinallyAction$cancel(){ this.other._interpret(noop, noop, noop)() },
-  rejected: function FinallyAction$rejected(x){ return this.other._and(new Rejected(x)) },
-  resolved: function FinallyAction$resolved(x){
-    return this.other._map(function FoldAction$resolved$mapper(){ return x });
-  }
-};
-
-defineOtherAction('finally', finallyAction);
-defineOtherAction('lastly', finallyAction);
+defineOtherAction('assume', {
+  rejected: returnOther,
+  resolved: returnOther
+});
 
 defineOtherAction('and', {
   resolved: returnOther

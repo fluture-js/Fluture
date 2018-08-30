@@ -21,7 +21,7 @@ import './test/5.chain.test.mjs';
 import './test/5.encase-n.test.mjs';
 import './test/5.encase-p.test.mjs';
 import './test/5.encase.test.mjs';
-import './test/5.finally.test.mjs';
+import './test/5.assume.test.mjs';
 import './test/5.fold.test.mjs';
 import './test/5.hook.test.mjs';
 import './test/5.map-rej.test.mjs';

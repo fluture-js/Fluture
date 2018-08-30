@@ -340,9 +340,9 @@ describe('Transformation', function (){
 
   });
 
-  describe('finally', function (){
+  describe('assume', function (){
 
-    var seq = dummy.finally(dummy);
+    var seq = dummy.assume(dummy);
 
     describe('#_interpret()', function (){
 
@@ -352,7 +352,7 @@ describe('Transformation', function (){
 
       it('runs the other if the left rejects', function (done){
         var other = Future(function (){done()});
-        var m = new Transformation(rejected, nil).finally(other);
+        var m = new Transformation(rejected, nil).assume(other);
         m._interpret(done, noop, noop);
       });
 
@@ -361,7 +361,7 @@ describe('Transformation', function (){
     describe('#toString()', function (){
 
       it('returns code to create the same data-structure', function (){
-        expect(seq.toString()).to.equal('Future.of("resolved").finally(Future.of("resolved"))');
+        expect(seq.toString()).to.equal('Future.of("resolved").assume(Future.of("resolved"))');
       });
 
     });
