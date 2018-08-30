@@ -87,9 +87,6 @@ declare module 'fluture' {
     /** Attempt to extract the resolution value. See https://github.com/fluture-js/Fluture#extractright */
     extractRight(): Array<R>
 
-    /** Set up a cleanup Future to run after this one is done. See https://github.com/fluture-js/Fluture#finally */
-    finally(cleanup: FutureInstance<L, any>): FutureInstance<L, R>
-
     /** Fold both branches into the resolution branch. See https://github.com/fluture-js/Fluture#fold */
     fold<L, RB>(lmapper: (reason: L) => RB, rmapper: (value: R) => RB): FutureInstance<L, RB>
 
@@ -98,9 +95,6 @@ declare module 'fluture' {
 
     /** Fork with exception recovery. See https://github.com/fluture-js/Fluture#forkCatch */
     forkCatch(recover: RecoverFunction, reject: RejectFunction<L>, resolve: ResolveFunction<R>): Cancel
-
-    /** Set up a cleanup Future to run after this one is done. See https://github.com/fluture-js/Fluture#finally */
-    lastly(cleanup: FutureInstance<L, any>): FutureInstance<L, R>
 
     /** Map over the resolution value in this Future. See https://github.com/fluture-js/Fluture#map */
     map<RB>(mapper: (value: R) => RB): FutureInstance<L, RB>
@@ -253,10 +247,6 @@ declare module 'fluture' {
 
   /** Returns true for Futures that will certainly never settle. See https://github.com/fluture-js/Fluture#isnever */
   export function isNever(value: any): boolean
-
-  /** Set up a cleanup Future to run after the given action has settled. See https://github.com/fluture-js/Fluture#lastly */
-  export function lastly<L, R>(cleanup: FutureInstance<L, any>, action: FutureInstance<L, R>): FutureInstance<L, R>
-  export function lastly<L, R>(cleanup: FutureInstance<L, any>): (action: FutureInstance<L, R>) => FutureInstance<L, R>
 
   /** Map over the resolution value of the given Future. See https://github.com/fluture-js/Fluture#map */
   export function map<L, RA, RB>(mapper: (value: RA) => RB, source: FutureInstance<L, RA>): FutureInstance<L, RB>

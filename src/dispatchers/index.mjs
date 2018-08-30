@@ -6,7 +6,6 @@ export {chain} from './chain';
 
 export {mapRej} from './map-rej';
 export {chainRej} from './chain-rej';
-export {lastly, lastly as finally} from './lastly';
 
 export {and} from './and';
 export {both} from './both';

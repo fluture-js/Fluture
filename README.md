@@ -179,7 +179,6 @@ for sponsoring the project.
 - [`ap`: Combine the success values of multiple Futures using a function](#ap)
 - [`and`: Logical *and* for Futures](#and)
 - [`or`: Logical *or* for Futures](#or)
-- [`finally`: Run a Future after the previous settles](#finally)
 - [`race`: Race two Futures against each other](#race)
 - [`both`: Await both success values from two Futures](#both)
 - [`parallel`: Await all success values from many Futures](#parallel)
@@ -1036,7 +1035,7 @@ Returns a new Future which either rejects with the first rejection reason, or
 resolves with the last resolution value once and if both Futures resolve. We
 can use it if we want a computation to run only after another has succeeded.
 
-See also [`or`](#or) and [`finally`](#finally).
+See also [`or`](#or).
 
 ```js
 Future.after(300, null)
@@ -1072,7 +1071,7 @@ Returns a new Future which either resolves with the first resolution value, or
 rejects with the last rejection value once and if both Futures reject. We can
 use it if we want a computation to run only if another has failed.
 
-See also [`and`](#and) and [`finally`](#finally).
+See also [`and`](#and).
 
 ```js
 Future.rejectAfter(300, new Error('Failed'))
@@ -1089,55 +1088,6 @@ to reject.
 var any = ms => ms.reduce(Future.or, Future.reject('empty list'));
 any([Future.reject(1), Future.after(20, 2), Future.of(3)]).value(console.log);
 //> 2
-```
-
-#### finally
-
-<details><summary><code>finally :: Future a c -> Future a b -> Future a b</code></summary>
-
-```hs
-finally                  ::               Future a c -> Future a b -> Future a b
-lastly                   ::               Future a c -> Future a b -> Future a b
-Future.prototype.finally :: Future a b ~> Future a c               -> Future a b
-Future.prototype.lastly  :: Future a b ~> Future a c               -> Future a b
-```
-
-</details>
-
-Run a second Future after the first settles (successfully or unsuccessfully).
-Rejects with the rejection reason from the first or second Future, or resolves
-with the resolution value from the first Future. We can use this when we want
-a computation to run after another settles, successfully or unsuccessfully.
-
-If you're looking to clean up resources after running a computation which
-acquires them, you should use [`hook`](#hook), which has many more fail-safes
-in place.
-
-This function has an alias `lastly`, for environments where `finally` is
-reserved.
-
-See also [`and`](#and) and [`or`](#or).
-
-```js
-Future.of('Hello')
-.finally(Future.of('All done!').map(console.log))
-.fork(console.error, console.log);
-//> "All done!"
-//> "Hello"
-```
-
-Note that the *first* Future is given as the *last* argument to `Future.finally()`:
-
-```js
-var program = S.pipe([
-  Future.of,
-  Future.finally(Future.of('All done!').map(console.log)),
-  Future.fork(console.error, console.log)
-]);
-
-program('Hello');
-//> "All done!"
-//> "Hello"
 ```
 
 ### Consuming Futures
