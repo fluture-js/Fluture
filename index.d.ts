@@ -97,7 +97,7 @@ declare module 'fluture' {
     finally(cleanup: FutureInstance<L, any>): FutureInstance<L, R>
 
     /** Fold both branches into the resolution branch. See https://github.com/fluture-js/Fluture#fold */
-    fold<L, RB>(lmapper: (reason: L) => RB, rmapper: (value: R) => RB): FutureInstance<L, RB>
+    fold<LA, RA, LB, RB>(lmapper: (reason: LA) => RB, rmapper: (value: RA) => RB): FutureInstance<LB, RB>
 
     /** Fork the Future into the two given continuations. See https://github.com/fluture-js/Fluture#fork */
     fork(reject: RejectFunction<L>, resolve: ResolveFunction<R>): Cancel
@@ -235,9 +235,9 @@ declare module 'fluture' {
   export function extractRight<L, R>(source: FutureInstance<L, R>): Array<R>
 
   /** Fold both branches into the resolution branch. See https://github.com/fluture-js/Fluture#fold */
-  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RA, rmapper: (right: RA) => RB, source: FutureInstance<LA, RA>): FutureInstance<LB, RB>
-  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RA, rmapper: (right: RA) => RB): (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
-  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RA): AwaitingTwo<(right: RA) => RB, FutureInstance<LA, RA>, FutureInstance<LB, RB>>
+  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RB, rmapper: (right: RA) => RB, source: FutureInstance<LA, RA>): FutureInstance<LB, RB>
+  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RB, rmapper: (right: RA) => RB): (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
+  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RB): AwaitingTwo<(right: RA) => RB, FutureInstance<LA, RA>, FutureInstance<LB, RB>>
 
   /** Fork the given Future into the given continuations. See https://github.com/fluture-js/Fluture#fork */
   export function fork<L, R>(reject: RejectFunction<L>, resolve: ResolveFunction<R>, source: FutureInstance<L, R>): Cancel
