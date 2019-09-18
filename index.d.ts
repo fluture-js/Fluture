@@ -122,7 +122,7 @@ declare module 'fluture' {
   export function extractRight<L, R>(source: FutureInstance<L, R>): Array<R>
 
   /** Fold both branches into the resolution branch. See https://github.com/fluture-js/Fluture#fold */
-  export function fold<LA, RA, LB, RB>(lmapper: (left: LA) => RB): (rmapper: (right: RA) => RB) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
+  export function fold<LA, LB, RB>(lmapper: (left: LA) => RB): <RA>(rmapper: (right: RA) => RB) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
 
   /** Fork the given Future into the given continuations. See https://github.com/fluture-js/Fluture#fork */
   export function fork<L, R>(reject: RejectFunction<L>): (resolve: ResolveFunction<R>) => (source: FutureInstance<L, R>) => Cancel
