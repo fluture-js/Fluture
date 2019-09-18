@@ -92,7 +92,7 @@ declare module 'fluture' {
   export function attemptP<L, R>(fn: () => Promise<R>): FutureInstance<L, R>
 
   /** Map over both branched of the given Bifunctor at once. See https://github.com/fluture-js/Fluture#bimap */
-  export function bimap<LA, LB, RA, RB>(lmapper: (reason: LA) => LB): (rmapper: (value: RA) => RB) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
+  export function bimap<LA, LB>(lmapper: (reason: LA) => LB): <RA, RB>(rmapper: (value: RA) => RB) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
 
   /** Wait for both Futures to resolve in parallel. See https://github.com/fluture-js/Fluture#both */
   export function both<L, A, B>(left: FutureInstance<L, A>): (right: FutureInstance<L, B>) => FutureInstance<L, [A, B]>
