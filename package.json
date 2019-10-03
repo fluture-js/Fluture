@@ -8,7 +8,7 @@
   "module": "index.js",
   "files": [
     "src",
-    "cjs.js",
+    "index.cjs",
     "index.js",
     "index.d.ts",
     "test/arbitraries.js",
@@ -19,7 +19,7 @@
     "bench": "npm run build && sanctuary-benchmark",
     "build": "rollup -c rollup.config.js",
     "build:dist": "rollup -c rollup.config.dist.js",
-    "clean": "rimraf npm-debug.log coverage cjs.js .esm-cache .nyc_output node_modules/.cache",
+    "clean": "rimraf npm-debug.log coverage index.cjs .esm-cache .nyc_output node_modules/.cache",
     "lint": "eslint src test index.js index.cjs.js",
     "lint:readme": "remark --no-stdout --frail -u remark-validate-links README.md",
     "release": "xyz --edit --repo git@github.com:fluture-js/Fluture.git --tag 'X.Y.Z' --script scripts/distribute --increment",

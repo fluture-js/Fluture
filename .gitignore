@@ -3,4 +3,4 @@
 /node_modules/
 /perf/
 
-/cjs.js
+/index.cjs

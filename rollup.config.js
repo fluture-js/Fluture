@@ -10,7 +10,7 @@ export default {
   external: Object.keys(dependencies),
   output: {
     format: 'umd',
-    file: 'cjs.js',
+    file: 'index.cjs',
     name: 'Fluture',
     globals: dependencies
   }

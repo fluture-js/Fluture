@@ -2,7 +2,7 @@ import {noop, eq, test} from '../util/util.js';
 import * as Fluture from '../../index.js';
 import require from './require.js';
 
-const Future = require('../../cjs.js');
+const Future = require('../../index.cjs');
 
 test('exports the Future constructor by default', function (){
   eq(typeof Future, 'function');
