@@ -1,7 +1,0 @@
-{
-  "root": true,
-  "extends": ["warp/node", "warp/es6"],
-  "rules": {
-    "max-len": [0]
-  }
-}

@@ -2,8 +2,8 @@
 
 /* global process setImmediate */
 
-var {Future, fork, race, chain, resolve: sync} = require('../cjs');
-var {log} = require('util');
+import {Future, fork, race, chain, resolve as sync} from '../index.js';
+import {log} from 'util';
 
 var start = Date.now();
 var batch = 0;
@@ -83,7 +83,7 @@ var f = cases[process.argv[2]];
 if(typeof f !== 'function'){
   console.log('Usage:\n\n  test-mem <case>\n\nPossible cases:\n');
   Object.keys(cases).forEach(function(k){console.log(`  ${k}`)});
-  process.exit(1);
+  process.exit(0);
 }
 
 log('PID', process.pid);

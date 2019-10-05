@@ -56,11 +56,11 @@ functions: [`Object.create`][JS:Object.create],
 ### EcmaScript Module
 
 Fluture is written as modular JavaScript. It can be loaded directly
-by Node 9 and up using `--experimental-modules`, with the [esm loader][esm], or
-with TypeScript (typings included).
+by Node 12 and up using `--experimental-modules`, or bundled by tools
+such as [Rollup][] or [TypeScript][].
 
 Besides the module system, no other ES5+ features are used in Fluture's source,
-which means that no transpilation is needed after concatenation.
+which means that no transpilation is needed after bundling.
 
 ```js
 import {readFile} from 'fs'
@@ -76,25 +76,9 @@ getPackageName ('package.json')
 .pipe (fork (console.error) (console.log))
 ```
 
-### CommonJS Module
+### CommonJS Usage
 
-Although the Fluture source uses the EcmaScript module system, versions
-downloaded from the npm registry include a CommonJS build, which can be
-loaded with `require ("fluture/cjs")`.
-
-```js
-const fs = require ('fs')
-const Future = require ('fluture/cjs')
-
-const getPackageName = function (file) {
-  return Future.node (function (done) { fs.readFile (file, 'utf8', done) })
-  .pipe (Future.chain (Future.encase (JSON.parse)))
-  .pipe (Future.map (function (x) { return x.name }))
-}
-
-getPackageName ('package.json')
-.pipe (Future.fork (console.error) (console.log))
-```
+To load Fluture into a CommonJS context, use the [esm][] module loader.
 
 ### Global Bundle (CDN)
 
@@ -1602,6 +1586,7 @@ by Fluture to generate contextual stack traces.
 [concurrify]:           https://github.com/fluture-js/concurrify
 
 [Rollup]:               https://rollupjs.org/
+[TypeScript]:           https://www.typescriptlang.org/
 [esm]:                  https://github.com/standard-things/esm
 
 [Guide:HM]:             https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html

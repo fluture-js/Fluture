@@ -1,7 +1,8 @@
-'use strict';
+/* global setImmediate */
 
-const Old = require('fluture');
-const New = require('..');
+import bench from 'sanctuary-benchmark';
+import Old from 'fluture';
+import * as New from '../index.js';
 
 const config = {leftHeader: 'Old', rightHeader: 'New'};
 
@@ -13,7 +14,7 @@ const arr = (T, length) => Array.from({length}, (_, i) => T.resolve(i));
 const fast = (T, x) => T((rej, res) => void setImmediate(res, x));
 const slow = (T, x) => T.after(1)(x);
 
-module.exports = require('sanctuary-benchmark')(Old, New, config, {
+export default bench(Old, New, config, {
 
   'def.interpreter.Future': [
     {}, ({Future}) => Future((rej, res) => res(1))
@@ -96,7 +97,9 @@ module.exports = require('sanctuary-benchmark')(Old, New, config, {
   ],
 
   'run.interpreter.go': [
-    {}, ({go, resolve}) => run(go(function*() { return (yield resolve(1)) + (yield resolve(2)); }))
+    {}, ({go, resolve}) => run(go(function*(){
+      return (yield resolve(1)) + (yield resolve(2));
+    }))
   ],
 
   'run.transformation.sync.map': [
@@ -110,7 +113,7 @@ module.exports = require('sanctuary-benchmark')(Old, New, config, {
   'run.transformation.sync.swap.many': [
     {}, ({resolve, swap}) => {
       let m = resolve(1);
-      for(let i = 0; i < 1000; i++) { m = swap(m); }
+      for(let i = 0; i < 1000; i++){ m = swap(m) }
       run(m);
     }
   ],
@@ -123,7 +126,7 @@ module.exports = require('sanctuary-benchmark')(Old, New, config, {
     {}, ({chain, resolve}) => {
       const f = compose(resolve, plus1);
       let m = resolve(1);
-      for(let i = 0; i < 1000; i++) { m = chain(f)(m); }
+      for(let i = 0; i < 1000; i++){ m = chain(f)(m) }
       run(m);
     }
   ],
@@ -145,7 +148,7 @@ module.exports = require('sanctuary-benchmark')(Old, New, config, {
     {defer: true}, ({Future, chain, value}, [d]) => {
       const f = x => fast(Future, plus1(x));
       let m = fast(Future, 1);
-      for(let i = 0; i < 100; i++) { m = chain(f)(m); }
+      for(let i = 0; i < 100; i++){ m = chain(f)(m) }
       m.pipe(value(() => d.resolve()));
     }
   ],

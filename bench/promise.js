@@ -1,9 +1,8 @@
-'use strict';
-
-const Future = require('..');
+import bench from 'sanctuary-benchmark';
+import * as Future from '../index.js';
 
 const plus1 = x => x + 1;
-const repeat = (n, f, x) => Array.from({length: n}).reduce(f, x);
+const repeat = (n, f, x) => Array.from({length: n}).reduce(x => f(x), x);
 const Left = x => ({left: true, right: false, value: x});
 const Right = x => ({left: false, right: true, value: x});
 
@@ -24,14 +23,14 @@ const PromiseInterop = {
   after: n => x => new Promise(res => setTimeout(res, n, x))
 };
 
-module.exports = require('sanctuary-benchmark')(PromiseInterop, Future, config, {
+export default bench(PromiseInterop, Future, config, {
 
   'resolve': def(
     ({resolve}) => repeat(1000, resolve, 1)
   ),
 
   'after': def(
-    ({after}) => after(10)(1),
+    ({after}) => after(10)(1)
   ),
 
   'map': def(

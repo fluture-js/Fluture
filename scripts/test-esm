@@ -3,8 +3,8 @@ set -eufo pipefail
 
 version=$(node --print 'process.versions.node.split(".")[0]')
 
-if [[ "$version" -lt 9 ]]; then
-  echo 'Skipping esm test on Node versions below 9'
+if [[ "$version" -lt 12 ]]; then
+  echo 'Skipping esm test on Node versions below 12'
 elif node --experimental-modules --no-warnings index.js; then
   echo 'No problems with the EcmaScript module'
 else

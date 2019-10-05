@@ -1,17 +1,16 @@
-'use strict';
-
-const Future = require('..');
-const {task} = require('folktale/concurrency/task');
+import bench from 'sanctuary-benchmark';
+import * as Future from '../index.js';
+import folktale from 'folktale/concurrency/task/index.js';
 
 const noop = () => {};
 const plus1 = x => x + 1;
-const repeat = (n, f) => x => Array.from({length: n}).reduce(f, x);
+const repeat = (n, f) => x => Array.from({length: n}).reduce(x => f(x), x);
 
 const map1000 = repeat(1000, Future.map(plus1));
 const chain1000 = repeat(1000, Future.chain(plus1));
 
-const createTask = x => task(resolver => resolver.resolve(x));
-const createFuture = x => Future((rej, res) => res(x));
+const createTask = x => folktale.task(resolver => resolver.resolve(x));
+const createFuture = x => Future.Future((rej, res) => { res(x); return noop });
 const consumeTask = m => m.run().listen({onCancelled: noop, onRejected: noop, onResolved: noop});
 const consumeFuture = Future.fork(noop)(noop);
 
@@ -31,7 +30,7 @@ const right = {
   mapped: map1000(createFuture(1))
 };
 
-module.exports = require('sanctuary-benchmark')(left, right, config, {
+export default bench(left, right, config, {
 
   'create.construct': [
     {}, ({create}) => repeat(1000, create)(1)
