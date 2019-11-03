@@ -62,7 +62,7 @@
   "dependencies": {
     "concurrify": "^1.1.1",
     "sanctuary-show": "^1.0.0",
-    "sanctuary-type-identifiers": "^2.0.0"
+    "sanctuary-type-identifiers": "^3.0.0"
   },
   "devDependencies": {
     "c8": "^6.0.0",
