@@ -171,6 +171,7 @@ for sponsoring the project.
 - [`map`: Synchronously process the success value in a Future](#map)
 - [`bimap`: Synchronously process the success or failure value in a Future](#bimap)
 - [`chain`: Asynchronously process the success value in a Future](#chain)
+- [`bichain`: Asynchronously process the success or failure value in a Future](#bichain)
 - [`swap`: Swap the success with the failure value](#swap)
 - [`mapRej`: Synchronously process the failure value in a Future](#maprej)
 - [`chainRej`: Asynchronously process the failure value in a Future](#chainrej)
@@ -856,6 +857,42 @@ For comparison, an approximation with Promises is:
 ```js
 > Promise.resolve (41)
 . .then (x => Promise.resolve (x + 1))
+. .then (log ('resolution'), log ('rejection'))
+[resolution]: 42
+```
+
+#### bichain
+
+```hs
+bichain :: (a -> Future c d) -> (b -> Future c d) -> Future a b -> Future c d
+```
+
+Sequence a new Future using either the resolution or the rejection value from
+another. Similarly to [`bimap`](#bimap), `bichain` expects two functions. But
+instead of returning the new *value*, bichain expects Futures to be returned.
+
+```js
+> fork (log ('rejection'))
+.      (log ('resolution'))
+.      (bichain (resolve) (x => resolve (x + 1)) (resolve (41)))
+[resolution]: 42
+
+> fork (log ('rejection'))
+.      (log ('resolution'))
+.      (bichain (x => resolve (x + 1)) (resolve) (reject (41)))
+[resolution]: 42
+```
+
+For comparison, an approximation with Promises is:
+
+```js
+> Promise.resolve (41)
+. .then (x => Promise.resolve (x + 1), Promise.resolve)
+. .then (log ('resolution'), log ('rejection'))
+[resolution]: 42
+
+> Promise.reject (41)
+. .then (Promise.resolve, x => Promise.resolve (x + 1))
 . .then (log ('resolution'), log ('rejection'))
 [resolution]: 42
 ```
