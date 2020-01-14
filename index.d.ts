@@ -119,7 +119,7 @@ declare module 'fluture' {
   export function forkCatch(recover: RecoverFunction): <L>(reject: RejectFunction<L>) => <R>(resolve: ResolveFunction<R>) => (source: FutureInstance<L, R>) => Cancel
 
   /** Build a coroutine using Futures. See https://github.com/fluture-js/Fluture#go */
-  export function go<L, R>(generator: () => Generator<FutureInstance<L, any>, R>): FutureInstance<L, R>
+  export function go<L, R>(generator: () => Generator<FutureInstance<L, any>, R, any>): FutureInstance<L, R>
 
   /** Manage resources before and after the computation that needs them. See https://github.com/fluture-js/Fluture#hook */
   export function hook<L, H>(acquire: FutureInstance<L, H>): (dispose: (handle: H) => FutureInstance<any, any>) => <R>(consume: (handle: H) => FutureInstance<L, R>) => FutureInstance<L, R>
