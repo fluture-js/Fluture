@@ -278,9 +278,9 @@ Generally, these constraints express that some value must conform to a
 
 ### Cancellation
 
-Cancellation is a system whereby running Futures get an opportunity stop what
-they're doing and release resources that they were holding, when the consumer
-indicates it is no longer interested in the result.
+Cancellation is a system whereby running Futures get an opportunity to stop
+what they're doing and release resources that they were holding, when the
+consumer indicates it is no longer interested in the result.
 
 To cancel a Future, it must be unsubscribed from. Most of the
 [consumption functions](#consuming-futures) return an `unsubscribe` function.
