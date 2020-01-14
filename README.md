@@ -91,7 +91,7 @@ getPackageName ('package.json')
 ### Global Bundle (CDN)
 
 Fluture is hosted in full with all of its dependencies at
-https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.1.0/dist/bundle.js
+https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.1.1/dist/bundle.js
 
 This script will add `Fluture` to the global scope.
 
