@@ -15,6 +15,7 @@ export {ap} from './src/ap.js';
 export {attemptP} from './src/attempt-p.js';
 export {attempt} from './src/attempt.js';
 export {bimap} from './src/bimap.js';
+export {bichain} from './src/bichain.js';
 export {both} from './src/both.js';
 export {cache} from './src/cache.js';
 export {chainRej} from './src/chain-rej.js';

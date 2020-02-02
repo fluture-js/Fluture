@@ -13,6 +13,7 @@ import {
 import {
   after,
   and,
+  bichain,
   bimap,
   chain,
   chainRej,
@@ -88,6 +89,14 @@ property('mapRej(f)(m) = chainRej(B(reject)(f))(m)', anyFuture, function (m){
 
 property('mapRej(f)(m) = bimap(f)(I)(m)', anyFuture, function (m){
   return eq(mapRej(f)(m))(bimap(f)(I)(m));
+});
+
+property('Rejected m => chainRej(B(mk)(f))(m) = bichain(B(mk)(f))(reject)(m)', make, anyRejectedFuture, function (mk, m){
+  return eq(chainRej(B(mk)(f))(m))(bichain(B(mk)(f))(reject)(m));
+});
+
+property('Resolved m => chain(B(mk)(f))(m) = bichain(resolve)(B(mk)(f))(m)', make, anyResolvedFuture, function (mk, m){
+  return eq(chain(B(mk)(f))(m))(bichain(resolve)(B(mk)(f))(m));
 });
 
 property('mapRej(f)(m) = swap(map(f)(swap(m)))', anyFuture, function (m){

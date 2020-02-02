@@ -5,6 +5,7 @@ import {
   alt,
   and,
   ap,
+  bichain,
   bimap,
   cache,
   chain,
@@ -52,6 +53,22 @@ property('and distributivity with map', _mx, _mx, function (a, b){
 
 property('ap composition using map', _mx, _mf, _mf, function (mx, mf, mg){
   return eq(ap(mx)(ap(mf)(map(B)(mg))))(ap(ap(mx)(mf))(mg));
+});
+
+property('bichain associativity', _mx, _fm, _fm, function (m, f, g){
+  return eq(bichain(g)(g)(bichain(f)(f)(m)))(bichain(B(bichain(g)(g))(f))(B(bichain(g)(g))(f))(m));
+});
+
+property('bichain identity', _mx, function (m){
+  return eq(bichain(reject)(resolve)(m))(m);
+});
+
+property('bichain left identity', _x, _fm, _fm, function (x, f, g){
+  return eq(bichain(f)(g)(reject(x)))(f(x));
+});
+
+property('bichain left identity', _x, _fm, _fm, function (x, f, g){
+  return eq(bichain(f)(g)(resolve(x)))(g(x));
 });
 
 property('bimap identity', _mx, function (mx){
