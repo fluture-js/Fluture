@@ -1,5 +1,5 @@
 /**
- * Fluture bundled; version 12.1.1
+ * Fluture bundled; version 12.2.0
  */
 
 var Fluture = (function () {
@@ -357,10 +357,10 @@ var Fluture = (function () {
 
 	  /* istanbul ignore else */
 	  {
-	    module.exports = f();
+	    module.exports = f ();
 	  }
 
-	}(function() {
+	} (function() {
 
 	  //  $$show :: String
 	  var $$show = '@@show';
@@ -371,8 +371,13 @@ var Fluture = (function () {
 	  //  entry :: Object -> String -> String
 	  function entry(o) {
 	    return function(k) {
-	      return show(k) + ': ' + show(o[k]);
+	      return show (k) + ': ' + show (o[k]);
 	    };
+	  }
+
+	  //  sortedKeys :: Object -> Array String
+	  function sortedKeys(o) {
+	    return (Object.keys (o)).sort ();
 	  }
 
 	  //# show :: Showable a => a -> String
@@ -421,66 +426,81 @@ var Fluture = (function () {
 	  //. '{"x": [1, 2], "y": [3, 4], "z": [5, 6]}'
 	  //. ```
 	  function show(x) {
-	    if (seen.indexOf(x) >= 0) return '<Circular>';
+	    if (seen.indexOf (x) >= 0) return '<Circular>';
 
-	    switch (Object.prototype.toString.call(x)) {
+	    switch (Object.prototype.toString.call (x)) {
 
 	      case '[object Boolean]':
 	        return typeof x === 'object' ?
-	          'new Boolean (' + show(x.valueOf()) + ')' :
-	          x.toString();
+	          'new Boolean (' + show (x.valueOf ()) + ')' :
+	          x.toString ();
 
 	      case '[object Number]':
 	        return typeof x === 'object' ?
-	          'new Number (' + show(x.valueOf()) + ')' :
-	          1 / x === -Infinity ? '-0' : x.toString(10);
+	          'new Number (' + show (x.valueOf ()) + ')' :
+	          1 / x === -Infinity ? '-0' : x.toString (10);
 
 	      case '[object String]':
 	        return typeof x === 'object' ?
-	          'new String (' + show(x.valueOf()) + ')' :
-	          JSON.stringify(x);
+	          'new String (' + show (x.valueOf ()) + ')' :
+	          JSON.stringify (x);
 
 	      case '[object Date]':
 	        return 'new Date (' +
-	               show(isNaN(x.valueOf()) ? NaN : x.toISOString()) +
+	               show (isNaN (x.valueOf ()) ? NaN : x.toISOString ()) +
 	               ')';
 
 	      case '[object Error]':
-	        return 'new ' + x.name + ' (' + show(x.message) + ')';
+	        return 'new ' + x.name + ' (' + show (x.message) + ')';
 
 	      case '[object Arguments]':
 	        return 'function () { return arguments; } (' +
-	               Array.prototype.map.call(x, show).join(', ') +
+	               (Array.prototype.map.call (x, show)).join (', ') +
 	               ')';
 
 	      case '[object Array]':
-	        seen.push(x);
+	        seen.push (x);
 	        try {
-	          return '[' + x.map(show).concat(
-	            Object.keys(x)
-	            .sort()
-	            .filter(function(k) { return !/^\d+$/.test(k); })
-	            .map(entry(x))
-	          ).join(', ') + ']';
+	          return '[' + ((x.map (show)).concat (
+	            sortedKeys (x)
+	            .filter (function(k) { return !(/^\d+$/.test (k)); })
+	            .map (entry (x))
+	          )).join (', ') + ']';
 	        } finally {
-	          seen.pop();
+	          seen.pop ();
 	        }
 
 	      case '[object Object]':
-	        seen.push(x);
+	        seen.push (x);
 	        try {
 	          return (
 	            $$show in x &&
 	            (x.constructor == null || x.constructor.prototype !== x) ?
-	              x[$$show]() :
-	              '{' + Object.keys(x).sort().map(entry(x)).join(', ') + '}'
+	              x[$$show] () :
+	              '{' + ((sortedKeys (x)).map (entry (x))).join (', ') + '}'
 	          );
 	        } finally {
-	          seen.pop();
+	          seen.pop ();
+	        }
+
+	      case '[object Set]':
+	        seen.push (x);
+	        try {
+	          return 'new Set (' + show (Array.from (x.values ())) + ')';
+	        } finally {
+	          seen.pop ();
+	        }
+
+	      case '[object Map]':
+	        seen.push (x);
+	        try {
+	          return 'new Map (' + show (Array.from (x.entries ())) + ')';
+	        } finally {
+	          seen.pop ();
 	        }
 
 	      default:
-	        return String(x);
+	        return String (x);
 
 	    }
 	  }
@@ -1315,6 +1335,22 @@ var Fluture = (function () {
 	  };
 	}
 
+	var BichainTransformation = createTransformation(2, 'bichain', {
+	  rejected: function BichainTransformation$rejected(x){ return call(this.$1, x) },
+	  resolved: function BichainTransformation$resolved(x){ return call(this.$2, x) }
+	});
+
+	function bichain(f){
+	  var context1 = application1(bichain, func, arguments);
+	  return function bichain(g){
+	    var context2 = application(2, bichain, func, arguments, context1);
+	    return function bichain(m){
+	      var context3 = application(3, bichain, future, arguments, context1);
+	      return m._transform(new BichainTransformation(context3, f, g));
+	    };
+	  };
+	}
+
 	function Eager(future){
 	  var _this = this;
 	  _this.rec = noop;
@@ -2130,6 +2166,7 @@ var Fluture = (function () {
 		attemptP: attemptP,
 		attempt: attempt,
 		bimap: bimap,
+		bichain: bichain,
 		both: both,
 		cache: cache,
 		chainRej: chainRej,
