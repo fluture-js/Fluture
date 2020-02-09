@@ -64,7 +64,7 @@
     "sanctuary-type-identifiers": "^2.0.0"
   },
   "devDependencies": {
-    "c8": "^7.0.0",
+    "c8": "^7.1.0",
     "chai": "^4.1.2",
     "codecov": "^3.6.1",
     "es-check": "^5.0.0",
