@@ -72,7 +72,7 @@
     "eslint-config-warp": "^3.0.0",
     "fantasy-laws": "^1.0.1",
     "jsverify": "^0.8.3",
-    "oletus": "^2.0.0",
+    "oletus": "^3.0.0",
     "ramda": "^0.27.0",
     "remark-cli": "^7.0.0",
     "remark-validate-links": "^9.0.1",

@@ -17,9 +17,12 @@ test('crashes when the computation returns nonsense', function (){
   ));
 });
 
-test('does not crash when the computation returns a nullary function', function (done){
-  var m = Future(function (){ return function (){} });
-  m._interpret(done, noop, noop);
+test('does not crash when the computation returns a nullary function', function (){
+  return new Promise((res, rej) => {
+    var m = Future(function (){ return function (){} });
+    m._interpret(rej, noop, noop);
+    setTimeout(res, 20);
+  });
 });
 
 test('settles using the last synchronously called continuation', function (){
@@ -41,35 +44,43 @@ test('settles using the first asynchronously called continuation', function (){
   return assertResolved(actual, 1);
 });
 
-test('stops continuations from being called after cancellation', function (done){
-  const fail = () => done(error);
-  Future(function (rej, res){
-    setTimeout(res, 20, 1);
-    setTimeout(rej, 20, 1);
-    return noop;
-  })
-  ._interpret(done, fail, fail)();
-  setTimeout(done, 25);
-});
-
-test('cannot continue during cancellation (#216)', function (done){
-  const fail = () => done(error);
-  Future(function (rej, res){
-    return function (){
-      rej();
-      res();
-    };
-  })
-  ._interpret(done, fail, fail)();
-});
-
-test('stops cancellation from being called after continuations', function (done){
-  var m = Future(function (rej, res){
-    res(1);
-    return function (){ done(error) };
+test('stops continuations from being called after cancellation', function (){
+  return new Promise((res, rej) => {
+    const fail = () => rej(error);
+    Future(function (rej, res){
+      setTimeout(res, 20, 1);
+      setTimeout(rej, 20, 1);
+      return noop;
+    })
+    ._interpret(rej, fail, fail)();
+    setTimeout(res, 25);
   });
-  var cancel = m._interpret(done, noop, noop);
-  cancel();
+});
+
+test('cannot continue during cancellation (#216)', function (){
+  return new Promise((res, rej) => {
+    const fail = () => rej(error);
+    Future(function (rej, res){
+      return function (){
+        rej();
+        res();
+      };
+    })
+    ._interpret(rej, fail, fail)();
+    setTimeout(res, 20);
+  });
+});
+
+test('stops cancellation from being called after continuations', function (){
+  return new Promise((res, rej) => {
+    var m = Future(function (rej, res){
+      res(1);
+      return function (){ rej(error) };
+    });
+    var cancel = m._interpret(rej, noop, noop);
+    cancel();
+    res();
+  });
 });
 
 test('can be cast to String', function (){
