@@ -5,14 +5,12 @@
 [![Dependency Status][]](https://david-dm.org/fluture-js/Fluture)
 [![NPM Package][]](https://www.npmjs.com/package/fluture)
 [![Gitter Chat][]](https://gitter.im/fluture-js/Fluture)
-[![Questions and Answers][]](https://stackoverflow.com/questions/tagged/fluture)
 
 [Build Status]: https://img.shields.io/travis/fluture-js/Fluture/master.svg
 [Code Coverage]: https://img.shields.io/codecov/c/github/fluture-js/Fluture/master.svg
 [Dependency Status]: https://img.shields.io/david/fluture-js/Fluture.svg
 [NPM Package]: https://img.shields.io/npm/v/fluture.svg
 [Gitter Chat]: https://img.shields.io/gitter/room/fluture-js/Fluture.svg?colorB=blue
-[Questions and Answers]: https://img.shields.io/stackexchange/stackoverflow/t/fluture.svg?label=questions&colorB=blue
 
 Fluture offers a control structure similar to Promises, Tasks, Deferreds, and
 what-have-you. Let's call them Futures.
