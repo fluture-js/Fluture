@@ -30,8 +30,8 @@ Some of the features provided by Fluture include:
 For more information:
 
 * [API documentation](#documentation)
+* [Article: Introduction to Fluture - A Functional Alternative to Promises][10]
 * [Wiki: Compare Futures to Promises][wiki:promises]
-* [Article: Why Promises shouldn't be used][10]
 * [Wiki: Compare Fluture to similar libraries][wiki:similar]
 * [Video: Monad a Day - Futures by @DrBoolean][5]
 
@@ -1664,4 +1664,4 @@ by Fluture to generate contextual stack traces.
 [5]:                    https://vimeo.com/106008027
 [7]:                    https://promisesaplus.com/
 [9]:                    https://wearereasonablepeople.nl/
-[10]:                   https://medium.com/@avaq/broken-promises-2ae92780f33
+[10]:                   https://dev.to/avaq/fluture-a-functional-alternative-to-promises-21b
