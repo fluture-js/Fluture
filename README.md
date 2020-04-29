@@ -64,13 +64,18 @@ getPackageName ('package.json')
 
 ### EcmaScript Module
 
-Fluture is written as modular JavaScript. It can be loaded directly by Node 12
-and up using `--experimental-modules`, or with the [esm loader][esm].
-Note that the ESM code lives at `fluture/index.js`, which is not the `main`
-file and must be imported explicitly.
+Fluture is written as modular JavaScript.
 
-Besides the module system, no other ES5+ features are used in Fluture's source,
-which means that no transpilation is needed after concatenation.
+- On Node 13 and up, you can load Fluture directly as shown in the example.
+- On Node 12, you'll need to run with `node --experimental-modules`.
+- On Node versions below 12, you can use the [esm loader][esm]. Alternatively,
+  you can use the [CommonJS Module](#commonjs-module).
+- Modern browsers can run Fluture directly. If you'd like to try this out,
+  I recommend installing Fluture with [Pika][] or [Snowpack][].
+- For older browsers, you can use a bundler such as [Rollup][] or WebPack.
+  Fluture doesn't use ES5+ language features, so the source does not have to
+  be transpiled. Alternatively, you can use the
+  [CommonJS Module](#commonjs-module).
 
 ```js
 import {readFile} from 'fs'
@@ -1652,6 +1657,8 @@ by Fluture to generate contextual stack traces.
 [$]:                    https://github.com/sanctuary-js/sanctuary-def
 
 [Rollup]:               https://rollupjs.org/
+[Pika]:                 https://www.pikapkg.com/
+[Snowpack]:             https://www.snowpack.dev/
 [esm]:                  https://github.com/standard-things/esm
 
 [Guide:HM]:             https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html
