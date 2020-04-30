@@ -24,9 +24,9 @@
     "lint:readme": "remark --no-stdout --frail -u remark-validate-links README.md",
     "release": "xyz --edit --repo git@github.com:fluture-js/Fluture.git --tag 'X.Y.Z' --script scripts/distribute --increment",
     "test": "npm run lint && npm run lint:readme && ./scripts/test-esm && npm run test:code && npm run test:types && npm run test:build",
-    "test:code": "c8 node --experimental-modules --no-warnings -- ./node_modules/.bin/oletus test/unit/*.js test/integration/*.js test/prop/*.js",
+    "test:code": "c8 oletus test/unit/*.js test/integration/*.js test/prop/*.js",
     "test:mem": "NODE_OPTIONS='--experimental-modules --no-warnings' ./scripts/test-mem",
-    "test:build": "npm run build && node --experimental-modules --no-warnings -- ./node_modules/.bin/oletus test/build/*.js",
+    "test:build": "npm run build && oletus test/build/*.js",
     "coverage:upload": "c8 report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage:report": "c8 report --reporter=html",
     "test:types": "tsc index.d.ts"
