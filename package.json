@@ -61,7 +61,7 @@
   ],
   "dependencies": {
     "sanctuary-show": "^2.0.0",
-    "sanctuary-type-identifiers": "^2.0.0"
+    "sanctuary-type-identifiers": "^3.0.0"
   },
   "devDependencies": {
     "c8": "^7.0.0",
