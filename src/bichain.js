@@ -11,7 +11,7 @@ export function bichain(f){
   return function bichain(g){
     var context2 = application(2, bichain, func, arguments, context1);
     return function bichain(m){
-      var context3 = application(3, bichain, future, arguments, context1, context2);
+      var context3 = application(3, bichain, future, arguments, context2);
       return m._transform(new BichainTransformation(context3, f, g));
     };
   };
