@@ -57,61 +57,72 @@ var mockType = function (identifier){
   }};
 };
 
+var mockLegacyType = function (identifier){
+  return {'constructor': {'@@type': identifier}, '@@show': function (){
+    return 'mockType("' + identifier + '")';
+  }};
+};
+
 test('invalidFutureArgument warns us when nothing seems wrong', function (){
-  var actual = invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + version));
-  eq(actual, new TypeError(
+  var expected = new TypeError(
     'Foo() expects its first argument to be a valid Future.\n' +
     'Nothing seems wrong. Contact the Fluture maintainers.\n' +
     '  Actual: mockType("fluture/Future@5") :: Future'
-  ));
+  );
+  eq(invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + version)), expected);
+  eq(invalidFutureArgument('Foo', 0, mockLegacyType(namespace + '/' + name + '@' + version)), expected);
 });
 
 test('invalidFutureArgument warns us about Futures from other sources', function (){
-  var actual = invalidFutureArgument('Foo', 0, mockType('bobs-tinkershop/' + name + '@' + version));
-  eq(actual, new TypeError(
+  var expected = new TypeError(
     'Foo() expects its first argument to be a valid Future.\n' +
     'The Future was not created by fluture. ' +
     'Make sure you transform other Futures to fluture Futures. ' +
     'Got a Future from bobs-tinkershop.\n' +
     '  See: https://github.com/fluture-js/Fluture#casting-futures\n' +
     '  Actual: mockType("bobs-tinkershop/Future@5") :: Future'
-  ));
+  );
+  eq(invalidFutureArgument('Foo', 0, mockType('bobs-tinkershop/' + name + '@' + version)), expected);
+  eq(invalidFutureArgument('Foo', 0, mockLegacyType('bobs-tinkershop/' + name + '@' + version)), expected);
 });
 
 test('invalidFutureArgument warns us about Futures from unnamed sources', function (){
-  var actual = invalidFutureArgument('Foo', 0, mockType(name));
-  eq(actual, new TypeError(
+  var expected = new TypeError(
     'Foo() expects its first argument to be a valid Future.\n' +
     'The Future was not created by fluture. ' +
     'Make sure you transform other Futures to fluture Futures. ' +
     'Got an unscoped Future.\n' +
     '  See: https://github.com/fluture-js/Fluture#casting-futures\n' +
     '  Actual: mockType("Future") :: Future'
-  ));
+  );
+  eq(invalidFutureArgument('Foo', 0, mockType(name)), expected);
+  eq(invalidFutureArgument('Foo', 0, mockLegacyType(name)), expected);
 });
 
 test('invalidFutureArgument warns about older versions', function (){
-  var actual = invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + (version - 1)));
-  eq(actual, new TypeError(
+  var expected = new TypeError(
     'Foo() expects its first argument to be a valid Future.\n' +
     'The Future was created by an older version of fluture. ' +
     'This means that one of the sources which creates Futures is outdated. ' +
     'Update this source, or transform its created Futures to be compatible.\n' +
     '  See: https://github.com/fluture-js/Fluture#casting-futures\n' +
     '  Actual: mockType("fluture/Future@4") :: Future'
-  ));
+  );
+  eq(invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + (version - 1))), expected);
+  eq(invalidFutureArgument('Foo', 0, mockLegacyType(namespace + '/' + name + '@' + (version - 1))), expected);
 });
 
 test('invalidFutureArgument warns about newer versions', function (){
-  var actual = invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + (version + 1)));
-  eq(actual, new TypeError(
+  var expected = new TypeError(
     'Foo() expects its first argument to be a valid Future.\n' +
     'The Future was created by a newer version of fluture. ' +
     'This means that one of the sources which creates Futures is outdated. ' +
     'Update this source, or transform its created Futures to be compatible.\n' +
     '  See: https://github.com/fluture-js/Fluture#casting-futures\n' +
     '  Actual: mockType("fluture/Future@6") :: Future'
-  ));
+  );
+  eq(invalidFutureArgument('Foo', 0, mockType(namespace + '/' + name + '@' + (version + 1))), expected);
+  eq(invalidFutureArgument('Foo', 0, mockLegacyType(namespace + '/' + name + '@' + (version + 1))), expected);
 });
 
 test('wrapException converts any value to an Error', function (){

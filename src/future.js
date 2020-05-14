@@ -1,6 +1,5 @@
 /*eslint no-cond-assign:0, no-constant-condition:0 */
-import type from 'sanctuary-type-identifiers';
-
+import {type, legacyType} from './internal/type.js';
 import {FL, $$type} from './internal/const.js';
 import {captureContext, captureApplicationContext, captureStackTrace} from './internal/debug.js';
 import {
@@ -56,7 +55,7 @@ export function Future(computation){
 }
 
 export function isFuture(x){
-  return x instanceof Future || type(x) === $$type;
+  return x instanceof Future || type(x) === $$type || legacyType(x) === $$type;
 }
 
 // Compliance with sanctuary-type-identifiers versions 1 and 2.

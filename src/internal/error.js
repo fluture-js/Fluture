@@ -1,11 +1,11 @@
 import {show} from './utils.js';
 import {ordinal, namespace, name, version} from './const.js';
-import type from 'sanctuary-type-identifiers';
+import {type, legacyType, parseType} from './type.js';
 import {nil, cat} from './list.js';
 import {captureStackTrace} from './debug.js';
 
 function showArg(x){
-  return show(x) + ' :: ' + type.parse(type(x)).name;
+  return show(x) + ' :: ' + parseType(type(x)).name;
 }
 
 export function error(message){
@@ -70,7 +70,11 @@ function invalidVersion(m, x){
 }
 
 export function invalidFuture(desc, m, s){
-  var id = type.parse(type(m));
+  var id = parseType(type(m));
+  var legacyId = parseType(legacyType(m));
+  if(id.name !== name && legacyId.name === name){
+    id = legacyId;
+  }
   var info = id.name === name ? '\n' + (
     id.namespace !== namespace ? invalidNamespace(m, id.namespace)
   : id.version !== version ? invalidVersion(m, id.version)

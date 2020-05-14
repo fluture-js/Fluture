@@ -1,5 +1,4 @@
-import type from 'sanctuary-type-identifiers';
-
+import {type, legacyType} from './internal/type.js';
 import {FL, namespace, version} from './internal/const.js';
 import {invalidFutureArgument} from './internal/error.js';
 import {captureContext} from './internal/debug.js';
@@ -80,5 +79,5 @@ Par.prototype[FL.alt] = function Par$FL$alt(other){
 };
 
 export function isParallel(x){
-  return x instanceof ConcurrentFuture || type(x) === $$type;
+  return x instanceof ConcurrentFuture || type(x) === $$type || legacyType(x) === $$type;
 }
