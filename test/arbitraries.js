@@ -61,6 +61,8 @@ export const {
     jsv.bool,
     jsv.falsy,
     jsv.constant(new Error('Kapot')),
+    jsv.constant(Future),
+    jsv.constant(Par),
     tie('anyFunction')
   ),
   any: jsv.oneof(

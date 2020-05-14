@@ -59,7 +59,13 @@ export function isFuture(x){
   return x instanceof Future || type(x) === $$type;
 }
 
+// Compliance with sanctuary-type-identifiers versions 1 and 2.
+// To prevent sanctuary-type-identifiers version 3 from identifying 'Future'
+// as being of the type denoted by $$type, we ensure that
+// Future.constructor.prototype is equal to Future.
 Future['@@type'] = $$type;
+Future.constructor = {prototype: Future};
+
 Future[FL.of] = resolve;
 Future[FL.chainRec] = chainRec;
 

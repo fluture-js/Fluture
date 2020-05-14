@@ -23,7 +23,12 @@ export function Par (sequential){
 var $$type = namespace + '/ConcurrentFuture@' + version;
 var zeroInstance = new ConcurrentFuture(never);
 
+// Compliance with sanctuary-type-identifiers versions 1 and 2.
+// To prevent sanctuary-type-identifiers version 3 from identifying
+// 'Par' as being of the type denoted by $$type, we ensure that
+// Par.constructor.prototype is equal to Par.
 Par['@@type'] = $$type;
+Par.constructor = {prototype: Par};
 
 Par[FL.of] = function Par$of(x){
   return new ConcurrentFuture(resolve(x));

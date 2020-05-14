@@ -52,7 +52,7 @@ test('invalidArity constructs a TypeError', function (){
 });
 
 var mockType = function (identifier){
-  return {'constructor': {'@@type': identifier}, '@@show': function (){
+  return {'@@type': identifier, '@@show': function (){
     return 'mockType("' + identifier + '")';
   }};
 };
