@@ -1,5 +1,5 @@
 /**
- * Fluture bundled; version 12.2.0
+ * Fluture bundled; version 12.2.1
  */
 
 var Fluture = (function () {
@@ -43,10 +43,7 @@ var Fluture = (function () {
 	//.
 	//. For a type to be compatible with the algorithm:
 	//.
-	//.   - every member of the type MUST have a `constructor` property
-	//.     pointing to an object known as the _type representative_;
-	//.
-	//.   - the type representative MUST have a `@@type` property
+	//.   - every member of the type MUST have a `@@type` property
 	//.     (the _type identifier_); and
 	//.
 	//.   - the type identifier MUST be a string primitive and SHOULD have
@@ -67,48 +64,21 @@ var Fluture = (function () {
 	//. _namespace_ will be `null` and _version_ will be `0`.
 	//.
 	//. If the _version_ is not given, it is assumed to be `0`.
-	//.
-	//. For example:
-	//.
-	//. ```javascript
-	//. //  Identity :: a -> Identity a
-	//. function Identity(x) {
-	//.   if (!(this instanceof Identity)) return new Identity(x);
-	//.   this.value = x;
-	//. }
-	//.
-	//. Identity['@@type'] = 'my-package/Identity';
-	//. ```
-	//.
-	//. Note that by using a constructor function the `constructor` property is set
-	//. implicitly for each value created. Constructor functions are convenient for
-	//. this reason, but are not required. This definition is also valid:
-	//.
-	//. ```javascript
-	//. //  IdentityTypeRep :: TypeRep Identity
-	//. var IdentityTypeRep = {
-	//.   '@@type': 'my-package/Identity'
-	//. };
-	//.
-	//. //  Identity :: a -> Identity a
-	//. function Identity(x) {
-	//.   return {constructor: IdentityTypeRep, value: x};
-	//. }
-	//. ```
 
 	(function(f) {
 
+	  /* istanbul ignore else */
 	  {
-	    module.exports = f();
+	    module.exports = f ();
 	  }
 
-	}(function() {
+	} (function() {
 
 	  //  $$type :: String
 	  var $$type = '@@type';
 
 	  //  pattern :: RegExp
-	  var pattern = new RegExp(
+	  var pattern = new RegExp (
 	    '^'
 	  + '([\\s\\S]+)'   //  <namespace>
 	  + '/'             //  SOLIDUS (U+002F)
@@ -123,17 +93,24 @@ var Fluture = (function () {
 	  //. ### Usage
 	  //.
 	  //. ```javascript
-	  //. const type = require('sanctuary-type-identifiers');
+	  //. const type = require ('sanctuary-type-identifiers');
 	  //. ```
 	  //.
 	  //. ```javascript
-	  //. > function Identity(x) {
-	  //. .   if (!(this instanceof Identity)) return new Identity(x);
-	  //. .   this.value = x;
+	  //. > const Identity$prototype = {
+	  //. .   '@@type': 'my-package/Identity@1',
+	  //. .   '@@show': function() {
+	  //. .     return 'Identity (' + show (this.value) + ')';
+	  //. .   }
 	  //. . }
-	  //. . Identity['@@type'] = 'my-package/Identity@1';
 	  //.
-	  //. > type.parse(type(Identity(0)))
+	  //. > const Identity = value =>
+	  //. .   Object.assign (Object.create (Identity$prototype), {value})
+	  //.
+	  //. > type (Identity (0))
+	  //. 'my-package/Identity@1'
+	  //.
+	  //. > type.parse (type (Identity (0)))
 	  //. {namespace: 'my-package', name: 'Identity', version: 1}
 	  //. ```
 	  //.
@@ -146,22 +123,23 @@ var Fluture = (function () {
 	  //. returned.
 	  //.
 	  //. ```javascript
-	  //. > type(null)
+	  //. > type (null)
 	  //. 'Null'
 	  //.
-	  //. > type(true)
+	  //. > type (true)
 	  //. 'Boolean'
 	  //.
-	  //. > type(Identity(0))
+	  //. > type (Identity (0))
 	  //. 'my-package/Identity@1'
 	  //. ```
 	  function type(x) {
 	    return x != null &&
 	           x.constructor != null &&
 	           x.constructor.prototype !== x &&
-	           typeof x.constructor[$$type] === 'string' ?
-	      x.constructor[$$type] :
-	      Object.prototype.toString.call(x).slice('[object '.length, -']'.length);
+	           typeof x[$$type] === 'string' ?
+	      x[$$type] :
+	      (Object.prototype.toString.call (x)).slice ('[object '.length,
+	                                                  -']'.length);
 	  }
 
 	  //# type.parse :: String -> { namespace :: Nullable String, name :: String, version :: Number }
@@ -170,22 +148,26 @@ var Fluture = (function () {
 	  //. returning an object with `namespace`, `name`, and `version` fields.
 	  //.
 	  //. ```javascript
-	  //. > type.parse('my-package/List@2')
+	  //. > type.parse ('my-package/List@2')
 	  //. {namespace: 'my-package', name: 'List', version: 2}
 	  //.
-	  //. > type.parse('nonsense!')
+	  //. > type.parse ('nonsense!')
 	  //. {namespace: null, name: 'nonsense!', version: 0}
 	  //.
-	  //. > type.parse(Identity['@@type'])
+	  //. > type.parse (type (Identity (0)))
 	  //. {namespace: 'my-package', name: 'Identity', version: 1}
 	  //. ```
 	  type.parse = function parse(s) {
-	    var groups = pattern.exec(s);
-	    return {
-	      namespace: groups == null || groups[1] == null ? null : groups[1],
-	      name:      groups == null                      ? s    : groups[2],
-	      version:   groups == null || groups[3] == null ? 0    : Number(groups[3])
-	    };
+	    var namespace = null;
+	    var name = s;
+	    var version = 0;
+	    var groups = pattern.exec (s);
+	    if (groups != null) {
+	      namespace = groups[1];
+	      name = groups[2];
+	      if (groups[3] != null) version = Number (groups[3]);
+	    }
+	    return {namespace: namespace, name: name, version: version};
 	  };
 
 	  return type;
@@ -315,7 +297,7 @@ var Fluture = (function () {
 	  if(typeof e.stack === 'string'){
 	    x.stack = x.name + '\n' + e.stack.split('\n').slice(1).join('\n');
 	  /* c8 ignore next 3 */
-	  }else{
+	  }else {
 	    x.stack = x.name;
 	  }
 	}
@@ -754,7 +736,13 @@ var Fluture = (function () {
 	  return x instanceof Future || sanctuaryTypeIdentifiers(x) === $$type;
 	}
 
+	// Compliance with sanctuary-type-identifiers versions 1 and 2.
+	// To prevent sanctuary-type-identifiers version 3 from identifying 'Future'
+	// as being of the type denoted by $$type, we ensure that
+	// Future.constructor.prototype is equal to Future.
 	Future['@@type'] = $$type;
+	Future.constructor = {prototype: Future};
+
 	Future[FL.of] = resolve;
 	Future[FL.chainRec] = chainRec;
 
@@ -1345,7 +1333,7 @@ var Fluture = (function () {
 	  return function bichain(g){
 	    var context2 = application(2, bichain, func, arguments, context1);
 	    return function bichain(m){
-	      var context3 = application(3, bichain, future, arguments, context1);
+	      var context3 = application(3, bichain, future, arguments, context2);
 	      return m._transform(new BichainTransformation(context3, f, g));
 	    };
 	  };
@@ -1384,7 +1372,7 @@ var Fluture = (function () {
 	  if(this.crashed) rec(this.value);
 	  else if(this.rejected) rej(this.value);
 	  else if(this.resolved) res(this.value);
-	  else{
+	  else {
 	    this.rec = rec;
 	    this.rej = rej;
 	    this.res = res;
@@ -2028,7 +2016,12 @@ var Fluture = (function () {
 	var $$type$1 = namespace + '/ConcurrentFuture@' + version;
 	var zeroInstance = new ConcurrentFuture(never);
 
+	// Compliance with sanctuary-type-identifiers versions 1 and 2.
+	// To prevent sanctuary-type-identifiers version 3 from identifying
+	// 'Par' as being of the type denoted by $$type, we ensure that
+	// Par.constructor.prototype is equal to Par.
 	Par['@@type'] = $$type$1;
+	Par.constructor = {prototype: Par};
 
 	Par[FL.of] = function Par$of(x){
 	  return new ConcurrentFuture(resolve(x));
@@ -2147,8 +2140,6 @@ var Fluture = (function () {
 	    return m._interpret(raise, value$rej, res);
 	  };
 	}
-
-
 
 	var Fluture = /*#__PURE__*/Object.freeze({
 		__proto__: null,
