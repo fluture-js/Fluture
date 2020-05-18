@@ -1,12 +1,12 @@
 # [![Fluture](logo.png)](#butterfly)
 
-[![Build Status][]](https://travis-ci.org/fluture-js/Fluture)
+[![Build Status][]](https://github.com/fluture-js/Fluture/actions?query=branch%3Amaster+workflow%3ATest)
 [![Code Coverage][]](https://codecov.io/gh/fluture-js/Fluture/branch/master)
 [![Dependency Status][]](https://david-dm.org/fluture-js/Fluture)
 [![NPM Package][]](https://www.npmjs.com/package/fluture)
 [![Gitter Chat][]](https://gitter.im/fluture-js/Fluture)
 
-[Build Status]: https://img.shields.io/travis/fluture-js/Fluture/master.svg
+[Build Status]: https://github.com/fluture-js/Fluture/workflows/Test/badge.svg
 [Code Coverage]: https://img.shields.io/codecov/c/github/fluture-js/Fluture/master.svg
 [Dependency Status]: https://img.shields.io/david/fluture-js/Fluture.svg
 [NPM Package]: https://img.shields.io/npm/v/fluture.svg
