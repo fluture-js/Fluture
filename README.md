@@ -39,29 +39,6 @@ For more information:
 
 > `npm install --save fluture`
 
-On older environments you may need to polyfill one or more of the following
-functions: [`Object.create`][JS:Object.create],
-[`Object.assign`][JS:Object.assign] and [`Array.isArray`][JS:Array.isArray].
-
-### CommonJS Module
-
-Although the Fluture source uses the EcmaScript module system,
-the `main` file points to a CommonJS version of Fluture.
-
-```js
-const fs = require ('fs')
-const Future = require ('fluture')
-
-const getPackageName = function (file) {
-  return Future.node (function (done) { fs.readFile (file, 'utf8', done) })
-  .pipe (Future.chain (Future.encase (JSON.parse)))
-  .pipe (Future.map (function (x) { return x.name }))
-}
-
-getPackageName ('package.json')
-.pipe (Future.fork (console.error) (console.log))
-```
-
 ### EcmaScript Module
 
 Fluture is written as modular JavaScript.
@@ -109,6 +86,29 @@ of Fluture's dependencies pre-bundled.
 [Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.min.js
 [Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.js
 [Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.min.js
+
+### CommonJS Module
+
+Although the Fluture source uses the EcmaScript module system,
+the `main` file points to a CommonJS version of Fluture.
+
+On older environments you may need to polyfill one or more of the following
+functions: [`Object.create`][JS:Object.create],
+[`Object.assign`][JS:Object.assign] and [`Array.isArray`][JS:Array.isArray].
+
+```js
+const fs = require ('fs')
+const Future = require ('fluture')
+
+const getPackageName = function (file) {
+  return Future.node (function (done) { fs.readFile (file, 'utf8', done) })
+  .pipe (Future.chain (Future.encase (JSON.parse)))
+  .pipe (Future.map (function (x) { return x.name }))
+}
+
+getPackageName ('package.json')
+.pipe (Future.fork (console.error) (console.log))
+```
 
 ## Interoperability
 
