@@ -10,7 +10,11 @@ var banner = `/**
  */
 `;
 
-export default {
+var typeref = `/// <reference types="https://cdn.jsdelivr.net/gh/fluture-js/Fluture@${
+  process.env.VERSION || pkg.version
+}/index.d.ts" />`;
+
+export default [{
   input: 'index.cjs.js',
   plugins: [node(), commonjs({include: 'node_modules/**'})],
   output: {
@@ -19,4 +23,12 @@ export default {
     name: 'Fluture',
     file: 'dist/bundle.js'
   }
-};
+}, {
+  input: 'index.js',
+  plugins: [node(), commonjs({include: 'node_modules/**'})],
+  output: {
+    banner: `${banner}\n${typeref}\n`,
+    format: 'es',
+    file: 'dist/module.js'
+  }
+}];
