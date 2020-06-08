@@ -35,12 +35,8 @@ function eq (a){
   };
 }
 
-property('Rejected m => swap(m) = chainRej(resolve)(m)', anyRejectedFuture, function (m){
-  return eq(swap(m))(chainRej(resolve)(m));
-});
-
-property('Resolved m => swap(m) = chain(reject)(m)', anyResolvedFuture, function (m){
-  return eq(swap(m))(chain(reject)(m));
+property('swap(m) = bichain(resolve)(reject)(m)', anyFuture, function (m){
+  return eq(swap(m))(bichain(resolve)(reject)(m));
 });
 
 property('reject(x) = swap(resolve(x))', any, function (x){
