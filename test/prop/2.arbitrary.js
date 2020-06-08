@@ -43,6 +43,10 @@ property('bichain(B(mk)(f))(resolve)(m) = chainRej(B(mk)(f))(m)', make, anyFutur
   return eq(bichain(B(mk)(f))(resolve)(m))(chainRej(B(mk)(f))(m));
 });
 
+property('bichain(B(mk)(f))(B(mk)(g))(m) = chain(I)(coalesce(B(mk)(f))(B(mk)(g))(m))', make, anyFuture, function (mk, m){
+  return eq(bichain(B(mk)(f))(B(mk)(g))(m))(chain(I)(coalesce(B(mk)(f))(B(mk)(g))(m)));
+});
+
 property('swap(m) = bichain(resolve)(reject)(m)', anyFuture, function (m){
   return eq(swap(m))(bichain(resolve)(reject)(m));
 });
