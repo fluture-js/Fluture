@@ -35,6 +35,14 @@ function eq (a){
   };
 }
 
+property('bichain(reject)(B(mk)(f))(m) = chain(B(mk)(f))(m)', make, anyFuture, function (mk, m){
+  return eq(bichain(reject)(B(mk)(f))(m))(chain(B(mk)(f))(m));
+});
+
+property('bichain(B(mk)(f))(resolve)(m) = chainRej(B(mk)(f))(m)', make, anyFuture, function (mk, m){
+  return eq(bichain(B(mk)(f))(resolve)(m))(chainRej(B(mk)(f))(m));
+});
+
 property('swap(m) = bichain(resolve)(reject)(m)', anyFuture, function (m){
   return eq(swap(m))(bichain(resolve)(reject)(m));
 });
@@ -81,14 +89,6 @@ property('mapRej(f)(m) = chainRej(B(reject)(f))(m)', anyFuture, function (m){
 
 property('mapRej(f)(m) = bimap(f)(I)(m)', anyFuture, function (m){
   return eq(mapRej(f)(m))(bimap(f)(I)(m));
-});
-
-property('Rejected m => chainRej(B(mk)(f))(m) = bichain(B(mk)(f))(reject)(m)', make, anyRejectedFuture, function (mk, m){
-  return eq(chainRej(B(mk)(f))(m))(bichain(B(mk)(f))(reject)(m));
-});
-
-property('Resolved m => chain(B(mk)(f))(m) = bichain(resolve)(B(mk)(f))(m)', make, anyResolvedFuture, function (mk, m){
-  return eq(chain(B(mk)(f))(m))(bichain(resolve)(B(mk)(f))(m));
 });
 
 property('mapRej(f)(m) = swap(map(f)(swap(m)))', anyFuture, function (m){
