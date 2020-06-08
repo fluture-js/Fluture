@@ -39,8 +39,8 @@ property('swap(m) = bichain(resolve)(reject)(m)', anyFuture, function (m){
   return eq(swap(m))(bichain(resolve)(reject)(m));
 });
 
-property('reject(x) = swap(resolve(x))', any, function (x){
-  return eq(reject(x))(swap(resolve(x)));
+property('swap(resolve(x)) = reject(x)', any, function (x){
+  return eq(swap(resolve(x)))(reject(x));
 });
 
 property('swap(reject(x)) = resolve(x)', any, function (x){
