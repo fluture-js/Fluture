@@ -71,12 +71,8 @@ property('and(a)(b) = chain(K(a))(b)', anyFuture, anyFuture, function (a, b){
   return eq(and(a)(b))(chain(K(a))(b));
 });
 
-property('Rejected m => coalesce(f)(g)(m) = chainRej(B(resolve)(f))(m)', anyRejectedFuture, function (m){
-  return eq(coalesce(f)(g)(m))(chainRej(B(resolve)(f))(m));
-});
-
-property('Resolved m => coalesce(f)(g)(m) = map(g)(m)', anyResolvedFuture, function (m){
-  return eq(coalesce(f)(g)(m))(map(g)(m));
+property('coalesce(f)(g)(m) = chainRej(B(resolve)(f))(map(g)(m))', anyFuture, function (m){
+  return eq(coalesce(f)(g)(m))(chainRej(B(resolve)(f))(map(g)(m)));
 });
 
 property('go(function*(){ return f(yield m) }) = map(f)(m)', anyFuture, function (m){
