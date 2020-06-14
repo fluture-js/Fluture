@@ -133,7 +133,7 @@ getPackageName ('package.json')
 - [Debugging with Fluture](#debugging)
 - [Casting Futures to String](#casting-futures-to-string)
 - [Usage with Sanctuary](#sanctuary)
-- [Using multiple versions of Fluture](#casting-futures)
+- [Using multiple versions of Fluture alongside each other](#incompatible-fluture-versions)
 
 </details>
 
@@ -278,7 +278,8 @@ You can read in depth about [Hindley-Milner in JavaScript][Guide:HM] here.
 
 The concrete types you will encounter throughout this documentation:
 
-- **Future** - Instances of Future provided by [compatible versions](#casting-futures) of Fluture.
+- **Future** - Instances of Future provided by
+  [compatible versions](#incompatible-fluture-versions) of Fluture.
 - **ConcurrentFuture** - Futures wrapped with ([`Future.Par`](#concurrentfuture)).
 - **Promise a b** - Values which conform to the [Promises/A+ specification][7]
   and have a rejection reason of type `a` and a resolution value of type `b`.
@@ -529,25 +530,33 @@ from [`fluture-sanctuary-types`][FST] and pass them to [`S.create`][S:create]:
 [resolution]: 42
 ```
 
-### Casting Futures
+### Incompatible Fluture Versions
 
-Sometimes we may need to convert one Future to another, for example when the
-Future was created by another package, or an incompatible version of Fluture.
+Most versions of Fluture understand how to consume instances from most other
+versions, even across Fluture's major releases. This allows for different
+packages that depend on Fluture to interact.
 
-When [`isFuture`](#isfuture) returns `false`, a conversion is necessary.
-Usually the most concise way of doing this is as follows:
+However, sometimes it's unavoidable that a newer version of Fluture is released
+that can no longer understand older versions, and vice-versa. This only ever
+happens on a major release, and will be mentioned in the breaking change log.
+When two incompatible versions of Fluture meet instances, they do their best to
+issue a clear error message about it.
+
+When this happens, you need to manually convert the older instance to a newer
+instance of Future. When [`isFuture`](#isfuture) returns `false`, a conversion
+is necessary. You can also apply this trick if the Future comes from another
+library similar to Fluture.
 
 ```js
-> const NoFuture = require ('incompatible-future')
+const NoFuture = require ('incompatible-future')
 
-> const incompatible = NoFuture.of ('Hello')
+const incompatible = NoFuture.of ('Hello')
 
-> const compatible = Future (incompatible.fork.bind (incompatible))
+const compatible = Future ((rej, res) => {
+  return NoFuture.fork (rej) (res) (incompatible)
+})
 
-> fork (log ('rejection'))
-.      (log ('resolution'))
-.      (both (compatible) (resolve ('world')))
-[resolution]: ["Hello", "world"]
+both (compatible) (resolve ('world'))
 ```
 
 ### Creating Futures
