@@ -82,10 +82,10 @@ of Fluture's dependencies pre-bundled.
   or modern browsers.
 - [Fluture Module Minified][]: A minified EcmaScript module without TypeScript typings. Not recommended for Deno.
 
-[Fluture Script]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.js
-[Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.min.js
-[Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.js
-[Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.min.js
+[Fluture Script]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.js
+[Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.min.js
+[Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.js
+[Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.min.js
 
 ### CommonJS Module
 
