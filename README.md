@@ -39,29 +39,6 @@ For more information:
 
 > `npm install --save fluture`
 
-On older environments you may need to polyfill one or more of the following
-functions: [`Object.create`][JS:Object.create],
-[`Object.assign`][JS:Object.assign] and [`Array.isArray`][JS:Array.isArray].
-
-### CommonJS Module
-
-Although the Fluture source uses the EcmaScript module system,
-the `main` file points to a CommonJS version of Fluture.
-
-```js
-const fs = require ('fs')
-const Future = require ('fluture')
-
-const getPackageName = function (file) {
-  return Future.node (function (done) { fs.readFile (file, 'utf8', done) })
-  .pipe (Future.chain (Future.encase (JSON.parse)))
-  .pipe (Future.map (function (x) { return x.name }))
-}
-
-getPackageName ('package.json')
-.pipe (Future.fork (console.error) (console.log))
-```
-
 ### EcmaScript Module
 
 Fluture is written as modular JavaScript.
@@ -71,7 +48,8 @@ Fluture is written as modular JavaScript.
 - On Node versions below 12, you can use the [esm loader][esm]. Alternatively,
   you can use the [CommonJS Module](#commonjs-module).
 - Modern browsers can run Fluture directly. If you'd like to try this out,
-  I recommend installing Fluture with [Pika][] or [Snowpack][].
+  I recommend installing Fluture with [Pika][] or [Snowpack][]. You can also
+  try the [bundled module](#global-bundle-cdn) to avoid a package manager.
 - For older browsers, you can use a bundler such as [Rollup][] or WebPack.
   Fluture doesn't use ES5+ language features, so the source does not have to
   be transpiled. Alternatively, you can use the
@@ -93,10 +71,44 @@ getPackageName ('package.json')
 
 ### Global Bundle (CDN)
 
-Fluture is hosted in full with all of its dependencies at
-https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.js
+To load Fluture directly into a browser, a code pen, or [Deno][], use one of
+the following downloads from JSDelivr. They are single files that come with all
+of Fluture's dependencies pre-bundled.
 
-This script will add `Fluture` to the global scope.
+- [Fluture Script][]: A JavaScript file that adds `Fluture` to the global
+  scope. Ideal for older browsers and code pens.
+- [Fluture Script Minified][]: The same as above, but minified.
+- [Fluture Module][]: An EcmaScript module with named exports. Ideal for Deno
+  or modern browsers.
+- [Fluture Module Minified][]: A minified EcmaScript module without TypeScript typings. Not recommended for Deno.
+
+[Fluture Script]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.js
+[Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/bundle.min.js
+[Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.js
+[Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.2.1/dist/module.min.js
+
+### CommonJS Module
+
+Although the Fluture source uses the EcmaScript module system,
+the `main` file points to a CommonJS version of Fluture.
+
+On older environments you may need to polyfill one or more of the following
+functions: [`Object.create`][JS:Object.create],
+[`Object.assign`][JS:Object.assign] and [`Array.isArray`][JS:Array.isArray].
+
+```js
+const fs = require ('fs')
+const Future = require ('fluture')
+
+const getPackageName = function (file) {
+  return Future.node (function (done) { fs.readFile (file, 'utf8', done) })
+  .pipe (Future.chain (Future.encase (JSON.parse)))
+  .pipe (Future.map (function (x) { return x.name }))
+}
+
+getPackageName ('package.json')
+.pipe (Future.fork (console.error) (console.log))
+```
 
 ## Interoperability
 
@@ -1660,6 +1672,7 @@ by Fluture to generate contextual stack traces.
 [Pika]:                 https://www.pikapkg.com/
 [Snowpack]:             https://www.snowpack.dev/
 [esm]:                  https://github.com/standard-things/esm
+[Deno]:                 https://deno.land/
 
 [Guide:HM]:             https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html
 [Guide:constraints]:    https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html#constraints
