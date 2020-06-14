@@ -1,7 +1,7 @@
 /* global process require */
 
-import node from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import node from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 var pkg = require('./package.json');
 
