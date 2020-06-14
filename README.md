@@ -35,25 +35,50 @@ For more information:
 * [Wiki: Compare Fluture to similar libraries][wiki:similar]
 * [Video: Monad a Day - Futures by @DrBoolean][5]
 
-## Usage
+## Installation
 
-> `npm install --save fluture`
+### With NPM
+
+```console
+$ npm install --save fluture
+```
+
+### Bundled from a CDN
+
+To load Fluture directly into a browser, a code pen, or [Deno][], use one of
+the following downloads from the JSDelivr content delivery network. These are
+single files that come with all of Fluture's dependencies pre-bundled.
+
+- [Fluture Script][]: A JavaScript file that adds `Fluture` to the global
+  scope. Ideal for older browsers and code pens.
+- [Fluture Script Minified][]: The same as above, but minified.
+- [Fluture Module][]: An EcmaScript module with named exports. Ideal for Deno
+  or modern browsers.
+- [Fluture Module Minified][]: A minified EcmaScript module without TypeScript
+  typings. Not recommended for Deno.
+
+[Fluture Script]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.js
+[Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.min.js
+[Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.js
+[Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.min.js
+
+## Usage
 
 ### EcmaScript Module
 
 Fluture is written as modular JavaScript.
 
-- On Node 13 and up, you can load Fluture directly as shown in the example.
-- On Node 12, you'll need to run with `node --experimental-modules`.
-- On Node versions below 12, you can use the [esm loader][esm]. Alternatively,
-  you can use the [CommonJS Module](#commonjs-module).
+- On Node 13 and up, Fluture can be loaded directly as shown in the example.
+- On Node 12, the `--experimental-modules` flag must be provided.
+- On Node versions below 12, the [esm loader][esm] can be used. Alternatively,
+  there is a [CommonJS Module](#commonjs-module) available.
 - Modern browsers can run Fluture directly. If you'd like to try this out,
   I recommend installing Fluture with [Pika][] or [Snowpack][]. You can also
-  try the [bundled module](#global-bundle-cdn) to avoid a package manager.
-- For older browsers, you can use a bundler such as [Rollup][] or WebPack.
-  Fluture doesn't use ES5+ language features, so the source does not have to
-  be transpiled. Alternatively, you can use the
-  [CommonJS Module](#commonjs-module).
+  try the [bundled module](#bundled-from-a-cdn) to avoid a package manager.
+- For older browsers, use a bundler such as [Rollup][] or WebPack. Fluture
+  doesn't use ES5+ language features, so the source does not have to be
+  transpiled. Alternatively, there is a [CommonJS Module](#commonjs-module)
+  available.
 
 ```js
 import {readFile} from 'fs'
@@ -69,31 +94,13 @@ getPackageName ('package.json')
 .pipe (fork (console.error) (console.log))
 ```
 
-### Global Bundle (CDN)
-
-To load Fluture directly into a browser, a code pen, or [Deno][], use one of
-the following downloads from JSDelivr. They are single files that come with all
-of Fluture's dependencies pre-bundled.
-
-- [Fluture Script][]: A JavaScript file that adds `Fluture` to the global
-  scope. Ideal for older browsers and code pens.
-- [Fluture Script Minified][]: The same as above, but minified.
-- [Fluture Module][]: An EcmaScript module with named exports. Ideal for Deno
-  or modern browsers.
-- [Fluture Module Minified][]: A minified EcmaScript module without TypeScript typings. Not recommended for Deno.
-
-[Fluture Script]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.js
-[Fluture Script Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/bundle.min.js
-[Fluture Module]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.js
-[Fluture Module Minified]: https://cdn.jsdelivr.net/gh/fluture-js/Fluture@12.3.0/dist/module.min.js
-
 ### CommonJS Module
 
 Although the Fluture source uses the EcmaScript module system,
 the `main` file points to a CommonJS version of Fluture.
 
-On older environments you may need to polyfill one or more of the following
-functions: [`Object.create`][JS:Object.create],
+On older environments one or more of the following functions may need to be
+polyfilled: [`Object.create`][JS:Object.create],
 [`Object.assign`][JS:Object.assign] and [`Array.isArray`][JS:Array.isArray].
 
 ```js
@@ -110,35 +117,16 @@ getPackageName ('package.json')
 .pipe (Future.fork (console.error) (console.log))
 ```
 
-## Interoperability
-
-[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" width="82" height="82" alt="Fantasy Land" />][FL]
-
-* `Future` implements [Fantasy Land][FL] 1.0+ -compatible
-  `Alt`, `Bifunctor`, `Monad`, and `ChainRec`
-  (`of`, `ap`, `alt`, `map`, `bimap`, `chain`, `chainRec`).
-* `Future.Par` implements [Fantasy Land 3][FL] -compatible
-  `Alternative` (`of`, `zero`, `map`, `ap`, `alt`).
-* The Future and ConcurrentFuture representatives contain `@@type` properties
-  for [Sanctuary Type Identifiers][STI].
-* The Future and ConcurrentFuture instances contain `@@show` properties for
-  [Sanctuary Show][SS].
-
-## Butterfly
-
-The name "Fluture" is a conjunction of "FL" (the acronym to [Fantasy Land][FL])
-and "future". Fluture means butterfly in Romanian: A creature one might expect
-to see in Fantasy Land.
-
-Credit goes to Erik Fuente for styling the logo, and [WEAREREASONABLEPEOPLE][9]
-for sponsoring the project.
-
 ## Documentation
 
 ### Table of contents
 
 <details open><summary>General</summary>
 
+- [Installation instructions](#installation)
+- [Usage instructions](#usage)
+- [About the Fluture project](#butterfly)
+- [On interoperability with other libraries](#interoperability)
 - [How to read the type signatures](#type-signatures)
 - [How cancellation works](#cancellation)
 - [On stack safety](#stack-safety)
@@ -240,6 +228,29 @@ for sponsoring the project.
 - [`context`: The debugging context of a Future instance](#context)
 
 </details>
+
+### Butterfly
+
+The name "Fluture" is a conjunction of "FL" (the acronym to [Fantasy Land][FL])
+and "future". Fluture means butterfly in Romanian: A creature one might expect
+to see in Fantasy Land.
+
+Credit goes to Erik Fuente for styling the logo, and [WEAREREASONABLEPEOPLE][9]
+for sponsoring the project.
+
+### Interoperability
+
+[<img src="https://raw.github.com/fantasyland/fantasy-land/master/logo.png" align="right" width="82" height="82" alt="Fantasy Land" />][FL]
+
+* `Future` implements [Fantasy Land][FL] 1.0+ -compatible
+  `Alt`, `Bifunctor`, `Monad`, and `ChainRec`
+  (`of`, `ap`, `alt`, `map`, `bimap`, `chain`, `chainRec`).
+* `Future.Par` implements [Fantasy Land 3][FL] -compatible
+  `Alternative` (`of`, `zero`, `map`, `ap`, `alt`).
+* The Future and ConcurrentFuture representatives contain `@@type` properties
+  for [Sanctuary Type Identifiers][STI].
+* The Future and ConcurrentFuture instances contain `@@show` properties for
+  [Sanctuary Show][SS].
 
 ### Type signatures
 
