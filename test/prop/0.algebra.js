@@ -59,16 +59,16 @@ property('bichain associativity', _mx, _fm, _fm, function (m, f, g){
   return eq(bichain(g)(g)(bichain(f)(f)(m)))(bichain(B(bichain(g)(g))(f))(B(bichain(g)(g))(f))(m));
 });
 
-property('bichain identity', _mx, function (m){
-  return eq(bichain(reject)(resolve)(m))(m);
-});
-
-property('bichain left identity', _x, _fm, _fm, function (x, f, g){
+property('bichain left identity on rejection', _x, _fm, _fm, function (x, f, g){
   return eq(bichain(f)(g)(reject(x)))(f(x));
 });
 
-property('bichain left identity', _x, _fm, _fm, function (x, f, g){
+property('bichain left identity on resolution', _x, _fm, _fm, function (x, f, g){
   return eq(bichain(f)(g)(resolve(x)))(g(x));
+});
+
+property('bichain right identity', _mx, function (m){
+  return eq(bichain(reject)(resolve)(m))(m);
 });
 
 property('bimap identity', _mx, function (mx){
