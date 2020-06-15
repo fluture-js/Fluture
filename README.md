@@ -75,10 +75,10 @@ Fluture is written as modular JavaScript.
 - Modern browsers can run Fluture directly. If you'd like to try this out,
   I recommend installing Fluture with [Pika][] or [Snowpack][]. You can also
   try the [bundled module](#bundled-from-a-cdn) to avoid a package manager.
-- For older browsers, use a bundler such as [Rollup][] or WebPack. Fluture
-  doesn't use ES5+ language features, so the source does not have to be
-  transpiled. Alternatively, there is a [CommonJS Module](#commonjs-module)
-  available.
+- For older browsers, use a bundler such as [Rollup][] or WebPack. Besides the
+  module system, Fluture uses purely ES5-compatible syntax, so the source does
+  not have to be transpiled after bundling. Alternatively, there is a
+  [CommonJS Module](#commonjs-module) available.
 
 ```js
 import {readFile} from 'fs'
