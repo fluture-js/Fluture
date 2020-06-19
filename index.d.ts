@@ -62,7 +62,12 @@ export interface FutureInstance<L, R> {
 export function after(duration: number): <R>(value: R) => FutureInstance<never, R>
 
 /** Logical and for Futures. See https://github.com/fluture-js/Fluture#and */
-export function and<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, any>) => FutureInstance<L, R>
+export function and<LB, RB>(second: FutureInstance<LB, RB>): {
+  (first: typeof never): typeof never
+  <LA>(first: Rejected<LA>): Rejected<LA>
+  (first: Resolved<any>): FutureInstance<LB, RB>
+  <LA>(first: FutureInstance<LA, any>): FutureInstance<LA | LB, RB>
+}
 
 /** Logical or for Futures. See https://github.com/fluture-js/Fluture#alt */
 export function alt<LB, RB>(second: FutureInstance<LB, RB>): {
