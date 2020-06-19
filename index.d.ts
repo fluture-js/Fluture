@@ -21,12 +21,20 @@ export interface Nodeback<E, R> {
   (err: E | null, value?: R): void
 }
 
+export type ConcurrentRejected<T> = ConcurrentFutureInstance<T, never>;
+
+export type ConcurrentResolved<T> = ConcurrentFutureInstance<never, T>;
+
 export interface ConcurrentFutureInstance<L, R> {
   sequential: FutureInstance<L, R>
   'fantasy-land/ap'<A, B>(this: ConcurrentFutureInstance<L, (value: A) => B>, right: ConcurrentFutureInstance<L, A>): ConcurrentFutureInstance<L, B>
   'fantasy-land/map'<RB>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
   'fantasy-land/alt'(right: ConcurrentFutureInstance<L, R>): ConcurrentFutureInstance<L, R>
 }
+
+export type Rejected<T> = FutureInstance<T, never>;
+
+export type Resolved<T> = FutureInstance<never, T>;
 
 export interface FutureInstance<L, R> {
 
@@ -57,10 +65,15 @@ export function after(duration: number): <R>(value: R) => FutureInstance<never, 
 export function and<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, any>) => FutureInstance<L, R>
 
 /** Logical or for Futures. See https://github.com/fluture-js/Fluture#alt */
-export function alt<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, R>) => FutureInstance<L, R>
+export function alt<LB, RB>(second: FutureInstance<LB, RB>): {
+  (first: typeof never): typeof never
+  (first: Rejected<any>): FutureInstance<LB, RB>
+  <RA>(first: Resolved<RA>): Resolved<RA>
+  <RA>(first: FutureInstance<any, RA>): FutureInstance<LB, RA | RB>
+}
 
 /** Race two ConcurrentFutures. See https://github.com/fluture-js/Fluture#alt */
-export function alt<L, R>(left: ConcurrentFutureInstance<L, R>): (right: ConcurrentFutureInstance<L, R>) => ConcurrentFutureInstance<L, R>
+export function alt<LB, RB>(second: ConcurrentFutureInstance<LB, RB>): <LA, RA>(first: ConcurrentFutureInstance<LA, RA>) => ConcurrentFutureInstance<LA | LB, RA | RB>
 
 /** Apply the function in the right Future to the value in the left Future. See https://github.com/fluture-js/Fluture#ap */
 export function ap<L, RA>(value: FutureInstance<L, RA>): <RB>(apply: FutureInstance<L, (value: RA) => RB>) => FutureInstance<L, RB>
