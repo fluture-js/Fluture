@@ -158,7 +158,7 @@ export function resolve<R>(value: R): FutureInstance<never, R>
 export function parallel(concurrency: number): <L, R>(futures: Array<FutureInstance<L, R>>) => FutureInstance<L, Array<R>>
 
 /** Convert a Future to a Promise. See https://github.com/fluture-js/Fluture#promise */
-export function promise<R>(source: FutureInstance<Error, R>): Promise<R>
+export function promise<R>(source: FutureInstance<any, R>): Promise<R>
 
 /** Race two Futures against one another. See https://github.com/fluture-js/Fluture#race */
 export function race<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, R>) => FutureInstance<L, R>
