@@ -110,7 +110,12 @@ export function attempt<L, R>(fn: () => R): FutureInstance<L, R>
 export function attemptP<L, R>(fn: () => Promise<R>): FutureInstance<L, R>
 
 /** Create a Future using the inner value of the given Future. See https://github.com/fluture-js/Fluture#bichain */
-export function bichain<LA, LB, RB>(lmapper: (reason: LA) => FutureInstance<LB, RB>): <RA>(rmapper: (value: RA) => FutureInstance<LB, RB>) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
+export function bichain<LA, LB, RB>(onReject: (reason: LA) => FutureInstance<LB, RB>): <RA, LC, RC>(onResolve: (value: RA) => FutureInstance<LC, RC>) => {
+  (source: typeof never): typeof never
+  (source: Rejected<LA>): FutureInstance<LB, RB>
+  (source: Resolved<RA>): FutureInstance<LC, RC>
+  (source: FutureInstance<LA, RA>): FutureInstance<LB | LC, RB | RC>
+}
 
 /** Map over both branches of the given Bifunctor at once. See https://github.com/fluture-js/Fluture#bimap */
 export function bimap<LA, LB>(lmapper: (reason: LA) => LB): <RA, RB>(rmapper: (value: RA) => RB) => (source: FutureInstance<LA, RA>) => FutureInstance<LB, RB>
