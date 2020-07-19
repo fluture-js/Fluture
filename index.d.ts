@@ -30,12 +30,20 @@ export interface Functor<A> {
 
 type Mapped<F extends Functor<unknown>, B> = ReturnType<(F & { [$T]: B })['fantasy-land/map']>
 
+export type ConcurrentRejected<T> = ConcurrentFutureInstance<T, never>;
+
+export type ConcurrentResolved<T> = ConcurrentFutureInstance<never, T>;
+
 export interface ConcurrentFutureInstance<L, R> extends Functor<R> {
   sequential: FutureInstance<L, R>
   'fantasy-land/ap'<A, B>(this: ConcurrentFutureInstance<L, (value: A) => B>, right: ConcurrentFutureInstance<L, A>): ConcurrentFutureInstance<L, B>
   'fantasy-land/map'<RB extends this[typeof $T]>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
   'fantasy-land/alt'(right: ConcurrentFutureInstance<L, R>): ConcurrentFutureInstance<L, R>
 }
+
+export type Rejected<T> = FutureInstance<T, never>;
+
+export type Resolved<T> = FutureInstance<never, T>;
 
 export interface FutureInstance<L, R> extends Functor<R> {
 
@@ -60,7 +68,7 @@ export interface FutureInstance<L, R> extends Functor<R> {
 }
 
 /** Creates a Future which resolves after the given duration with the given value. See https://github.com/fluture-js/Fluture#after */
-export function after(duration: number): <R>(value: R) => FutureInstance<never, R>
+export function after(duration: number): <R>(value: R) => Resolved<R>
 
 /** Logical and for Futures. See https://github.com/fluture-js/Fluture#and */
 export function and<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, any>) => FutureInstance<L, R>
@@ -120,7 +128,7 @@ export function extractLeft<L, R>(source: FutureInstance<L, R>): Array<L>
 export function extractRight<L, R>(source: FutureInstance<L, R>): Array<R>
 
 /** Coalesce both branches into the resolution branch. See https://github.com/fluture-js/Fluture#coalesce */
-export function coalesce<LA, R>(lmapper: (left: LA) => R): <RA>(rmapper: (right: RA) => R) => (source: FutureInstance<LA, RA>) => FutureInstance<never, R>
+export function coalesce<LA, R>(lmapper: (left: LA) => R): <RA>(rmapper: (right: RA) => R) => (source: FutureInstance<LA, RA>) => Resolved<R>
 
 /** Fork the given Future into the given continuations. See https://github.com/fluture-js/Fluture#fork */
 export function fork<L>(reject: RejectFunction<L>): <R>(resolve: ResolveFunction<R>) => (source: FutureInstance<L, R>) => Cancel
@@ -153,13 +161,13 @@ export const map: {
 export function mapRej<LA, LB>(mapper: (reason: LA) => LB): <R>(source: FutureInstance<LA, R>) => FutureInstance<LB, R>
 
 /** A Future that never settles. See https://github.com/fluture-js/Fluture#never */
-export var never: FutureInstance<never, never>
+export var never: Resolved<never>
 
 /** Create a Future using a provided Node-style callback. See https://github.com/fluture-js/Fluture#node */
 export function node<L, R>(fn: (done: Nodeback<L, R>) => void): FutureInstance<L, R>
 
 /** Create a Future with the given resolution value. See https://github.com/fluture-js/Fluture#of */
-export function resolve<R>(value: R): FutureInstance<never, R>
+export function resolve<R>(value: R): Resolved<R>
 
 /** Run an Array of Futures in parallel, under the given concurrency limit. See https://github.com/fluture-js/Fluture#parallel */
 export function parallel(concurrency: number): <L, R>(futures: Array<FutureInstance<L, R>>) => FutureInstance<L, Array<R>>
@@ -171,10 +179,10 @@ export function promise<R>(source: FutureInstance<Error, R>): Promise<R>
 export function race<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, R>) => FutureInstance<L, R>
 
 /** Create a Future with the given rejection reason. See https://github.com/fluture-js/Fluture#reject */
-export function reject<L>(reason: L): FutureInstance<L, never>
+export function reject<L>(reason: L): Rejected<L>
 
 /** Creates a Future which rejects after the given duration with the given reason. See https://github.com/fluture-js/Fluture#rejectafter */
-export function rejectAfter(duration: number): <L>(reason: L) => FutureInstance<L, never>
+export function rejectAfter(duration: number): <L>(reason: L) => Rejected<L>
 
 /** Convert a ConcurrentFuture to a regular Future. See https://github.com/fluture-js/Fluture#concurrentfuture */
 export function seq<L, R>(source: ConcurrentFutureInstance<L, R>): FutureInstance<L, R>
@@ -183,7 +191,7 @@ export function seq<L, R>(source: ConcurrentFutureInstance<L, R>): FutureInstanc
 export function swap<L, R>(source: FutureInstance<L, R>): FutureInstance<R, L>
 
 /** Fork the Future into the given continuation. See https://github.com/fluture-js/Fluture#value */
-export function value<R>(resolve: ResolveFunction<R>): (source: FutureInstance<never, R>) => Cancel
+export function value<R>(resolve: ResolveFunction<R>): (source: Resolved<R>) => Cancel
 
 /** Enable or disable debug mode. See https://github.com/fluture-js/Fluture#debugmode */
 export function debugMode(debug: boolean): void;
