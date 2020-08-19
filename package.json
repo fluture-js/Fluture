@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.0.0",
-    "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "c8": "^7.0.0",
     "chai": "^4.1.2",
     "codecov": "^3.6.1",
