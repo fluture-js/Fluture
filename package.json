@@ -12,6 +12,7 @@
       "import": "./index.js",
       "default": "./index.cjs"
     },
+    "./index.js": "./index.js",
     "./test/arbitraries.js": "./test/arbitraries.js",
     "./test/assertions.js": "./test/assertions.js"
   },
