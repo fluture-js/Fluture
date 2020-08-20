@@ -1,8 +1,8 @@
 /**
- * Fluture bundled; version 13.0.0
+ * Fluture bundled; version 13.0.1
  */
 
-/// <reference types="https://cdn.jsdelivr.net/gh/fluture-js/Fluture@13.0.0/index.d.ts" />
+/// <reference types="https://cdn.jsdelivr.net/gh/fluture-js/Fluture@13.0.1/index.d.ts" />
 
 function createCommonjsModule(fn, basedir, module) {
 	return module = {
