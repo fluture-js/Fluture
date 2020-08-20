@@ -68,8 +68,9 @@ single files that come with all of Fluture's dependencies pre-bundled.
 
 Fluture is written as modular JavaScript.
 
-- On Node 13 and up, Fluture can be loaded directly as shown in the example.
-- On Node 12, the `--experimental-modules` flag must be provided.
+- On Node 14 and up, Fluture can be loaded directly with `import 'fluture'`.
+- On Node 13 and lower, Fluture can be loaded directly with `import 'fluture/index.js'`.
+- On Node 12, the `--experimental-modules` flag must be provided in addition.
 - On Node versions below 12, the [esm loader][esm] can be used. Alternatively,
   there is a [CommonJS Module](#commonjs-module) available.
 - Modern browsers can run Fluture directly. If you'd like to try this out,
@@ -82,7 +83,7 @@ Fluture is written as modular JavaScript.
 
 ```js
 import {readFile} from 'fs'
-import {node, encase, chain, map, fork} from 'fluture/index.js'
+import {node, encase, chain, map, fork} from 'fluture'
 
 const getPackageName = file => (
   node (done => { readFile (file, 'utf8', done) })

@@ -6,6 +6,10 @@
   "type": "module",
   "types": "index.d.ts",
   "module": "index.js",
+  "exports": {
+    "require": "./index.cjs",
+    "import": "./index.js"
+  },
   "files": [
     "src",
     "index.cjs",
