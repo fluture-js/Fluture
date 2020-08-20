@@ -9,7 +9,8 @@
   "exports": {
     ".": {
       "require": "./index.cjs",
-      "import": "./index.js"
+      "import": "./index.js",
+      "default": "./index.cjs"
     },
     "./test/arbitraries.js": "./test/arbitraries.js",
     "./test/assertions.js": "./test/assertions.js"
