@@ -7,8 +7,14 @@
   "types": "index.d.ts",
   "module": "index.js",
   "exports": {
-    "require": "./index.cjs",
-    "import": "./index.js"
+    ".": {
+      "require": "./index.cjs",
+      "import": "./index.js",
+      "default": "./index.cjs"
+    },
+    "./index.js": "./index.js",
+    "./test/arbitraries.js": "./test/arbitraries.js",
+    "./test/assertions.js": "./test/assertions.js"
   },
   "files": [
     "src",
