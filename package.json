@@ -39,7 +39,7 @@
     "test:build": "npm run build && oletus test/build/*.js",
     "coverage:upload": "c8 report --reporter=text-lcov > coverage.lcov && codecov",
     "coverage:report": "c8 report --reporter=html",
-    "test:types": "tsc index.d.ts"
+    "test:types": "tsd"
   },
   "author": "Aldwin Vlasblom <aldwin.vlasblom@gmail.com> (https://github.com/Avaq)",
   "homepage": "https://github.com/fluture-js/Fluture",
@@ -93,7 +93,11 @@
     "sanctuary-benchmark": "^1.0.0",
     "sanctuary-either": "^2.0.0",
     "sanctuary-type-classes": "^12.0.0",
+    "tsd": "^0.11.0",
     "typescript": "^3.6.4",
     "xyz": "^4.0.0"
+  },
+  "tsd": {
+    "directory": "test/types"
   }
 }
