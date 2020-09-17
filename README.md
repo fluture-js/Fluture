@@ -992,7 +992,7 @@ Chain over the **rejection** reason of the Future. This is like
 ```js
 > fork (log ('rejection'))
 .      (log ('resolution'))
-.      (chainRej (s => resolve (`${s} But it's all good.`)))
+.      (chainRej (s => resolve (`${s} But it's all good.`)) (reject ('It broke!')))
 [resolution]: "It broke! But it's all good."
 ```
 
