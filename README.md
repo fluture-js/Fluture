@@ -523,7 +523,7 @@ from [`fluture-sanctuary-types`][FST] and pass them to [`S.create`][S:create]:
 
 > import {resolve} from 'fluture'
 
-> const S = sanctuary.create ({checkTypes: true, env: env.concat (flutureEnv)})
+> const S = sanctuary.create ({checkTypes: true, env: sanctuary.env.concat (flutureEnv)})
 
 > fork (log ('rejection'))
 .      (log ('resolution'))
