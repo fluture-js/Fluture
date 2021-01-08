@@ -145,8 +145,8 @@ export function lastly<L>(cleanup: FutureInstance<L, any>): <R>(action: FutureIn
 
 /** Map over the resolution value of the given Future or ConcurrentFuture. See https://github.com/fluture-js/Fluture#map */
 export const map: {
-  <B, F extends Functor<unknown>>(f: Functor<unknown> extends F ? never : (a: F extends Functor<infer A> ? A : never) => B): (source: F) => Unfunctor<F, B>
-  <A, B>(f: (a: A) => B): <F extends Functor<A>>(f: F) => Unfunctor<F, B>
+  <B, F extends Functor<unknown>>(mapper: Functor<unknown> extends F ? never : (a: F extends Functor<infer A> ? A : never) => B): (source: F) => Unfunctor<F, B>
+  <A, B>(mapper: (a: A) => B): <F extends Functor<A>>(source: F) => Unfunctor<F, B>
 }
 
 /** Map over the rejection reason of the given Future. See https://github.com/fluture-js/Fluture#maprej */
