@@ -86,10 +86,38 @@ export function after(duration: number): <R>(value: R) => Resolved<R>
 export function and<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, any>) => FutureInstance<L, R>
 
 /** Logical or for Futures. See https://github.com/fluture-js/Fluture#alt */
-export function alt<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, R>) => FutureInstance<L, R>
+export const alt: {
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Never ? S : never): (first: F) => Never
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Rejected<unknown> ? S : never): (first: F) => S
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Resolved<unknown> ? S : never): (first: F) => F
 
-/** Race two ConcurrentFutures. See https://github.com/fluture-js/Fluture#alt */
-export function alt<L, R>(left: ConcurrentFutureInstance<L, R>): (right: ConcurrentFutureInstance<L, R>) => ConcurrentFutureInstance<L, R>
+  <L>(second: Rejected<L>): {
+    (first: Never): Never
+    (first: Rejected<any>): Rejected<L>
+    <R>(first: Resolved<R>): Resolved<R>
+    <R>(first: Uncertain<any, R>): Uncertain<L, R>
+  }
+
+  <L, R>(second: Uncertain<L, R>): {
+    <T>(first: Resolved<T>): Resolved<T>
+    (first: Rejected<any>): Uncertain<L, R>
+    (first: Uncertain<any, R>): Uncertain<L, R>
+  }
+
+  (second: ConcurrentNever): <L, R>(first: ConcurrentUncertain<L, R>) => ConcurrentUncertain<L, R>
+
+  <L>(second: ConcurrentRejected<L>): {
+    <R>(first: ConcurrentResolved<R>): ConcurrentUncertain<L, R>
+    <R>(first: ConcurrentUncertain<L, R>): ConcurrentUncertain<L, R>
+  }
+
+  <R>(second: ConcurrentResolved<R>): {
+    <L>(first: ConcurrentRejected<L>): ConcurrentUncertain<L, R>
+    <L>(first: ConcurrentUncertain<L, R>): ConcurrentUncertain<L, R>
+  }
+
+  <L, R>(second: ConcurrentUncertain<L, R>): (first: ConcurrentUncertain<L, R>) => ConcurrentUncertain<L, R>
+}
 
 /** Apply the function in the right Future to the value in the left Future. See https://github.com/fluture-js/Fluture#ap */
 export function ap<L, RA>(value: FutureInstance<L, RA>): <RB>(apply: FutureInstance<L, (value: RA) => RB>) => FutureInstance<L, RB>
