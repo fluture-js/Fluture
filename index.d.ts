@@ -21,17 +21,19 @@ export interface Nodeback<E, R> {
   (err: E | null, value?: R): void
 }
 
+declare const $T: unique symbol
+
 export interface Functor<A> {
-  input: unknown
-  'fantasy-land/map'<B extends this['input']>(mapper: (value: A) => B): Functor<B>
+  [$T]: unknown
+  'fantasy-land/map'<B extends this[typeof $T]>(mapper: (value: A) => B): Functor<B>
 }
 
-type Unfunctor<F extends Functor<unknown>, B> = ReturnType<(F & { input: B })['fantasy-land/map']>
+type Unfunctor<F extends Functor<unknown>, B> = ReturnType<(F & { [$T]: B })['fantasy-land/map']>
 
 export interface ConcurrentFutureInstance<L, R> extends Functor<R> {
   sequential: FutureInstance<L, R>
   'fantasy-land/ap'<A, B>(this: ConcurrentFutureInstance<L, (value: A) => B>, right: ConcurrentFutureInstance<L, A>): ConcurrentFutureInstance<L, B>
-  'fantasy-land/map'<RB extends this['input']>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
+  'fantasy-land/map'<RB extends this[typeof $T]>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
   'fantasy-land/alt'(right: ConcurrentFutureInstance<L, R>): ConcurrentFutureInstance<L, R>
 }
 
@@ -50,7 +52,7 @@ export interface FutureInstance<L, R> extends Functor<R> {
   extractRight(): Array<R>
 
   'fantasy-land/ap'<A, B>(this: FutureInstance<L, (value: A) => B>, right: FutureInstance<L, A>): FutureInstance<L, B>
-  'fantasy-land/map'<RB extends this['input']>(mapper: (value: R) => RB): FutureInstance<L, RB>
+  'fantasy-land/map'<RB extends this[typeof $T]>(mapper: (value: R) => RB): FutureInstance<L, RB>
   'fantasy-land/alt'(right: FutureInstance<L, R>): FutureInstance<L, R>
   'fantasy-land/bimap'<LB, RB>(lmapper: (reason: L) => LB, rmapper: (value: R) => RB): FutureInstance<LB, RB>
   'fantasy-land/chain'<LB, RB>(mapper: (value: R) => FutureInstance<LB, RB>): FutureInstance<L | LB, RB>
