@@ -28,7 +28,7 @@ export interface Functor<A> {
   'fantasy-land/map'<B extends this[typeof $T]>(mapper: (value: A) => B): Functor<B>
 }
 
-type Unfunctor<F extends Functor<unknown>, B> = ReturnType<(F & { [$T]: B })['fantasy-land/map']>
+type Mapped<F extends Functor<unknown>, B> = ReturnType<(F & { [$T]: B })['fantasy-land/map']>
 
 export interface ConcurrentFutureInstance<L, R> extends Functor<R> {
   sequential: FutureInstance<L, R>
@@ -145,8 +145,8 @@ export function lastly<L>(cleanup: FutureInstance<L, any>): <R>(action: FutureIn
 
 /** Map over the resolution value of the given Future or ConcurrentFuture. See https://github.com/fluture-js/Fluture#map */
 export const map: {
-  <B, F extends Functor<unknown>>(mapper: Functor<unknown> extends F ? never : (a: F extends Functor<infer A> ? A : never) => B): (source: F) => Unfunctor<F, B>
-  <A, B>(mapper: (a: A) => B): <F extends Functor<A>>(source: F) => Unfunctor<F, B>
+  <B, F extends Functor<unknown>>(mapper: Functor<unknown> extends F ? never : (a: F extends Functor<infer A> ? A : never) => B): (source: F) => Mapped<F, B>
+  <A, B>(mapper: (a: A) => B): <F extends Functor<A>>(source: F) => Mapped<F, B>
 }
 
 /** Map over the rejection reason of the given Future. See https://github.com/fluture-js/Fluture#maprej */
