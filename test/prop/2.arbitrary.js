@@ -71,7 +71,7 @@ property('Resolved m => chain(B(mk)(f))(m) = chainRej(B(mk)(f))(swap(m))', make,
   return eq(chain(B(mk)(f))(m))(chainRej(B(mk)(f))(swap(m)));
 });
 
-property('after(1)(x) = resolve(x)', any, function (n, x){
+property('after(1)(x) = resolve(x)', any, function (x){
   return eq(after(1)(x))(resolve(x));
 });
 
@@ -103,6 +103,6 @@ property('map(f)(m) = swap(mapRej(f)(swap(m)))', anyFuture, function (m){
   return eq(map(f)(m))(swap(mapRej(f)(swap(m))));
 });
 
-property('rejectAfter(1)(x) = reject(x)', any, function (n, x){
+property('rejectAfter(1)(x) = reject(x)', any, function (x){
   return eq(rejectAfter(1)(x))(reject(x));
 });
