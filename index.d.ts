@@ -21,20 +21,29 @@ export interface Nodeback<E, R> {
   (err: E | null, value?: R): void
 }
 
-export interface ConcurrentFutureInstance<L, R> {
+declare const $T: unique symbol
+
+export interface Functor<A> {
+  [$T]: unknown
+  'fantasy-land/map'<B extends this[typeof $T]>(mapper: (value: A) => B): Functor<B>
+}
+
+type Mapped<F extends Functor<unknown>, B> = ReturnType<(F & { [$T]: B })['fantasy-land/map']>
+
+export interface ConcurrentFutureInstance<L, R> extends Functor<R> {
   sequential: FutureInstance<L, R>
   'fantasy-land/ap'<A, B>(this: ConcurrentFutureInstance<L, (value: A) => B>, right: ConcurrentFutureInstance<L, A>): ConcurrentFutureInstance<L, B>
-  'fantasy-land/map'<RB>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
+  'fantasy-land/map'<RB extends this[typeof $T]>(mapper: (value: R) => RB): ConcurrentFutureInstance<L, RB>
   'fantasy-land/alt'(right: ConcurrentFutureInstance<L, R>): ConcurrentFutureInstance<L, R>
 }
 
-export interface FutureInstance<L, R> {
+export interface FutureInstance<L, R> extends Functor<R> {
 
   /** The Future constructor */
   constructor: FutureTypeRep
 
   /** Apply a function to this Future. See https://github.com/fluture-js/Fluture#pipe */
-  pipe<T>(fn: (future: FutureInstance<L, R>) => T): T
+  pipe<T>(fn: (future: this) => T): T
 
   /** Attempt to extract the rejection reason. See https://github.com/fluture-js/Fluture#extractleft */
   extractLeft(): Array<L>
@@ -43,7 +52,7 @@ export interface FutureInstance<L, R> {
   extractRight(): Array<R>
 
   'fantasy-land/ap'<A, B>(this: FutureInstance<L, (value: A) => B>, right: FutureInstance<L, A>): FutureInstance<L, B>
-  'fantasy-land/map'<RB>(mapper: (value: R) => RB): FutureInstance<L, RB>
+  'fantasy-land/map'<RB extends this[typeof $T]>(mapper: (value: R) => RB): FutureInstance<L, RB>
   'fantasy-land/alt'(right: FutureInstance<L, R>): FutureInstance<L, R>
   'fantasy-land/bimap'<LB, RB>(lmapper: (reason: L) => LB, rmapper: (value: R) => RB): FutureInstance<LB, RB>
   'fantasy-land/chain'<LB, RB>(mapper: (value: R) => FutureInstance<LB, RB>): FutureInstance<L | LB, RB>
@@ -135,12 +144,10 @@ export function isNever(value: any): boolean
 export function lastly<L>(cleanup: FutureInstance<L, any>): <R>(action: FutureInstance<L, R>) => FutureInstance<L, R>
 
 /** Map over the resolution value of the given Future or ConcurrentFuture. See https://github.com/fluture-js/Fluture#map */
-export function map<RA, RB>(mapper: (value: RA) => RB): <T extends FutureInstance<any, RA> | ConcurrentFutureInstance<any, RA>>(source: T) =>
-  T extends FutureInstance<infer L, RA> ?
-  FutureInstance<L, RB> :
-  T extends ConcurrentFutureInstance<infer L, RA> ?
-  ConcurrentFutureInstance<L, RB> :
-  never;
+export const map: {
+  <B, F extends Functor<unknown>>(mapper: Functor<unknown> extends F ? never : (a: F extends Functor<infer A> ? A : never) => B): (source: F) => Mapped<F, B>
+  <A, B>(mapper: (a: A) => B): <F extends Functor<A>>(source: F) => Mapped<F, B>
+}
 
 /** Map over the rejection reason of the given Future. See https://github.com/fluture-js/Fluture#maprej */
 export function mapRej<LA, LB>(mapper: (reason: LA) => LB): <R>(source: FutureInstance<LA, R>) => FutureInstance<LB, R>
