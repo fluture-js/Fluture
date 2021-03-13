@@ -1,6 +1,6 @@
 {
   "name": "fluture",
-  "version": "13.0.1",
+  "version": "14.0.0",
   "description": "FantasyLand compliant (monadic) alternative to Promises",
   "main": "index.cjs",
   "type": "module",

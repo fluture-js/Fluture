@@ -1,24 +1,14 @@
 /**
- * Fluture bundled; version 13.0.1
+ * Fluture bundled; version 14.0.0
  */
 
-/// <reference types="https://cdn.jsdelivr.net/gh/fluture-js/Fluture@13.0.1/index.d.ts" />
+/// <reference types="https://cdn.jsdelivr.net/gh/fluture-js/Fluture@14.0.0/index.d.ts" />
 
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-	  path: basedir,
-	  exports: {},
-	  require: function (path, base) {
-      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-    }
-	}, fn(module, module.exports), module.exports;
+function createCommonjsModule(fn) {
+  var module = { exports: {} };
+	return fn(module, module.exports), module.exports;
 }
 
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-}
-
-var sanctuaryTypeIdentifiers = createCommonjsModule(function (module) {
 /*
         @@@@@@@            @@@@@@@         @@
       @@       @@        @@       @@      @@@
@@ -30,6 +20,8 @@ var sanctuaryTypeIdentifiers = createCommonjsModule(function (module) {
       @@                 @@                           @@  @@
         @@@@@@@            @@@@@@@               @@@@@    @@
                                                           */
+
+var sanctuaryTypeIdentifiers = createCommonjsModule(function (module) {
 //. # sanctuary-type-identifiers
 //.
 //. A type is a set of values. Boolean, for example, is the type comprising
@@ -206,7 +198,7 @@ var namespace = 'fluture';
 var name = 'Future';
 var version = 5;
 
-var $$type = namespace + '/' + name + '@' + version;
+var $$type$1 = namespace + '/' + name + '@' + version;
 
 function List(head, tail){
   this.head = head;
@@ -518,7 +510,7 @@ function raise(x){
   });
 }
 
-function showArg(x){
+function showArg$1(x){
   return sanctuaryShow(x) + ' :: ' + sanctuaryTypeIdentifiers.parse(sanctuaryTypeIdentifiers(x)).name;
 }
 
@@ -533,7 +525,7 @@ function typeError(message){
 function invalidArgument(it, at, expected, actual){
   return typeError(
     it + '() expects its ' + ordinal[at] + ' argument to ' + expected + '.' +
-    '\n  Actual: ' + showArg(actual)
+    '\n  Actual: ' + showArg$1(actual)
   );
 }
 
@@ -552,7 +544,7 @@ function invalidArity(f, args){
         ordinal[i] ?
         ordinal[i].charAt(0).toUpperCase() + ordinal[i].slice(1) :
         'Argument ' + String(i + 1)
-      ) + ': ' + showArg(arg);
+      ) + ': ' + showArg$1(arg);
     }).join('')
   );
 }
@@ -716,7 +708,7 @@ function getArgs(it){
   return args;
 }
 
-function showArg$1(arg){
+function showArg(arg){
   return ' (' + sanctuaryShow(arg) + ')';
 }
 
@@ -742,20 +734,20 @@ function Future(computation){
 }
 
 function isFuture(x){
-  return x instanceof Future || sanctuaryTypeIdentifiers(x) === $$type;
+  return x instanceof Future || sanctuaryTypeIdentifiers(x) === $$type$1;
 }
 
 // Compliance with sanctuary-type-identifiers versions 1 and 2.
 // To prevent sanctuary-type-identifiers version 3 from identifying 'Future'
 // as being of the type denoted by $$type, we ensure that
 // Future.constructor.prototype is equal to Future.
-Future['@@type'] = $$type;
+Future['@@type'] = $$type$1;
 Future.constructor = {prototype: Future};
 
 Future[FL.of] = resolve;
 Future[FL.chainRec] = chainRec;
 
-Future.prototype['@@type'] = $$type;
+Future.prototype['@@type'] = $$type$1;
 
 Future.prototype['@@show'] = function Future$show(){
   return this.toString();
@@ -809,11 +801,11 @@ Future.prototype.arity = 0;
 Future.prototype.name = 'future';
 
 Future.prototype.toString = function Future$toString(){
-  return this.name + getArgs(this).map(showArg$1).join('');
+  return this.name + getArgs(this).map(showArg).join('');
 };
 
 Future.prototype.toJSON = function Future$toJSON(){
-  return {$: $$type, kind: 'interpreter', type: this.name, args: getArgs(this)};
+  return {$: $$type$1, kind: 'interpreter', type: this.name, args: getArgs(this)};
 };
 
 function createInterpreter(arity, name, interpret){
@@ -1077,7 +1069,7 @@ Transformer.prototype._transform = function Transformer$_transform(transformatio
 
 Transformer.prototype.toString = function Transformer$toString(){
   return toArray(reverse(this.$2)).reduce(function(str, action){
-    return action.name + getArgs(action).map(showArg$1).join('') + ' (' + str + ')';
+    return action.name + getArgs(action).map(showArg).join('') + ' (' + str + ')';
   }, this.$1.toString());
 };
 
@@ -1092,7 +1084,7 @@ function BaseTransformation$resolved(x){
 }
 
 function BaseTransformation$toJSON(){
-  return {$: $$type, kind: 'transformation', type: this.name, args: getArgs(this)};
+  return {$: $$type$1, kind: 'transformation', type: this.name, args: getArgs(this)};
 }
 
 var BaseTransformation = {
@@ -1192,13 +1184,13 @@ After.prototype.extractRight = function After$extractRight(){
   return [this.$2];
 };
 
-function alwaysNever(_){
+function alwaysNever$1(_){
   return never;
 }
 
 function after(time){
   var context1 = application1(after, positiveInteger, arguments);
-  return time === Infinity ? alwaysNever : (function after(value){
+  return time === Infinity ? alwaysNever$1 : (function after(value){
     var context2 = application(2, after, any, arguments, context1);
     return new After(context2, time, value);
   });
@@ -1992,8 +1984,8 @@ var Parallel = createInterpreter(2, 'parallel', function Parallel$interpret(rec,
 
 var emptyArray = resolve([]);
 
-function parallel(max){
-  var context1 = application1(parallel, positiveInteger, arguments);
+function parallel$1(max){
+  var context1 = application1(parallel$1, positiveInteger, arguments);
   return function parallel(ms){
     var context2 = application(2, parallel, futureArray, arguments, context1);
     return ms.length === 0 ? emptyArray : new Parallel(context2, max, ms);
@@ -2022,14 +2014,14 @@ function Par (sequential){
   return new ConcurrentFuture(sequential);
 }
 
-var $$type$1 = namespace + '/ConcurrentFuture@' + version;
+var $$type = namespace + '/ConcurrentFuture@' + version;
 var zeroInstance = new ConcurrentFuture(never);
 
 // Compliance with sanctuary-type-identifiers versions 1 and 2.
 // To prevent sanctuary-type-identifiers version 3 from identifying
 // 'Par' as being of the type denoted by $$type, we ensure that
 // Par.constructor.prototype is equal to Par.
-Par['@@type'] = $$type$1;
+Par['@@type'] = $$type;
 Par.constructor = {prototype: Par};
 
 Par[FL.of] = function Par$of(x){
@@ -2040,7 +2032,7 @@ Par[FL.zero] = function Par$zero(){
   return zeroInstance;
 };
 
-Par.prototype['@@type'] = $$type$1;
+Par.prototype['@@type'] = $$type;
 
 Par.prototype['@@show'] = function Par$show(){
   return this.toString();
@@ -2082,7 +2074,7 @@ Par.prototype[FL.alt] = function Par$FL$alt(other){
 };
 
 function isParallel(x){
-  return x instanceof ConcurrentFuture || sanctuaryTypeIdentifiers(x) === $$type$1;
+  return x instanceof ConcurrentFuture || sanctuaryTypeIdentifiers(x) === $$type;
 }
 
 function promise(m){
@@ -2102,22 +2094,22 @@ RejectAfter.prototype.extractLeft = function RejectAfter$extractLeft(){
   return [this.$2];
 };
 
-function alwaysNever$1(_){
+function alwaysNever(_){
   return never;
 }
 
 function rejectAfter(time){
   var context1 = application1(rejectAfter, positiveInteger, arguments);
-  return time === Infinity ? alwaysNever$1 : (function rejectAfter(value){
+  return time === Infinity ? alwaysNever : (function rejectAfter(value){
     var context2 = application(2, rejectAfter, any, arguments, context1);
     return new RejectAfter(context2, time, value);
   });
 }
 
-var parallel$1 = {pred: isParallel, error: invalidArgumentOf('be a ConcurrentFuture')};
+var parallel = {pred: isParallel, error: invalidArgumentOf('be a ConcurrentFuture')};
 
 function seq(par){
-  application1(seq, parallel$1, arguments);
+  application1(seq, parallel, arguments);
   return par.sequential;
 }
 
@@ -2151,7 +2143,7 @@ function value(res){
 }
 
 export default Future;
-export { Future, Par, after, alt, and, ap, attempt, attemptP, bichain, bimap, both, cache, chain, chainRej, coalesce, debugMode, done, encase, encaseP, extractLeft, extractRight, fork, forkCatch, go, hook, isFuture, isNever, lastly, map, mapRej, never, node, pap, parallel, promise, race, reject, rejectAfter, resolve, seq, swap, value };
+export { Future, Par, after, alt, and, ap, attempt, attemptP, bichain, bimap, both, cache, chain, chainRej, coalesce, debugMode, done, encase, encaseP, extractLeft, extractRight, fork, forkCatch, go, hook, isFuture, isNever, lastly, map, mapRej, never, node, pap, parallel$1 as parallel, promise, race, reject, rejectAfter, resolve, seq, swap, value };
 /** Fluture license
 
 The MIT License (MIT)
