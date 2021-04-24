@@ -83,7 +83,17 @@ export interface FutureInstance<L, R> extends Functor<R> {
 export function after(duration: number): <R>(value: R) => Resolved<R>
 
 /** Logical and for Futures. See https://github.com/fluture-js/Fluture#and */
-export function and<L, R>(left: FutureInstance<L, R>): (right: FutureInstance<L, any>) => FutureInstance<L, R>
+export const and: {
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Never ? S : never): (first: F) => Never
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Resolved<unknown> ? S : never): (first: F) => S
+  <F extends AnyFuture, S extends AnyFuture>(second: F extends Rejected<unknown> ? S : never): (first: F) => F
+
+  <L, R>(second: Uncertain<L, R>): {
+    <T>(first: Rejected<T>): Rejected<T>
+    (first: Resolved<any>): Uncertain<L, R>
+    (first: Uncertain<L, any>): Uncertain<L, R>
+  }
+}
 
 /** Logical or for Futures. See https://github.com/fluture-js/Fluture#alt */
 export const alt: {
