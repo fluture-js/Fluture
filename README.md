@@ -261,7 +261,7 @@ Hindley-Milner notation.
 In summary, the syntax is as follows: `InputType -> OutputType`. Now,
 because functions in Fluture are [curried][Guide:currying], the "output" of a
 function is often *another function*. In Hindley-Milner that's simply written
-as `InputputType -> InputToSecondFunction -> OutputType` and so forth.
+as `InputType -> InputToSecondFunction -> OutputType` and so forth.
 
 By convention, types starting with an upper-case letter are
 [concrete types](#types). When they start with a lower-case letter they're
