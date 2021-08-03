@@ -86,7 +86,7 @@
     "jsverify": "^0.8.3",
     "oletus": "^3.0.0",
     "ramda": "^0.27.0",
-    "remark-cli": "^9.0.0",
+    "remark-cli": "^10.0.0",
     "remark-validate-links": "^10.0.0",
     "rimraf": "^3.0.0",
     "rollup": "^2.0.0",
