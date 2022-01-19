@@ -70,7 +70,7 @@
     "sequential"
   ],
   "dependencies": {
-    "sanctuary-show": "^2.0.0",
+    "sanctuary-show": "^3.0.0",
     "sanctuary-type-identifiers": "^3.0.0"
   },
   "devDependencies": {
