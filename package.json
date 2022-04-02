@@ -92,7 +92,7 @@
     "rollup": "^2.0.0",
     "sanctuary-benchmark": "^1.0.0",
     "sanctuary-either": "^2.0.0",
-    "sanctuary-type-classes": "^12.0.0",
+    "sanctuary-type-classes": "^13.0.0",
     "tsd": "^0.20.0",
     "typescript": "^4.0.2",
     "xyz": "^4.0.0"
