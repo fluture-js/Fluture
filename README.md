@@ -1695,9 +1695,9 @@ by Fluture to generate contextual stack traces.
 [esm]:                  https://github.com/standard-things/esm
 [Deno]:                 https://deno.land/
 
-[Guide:HM]:             https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html
-[Guide:constraints]:    https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch7.html#constraints
-[Guide:currying]:       https://drboolean.gitbooks.io/mostly-adequate-guide-old/content/ch4.html
+[Guide:HM]:             https://mostly-adequate.gitbook.io/mostly-adequate-guide/ch07
+[Guide:constraints]:    https://mostly-adequate.gitbook.io/mostly-adequate-guide/ch07#constraints
+[Guide:currying]:       https://mostly-adequate.gitbook.io/mostly-adequate-guide/ch04
 
 [1]:                    https://en.wikipedia.org/wiki/Continuation-passing_style
 [2]:                    https://github.com/tc39/proposal-pipeline-operator
