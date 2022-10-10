@@ -74,7 +74,7 @@
     "sanctuary-type-identifiers": "^3.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-commonjs": "^23.0.0",
     "@rollup/plugin-node-resolve": "^14.0.0",
     "c8": "^7.0.0",
     "chai": "^4.1.2",
