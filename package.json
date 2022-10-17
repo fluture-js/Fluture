@@ -89,7 +89,7 @@
     "remark-cli": "^11.0.0",
     "remark-validate-links": "^12.1.0",
     "rimraf": "^3.0.0",
-    "rollup": "^2.0.0",
+    "rollup": "^3.2.2",
     "sanctuary-benchmark": "^1.0.0",
     "sanctuary-either": "^2.0.0",
     "sanctuary-type-classes": "^13.0.0",
