@@ -88,7 +88,7 @@
     "ramda": "^0.27.0",
     "remark-cli": "^11.0.0",
     "remark-validate-links": "^12.1.0",
-    "rimraf": "^4.0.4",
+    "rimraf": "^5.0.0",
     "rollup": "^3.2.5",
     "sanctuary-benchmark": "^1.0.0",
     "sanctuary-either": "^2.0.0",
