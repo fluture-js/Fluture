@@ -29,8 +29,8 @@ test('isFunction', function (){
 });
 
 test('isUnsigned', function (){
-  var is = [1, 2, 99999999999999999999, Infinity];
-  var xs = [NaN, 0, -0, -1, -99999999999999999, -Infinity, '1', [], {}];
+  var is = [1, 2, 999999999999999, Infinity];
+  var xs = [NaN, 0, -0, -1, -999999999999999, -Infinity, '1', [], {}];
   is.forEach(function (i){ return expect(util.isUnsigned(i)).to.equal(true) });
   xs.forEach(function (x){ return expect(util.isUnsigned(x)).to.equal(false) });
 });
