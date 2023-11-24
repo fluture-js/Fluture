@@ -4,7 +4,7 @@ import {createTransformation, Reject, application1, application, future, func} f
 export var MapRejTransformation = createTransformation(1, 'mapRej', {
   rejected: function MapRejTransformation$rejected(x){
     return new Reject(this.context, call(this.$1, x));
-  }
+  },
 });
 
 export function mapRej(f){

@@ -22,12 +22,12 @@ test('crashes when the given function does not return an interator', function ()
 });
 
 test('crashes when iterator.next() throws an error', function (){
-  var m = go(function (){ return {next: function (){ throw error }} });
+  var m = go(function (){ return {next: () => { throw error }} });
   return assertCrashed(m, error);
 });
 
 test('crashes when the returned iterator does not return a valid iteration', function (){
-  var m = go(function (){ return {next: function (){ return null }} });
+  var m = go(function (){ return {next: () => { return null }} });
   return assertCrashed(m, new TypeError(
     'The iterator did not return a valid iteration from iterator.next()\n' +
     '  Actual: null'
@@ -35,7 +35,7 @@ test('crashes when the returned iterator does not return a valid iteration', fun
 });
 
 test('crashes when the returned iterator produces something other than a Future', function (){
-  var m = go(function (){ return {next: function (){ return {done: false, value: null} }} });
+  var m = go(function (){ return {next: () => { return {done: false, value: null} }} });
   return assertCrashed(m, new TypeError(
     'go() expects the value produced by the iterator to be a valid Future.\n' +
     '  Actual: null :: Null\n' +
@@ -72,7 +72,7 @@ test('does not mix state over multiple interpretations', function (){
   });
   return Promise.all([
     assertResolved(m, 3),
-    assertResolved(m, 3)
+    assertResolved(m, 3),
   ]);
 });
 

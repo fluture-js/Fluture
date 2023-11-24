@@ -2,7 +2,7 @@ import {call} from './internal/utils.js';
 import {createTransformation, application1, application, future, func} from './future.js';
 
 export var ChainRejTransformation = createTransformation(1, 'chainRej', {
-  rejected: function ChainRejTransformation$rejected(x){ return call(this.$1, x) }
+  rejected: function ChainRejTransformation$rejected(x){ return call(this.$1, x) },
 });
 
 export function chainRej(f){

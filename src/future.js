@@ -1,4 +1,4 @@
-/*eslint no-cond-assign:0, no-constant-condition:0 */
+/* eslint no-cond-assign:0, no-constant-condition:0 */
 import type from 'sanctuary-type-identifiers';
 
 import {FL, $$type} from './internal/const.js';
@@ -11,7 +11,7 @@ import {
   invalidFutureArgument,
   typeError,
   withExtraContext,
-  wrapException
+  wrapException,
 } from './internal/error.js';
 import {Next, Done} from './internal/iteration.js';
 import {nil, cons, isNil, reverse, toArray} from './internal/list.js';
@@ -234,7 +234,7 @@ export function resolve(x){
   return new Resolve(application1(resolve, any, arguments), x);
 }
 
-//Note: This function is not curried because it's only used to satisfy the
+// Note: This function is not curried because it's only used to satisfy the
 //      Fantasy Land ChainRec specification.
 export function chainRec(step, init){
   return resolve(Next(init))._transform(new ChainTransformation(nil, function chainRec$recur(o){
@@ -246,12 +246,11 @@ export function chainRec(step, init){
 
 export var Transformer =
 createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
-
-  //These are the cold, and hot, transformation stacks. The cold actions are those that
-  //have yet to run parallel computations, and hot are those that have.
+  // These are the cold, and hot, transformation stacks. The cold actions are those that
+  // have yet to run parallel computations, and hot are those that have.
   var cold = nil, hot = nil;
 
-  //These combined variables define our current state.
+  // These combined variables define our current state.
   // future         = the future we are currently forking
   // transformation = the transformation to be informed when the future settles
   // cancel         = the cancel function of the current future
@@ -259,25 +258,25 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
   // async          = a boolean indicating whether we are awaiting a result asynchronously
   var future, transformation, cancel = noop, settled, async = true, it;
 
-  //Takes a transformation from the top of the hot stack and returns it.
+  // Takes a transformation from the top of the hot stack and returns it.
   function nextHot(){
     var x = hot.head;
     hot = hot.tail;
     return x;
   }
 
-  //Takes a transformation from the top of the cold stack and returns it.
+  // Takes a transformation from the top of the cold stack and returns it.
   function nextCold(){
     var x = cold.head;
     cold = cold.tail;
     return x;
   }
 
-  //This function is called with a future to use in the next tick.
-  //Here we "flatten" the actions of another Sequence into our own actions,
-  //this is the magic that allows for infinitely stack safe recursion because
-  //actions like ChainAction will return a new Sequence.
-  //If we settled asynchronously, we call drain() directly to run the next tick.
+  // This function is called with a future to use in the next tick.
+  // Here we "flatten" the actions of another Sequence into our own actions,
+  // this is the magic that allows for infinitely stack safe recursion because
+  // actions like ChainAction will return a new Sequence.
+  // If we settled asynchronously, we call drain() directly to run the next tick.
   function settle(m){
     settled = true;
     future = m;
@@ -292,27 +291,27 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
     if(async) drain();
   }
 
-  //This function serves as a rejection handler for our current future.
-  //It will tell the current transformation that the future rejected, and it will
-  //settle the current tick with the transformation's answer to that.
+  // This function serves as a rejection handler for our current future.
+  // It will tell the current transformation that the future rejected, and it will
+  // settle the current tick with the transformation's answer to that.
   function rejected(x){
     settle(transformation.rejected(x));
   }
 
-  //This function serves as a resolution handler for our current future.
-  //It will tell the current transformation that the future resolved, and it will
-  //settle the current tick with the transformation's answer to that.
+  // This function serves as a resolution handler for our current future.
+  // It will tell the current transformation that the future resolved, and it will
+  // settle the current tick with the transformation's answer to that.
   function resolved(x){
     settle(transformation.resolved(x));
   }
 
-  //This function is passed into actions when they are "warmed up".
-  //If the transformation decides that it has its result, without the need to await
-  //anything else, then it can call this function to force "early termination".
-  //When early termination occurs, all actions which were stacked prior to the
-  //terminator will be skipped. If they were already hot, they will also be
-  //sent a cancel signal so they can cancel their own concurrent computations,
-  //as their results are no longer needed.
+  // This function is passed into actions when they are "warmed up".
+  // If the transformation decides that it has its result, without the need to await
+  // anything else, then it can call this function to force "early termination".
+  // When early termination occurs, all actions which were stacked prior to the
+  // terminator will be skipped. If they were already hot, they will also be
+  // sent a cancel signal so they can cancel their own concurrent computations,
+  // as their results are no longer needed.
   function early(m, terminator){
     cancel();
     cold = nil;
@@ -323,14 +322,14 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
     settle(m);
   }
 
-  //This will cancel the current Future, the current transformation, and all stacked hot actions.
+  // This will cancel the current Future, the current transformation, and all stacked hot actions.
   function Sequence$cancel(){
     cancel();
     transformation && transformation.cancel();
     while(it = nextHot()) it.cancel();
   }
 
-  //This function is called when an exception is caught.
+  // This function is called when an exception is caught.
   function exception(e){
     Sequence$cancel();
     settled = true;
@@ -340,11 +339,11 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
     rec(error);
   }
 
-  //This function serves to kickstart concurrent computations.
-  //Takes all actions from the cold stack in reverse order, and calls run() on
-  //each of them, passing them the "early" function. If any of them settles (by
-  //calling early()), we abort. After warming up all actions in the cold queue,
-  //we warm up the current transformation as well.
+  // This function serves to kickstart concurrent computations.
+  // Takes all actions from the cold stack in reverse order, and calls run() on
+  // each of them, passing them the "early" function. If any of them settles (by
+  // calling early()), we abort. After warming up all actions in the cold queue,
+  // we warm up the current transformation as well.
   function warmupActions(){
     cold = reverse(cold);
     while(cold !== nil){
@@ -356,8 +355,8 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
     transformation = transformation.run(early);
   }
 
-  //This function represents our main execution loop. By "tick", we've been
-  //referring to the execution of one iteration in the while-loop below.
+  // This function represents our main execution loop. By "tick", we've been
+  // referring to the execution of one iteration in the while-loop below.
   function drain(){
     async = false;
     while(true){
@@ -375,12 +374,11 @@ createInterpreter(2, 'transform', function Transformer$interpret(rec, rej, res){
     cancel = future._interpret(exception, rej, res);
   }
 
-  //Start the execution loop.
+  // Start the execution loop.
   settle(this);
 
-  //Return the cancellation function.
+  // Return the cancellation function.
   return Sequence$cancel;
-
 });
 
 Transformer.prototype.isTransformer = true;
@@ -417,7 +415,7 @@ export var BaseTransformation = {
   context: nil,
   arity: 0,
   name: 'transform',
-  toJSON: BaseTransformation$toJSON
+  toJSON: BaseTransformation$toJSON,
 };
 
 function wrapHandler(handler){
@@ -471,17 +469,17 @@ export var ApTransformation = createTransformation(1, 'ap', {
       'ap expects the second Future to resolve to a Function\n' +
       '  Actual: ' + show(f)
     );
-  }
+  },
 });
 
 export var AltTransformation = createTransformation(1, 'alt', {
-  rejected: function AltTransformation$rejected(){ return this.$1 }
+  rejected: function AltTransformation$rejected(){ return this.$1 },
 });
 
 export var MapTransformation = createTransformation(1, 'map', {
   resolved: function MapTransformation$resolved(x){
     return new Resolve(this.context, call(this.$1, x));
-  }
+  },
 });
 
 export var BimapTransformation = createTransformation(2, 'bimap', {
@@ -490,9 +488,9 @@ export var BimapTransformation = createTransformation(2, 'bimap', {
   },
   resolved: function BimapTransformation$resolved(x){
     return new Resolve(this.context, call(this.$2, x));
-  }
+  },
 });
 
 export var ChainTransformation = createTransformation(1, 'chain', {
-  resolved: function ChainTransformation$resolved(x){ return call(this.$1, x) }
+  resolved: function ChainTransformation$resolved(x){ return call(this.$1, x) },
 });

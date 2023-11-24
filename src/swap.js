@@ -6,7 +6,7 @@ export var SwapTransformation = createTransformation(0, 'swap', {
   },
   rejected: function SwapTransformation$rejected(x){
     return new Resolve(this.context, x);
-  }
+  },
 });
 
 export function swap(m){

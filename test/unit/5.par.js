@@ -49,7 +49,7 @@ test('ap rejects if one of the two reject', function (){
   var right = ap(Par(resolved))(Par(rejected));
   return Promise.all([
     assertRejected(seq(left), 'rejected'),
-    assertRejected(seq(right), 'rejected')
+    assertRejected(seq(right), 'rejected'),
   ]);
 });
 
@@ -58,7 +58,7 @@ test('ap does not matter if either resolves late', function (){
   var right = ap(Par(resolved))(Par(and(mf)(resolvedSlow)));
   return Promise.all([
     assertResolved(seq(left), 'resolvedSlow!'),
-    assertResolved(seq(right), 'resolved!')
+    assertResolved(seq(right), 'resolved!'),
   ]);
 });
 

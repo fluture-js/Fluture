@@ -6,7 +6,7 @@ export var FL = {
   chainRec: 'fantasy-land/chainRec',
   map: 'fantasy-land/map',
   of: 'fantasy-land/of',
-  zero: 'fantasy-land/zero'
+  zero: 'fantasy-land/zero',
 };
 
 export var ordinal = ['first', 'second', 'third', 'fourth', 'fifth'];

@@ -13,7 +13,7 @@ createParallelTransformation('pap', earlyCrash, earlyReject, noop, {
       'pap expects the second Future to resolve to a Function\n' +
       '  Actual: ' + show(f)
     );
-  }
+  },
 });
 
 export function pap(mx){

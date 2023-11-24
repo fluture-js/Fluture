@@ -19,7 +19,7 @@ test('crashes when one resolve the Futures crash', function (){
 test('throws when the Array contains something other than Futures', function (){
   var xs = [NaN, {}, [], 1, 'a', new Date, undefined, null];
   var fs = xs.map(function (x){ return function (){ return parallel(1)([x])._interpret(noop, noop, noop) } });
-  fs.forEach(function (f){ return expect(f).to.throw(TypeError, /Future/) });
+  fs.forEach(function (f){ return expect(f).to.throw(TypeError, /Future/u) });
 });
 
 test('parallelizes execution', function (){
@@ -28,7 +28,7 @@ test('parallelizes execution', function (){
     after(20)('b'),
     after(20)('c'),
     after(20)('d'),
-    after(20)('e')
+    after(20)('e'),
   ]);
   return promiseTimeout(70, assertResolved(actual, ['a', 'b', 'c', 'd', 'e']));
 });
@@ -54,7 +54,7 @@ test('runs all in parallel when given number larger than the array length', func
     after(20)('b'),
     after(20)('c'),
     after(20)('d'),
-    after(20)('e')
+    after(20)('e'),
   ]);
   return promiseTimeout(70, assertResolved(actual, ['a', 'b', 'c', 'd', 'e']));
 });
@@ -107,7 +107,7 @@ test('runs all in parallel when given Infinity', function (){
     after(20)('b'),
     after(20)('c'),
     after(20)('d'),
-    after(20)('e')
+    after(20)('e'),
   ]);
   return promiseTimeout(70, assertResolved(actual, ['a', 'b', 'c', 'd', 'e']));
 });
@@ -133,7 +133,7 @@ test('cancels Futures when cancelled', function (done){
 test('cancels only running Futures when cancelled', function (done){
   var i = 0, j = 0;
   var m = Future(function (rej, res){
-    var x = setTimeout(function (x){j += 1; res(x)}, 20, 1);
+    var x = setTimeout(function (x){ j += 1; res(x) }, 20, 1);
 
     return function (){
       i += 1;

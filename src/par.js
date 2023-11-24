@@ -9,13 +9,13 @@ import {never, resolve, isFuture, MapTransformation} from './future.js';
 import {ParallelApTransformation} from './pap.js';
 import {RaceTransformation} from './race.js';
 
-export function ConcurrentFuture (sequential){
+export function ConcurrentFuture(sequential){
   this.sequential = sequential;
 }
 
 ConcurrentFuture.prototype = Object.create(Par.prototype);
 
-export function Par (sequential){
+export function Par(sequential){
   if(!isFuture(sequential)) throw invalidFutureArgument(Par.name, 0, sequential);
   return new ConcurrentFuture(sequential);
 }

@@ -5,7 +5,7 @@ import {
   createTransformation,
   future,
   Reject,
-  Resolve
+  Resolve,
 } from './future.js';
 
 export var LastlyTransformation = createTransformation(1, 'lastly', {
@@ -14,7 +14,7 @@ export var LastlyTransformation = createTransformation(1, 'lastly', {
   },
   resolved: function LastlyAction$resolved(x){
     return this.$1._transform(new AndTransformation(this.context, new Resolve(this.context, x)));
-  }
+  },
 });
 
 export function lastly(cleanup){

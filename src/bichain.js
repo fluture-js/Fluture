@@ -3,7 +3,7 @@ import {call} from './internal/utils.js';
 
 export var BichainTransformation = createTransformation(2, 'bichain', {
   rejected: function BichainTransformation$rejected(x){ return call(this.$1, x) },
-  resolved: function BichainTransformation$resolved(x){ return call(this.$2, x) }
+  resolved: function BichainTransformation$resolved(x){ return call(this.$2, x) },
 });
 
 export function bichain(f){

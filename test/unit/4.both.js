@@ -29,13 +29,13 @@ test('resolves to a tuple of both resolution values', function (){
 
 test('[GH #118] does not call the left computation twice', function (cb){
   var called = false;
-  var left = node(function (f){ return called ? cb(error) : setTimeout(f, 20, null, called = true) });
+  var left = node(function (f){ called ? cb(error) : setTimeout(f, 20, null, called = true) });
   return done(cb)(both(left)(resolvedSlow));
 });
 
 test('[GH #118] does not call the right computation twice', function (cb){
   var called = false;
-  var right = node(function (f){ return called ? cb(error) : setTimeout(f, 20, null, called = true) });
+  var right = node(function (f){ called ? cb(error) : setTimeout(f, 20, null, called = true) });
   return done(cb)(both(resolvedSlow)(right));
 });
 

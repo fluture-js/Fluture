@@ -24,7 +24,7 @@ test('calls the function with the resolution value and sequences the returned Fu
     assertRejected(chain(reject)(resolvedSlow), 'resolvedSlow'),
     assertResolved(chain(resolve)(resolved), 'resolved'),
     assertRejected(chain(resolve)(rejected), 'rejected'),
-    assertCrashed(chain(throwing)(resolved), error)
+    assertCrashed(chain(throwing)(resolved), error),
   ]);
 });
 

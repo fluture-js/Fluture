@@ -43,7 +43,7 @@ test('crashes when the disposal Future rejects', function (){
   var resolved = hook(F.resolved)(function (){ return reject(1) })(function (){ return resolve(2) });
   return Promise.all([
     assertCrashed(rejected, new Error('The disposal Future rejected with 1')),
-    assertCrashed(resolved, new Error('The disposal Future rejected with 1'))
+    assertCrashed(resolved, new Error('The disposal Future rejected with 1')),
   ]);
 });
 
@@ -71,7 +71,7 @@ test('assumes the state resolve the second if the first resolves', function (){
   var resolved = hook(F.resolved)(function (){ return resolve(1) })(function (){ return resolve(2) });
   return Promise.all([
     assertRejected(rejected, 2),
-    assertResolved(resolved, 2)
+    assertResolved(resolved, 2),
   ]);
 });
 

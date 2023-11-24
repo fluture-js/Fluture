@@ -5,14 +5,14 @@ import {createTransformation, Resolve, application1, application, future} from '
 export var PairTransformation = createTransformation(1, 'pair', {
   resolved: function PairTransformation$resolved(x){
     return new Resolve(this.context, [x, this.$1]);
-  }
+  },
 });
 
 export var BothTransformation =
 createParallelTransformation('both', earlyCrash, earlyReject, noop, {
   resolved: function BothTransformation$resolved(x){
     return this.$1._transform(new PairTransformation(this.context, x));
-  }
+  },
 });
 
 export function both(left){

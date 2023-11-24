@@ -22,7 +22,7 @@ test('races one Future against another', function (){
     assertResolved(race(rejectedSlow)(resolved), 'resolved'),
     assertRejected(race(rejected)(resolvedSlow), 'rejected'),
     assertResolved(race(resolved)(rejectedSlow), 'resolved'),
-    assertRejected(race(resolvedSlow)(rejected), 'rejected')
+    assertRejected(race(resolvedSlow)(rejected), 'rejected'),
   ]);
 });
 

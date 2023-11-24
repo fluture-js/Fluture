@@ -1,7 +1,7 @@
 import {createTransformation, application1, application, future} from './future.js';
 
 export var AndTransformation = createTransformation(1, 'and', {
-  resolved: function AndTransformation$resolved(){ return this.$1 }
+  resolved: function AndTransformation$resolved(){ return this.$1 },
 });
 
 export function and(left){

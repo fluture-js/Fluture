@@ -14,7 +14,7 @@ test('maps the resolution branch with the given function', function (){
   return Promise.all([
     assertRejected(map(bang)(rejected), 'rejected'),
     assertResolved(map(bang)(resolved), 'resolved!'),
-    assertCrashed(map(throwing)(resolved), error)
+    assertCrashed(map(throwing)(resolved), error),
   ]);
 });
 
