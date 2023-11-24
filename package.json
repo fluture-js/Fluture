@@ -82,7 +82,7 @@
     "es-check": "^7.0.0",
     "eslint": "^8.54.0",
     "eslint-config-warp": "^7.1.0",
-    "fantasy-laws": "^1.0.1",
+    "fantasy-laws": "^2.0.1",
     "jsverify": "^0.8.3",
     "oletus": "^4.0.0",
     "ramda": "^0.29.1",
