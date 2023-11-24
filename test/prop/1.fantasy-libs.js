@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import Z from 'sanctuary-type-classes';
 import {Future, ap, alt, map, bimap, chain, resolve, reject} from '../../index.js';
 
