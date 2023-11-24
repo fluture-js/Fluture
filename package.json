@@ -93,7 +93,7 @@
     "sanctuary-benchmark": "^1.0.0",
     "sanctuary-either": "^2.0.0",
     "sanctuary-type-classes": "^13.0.0",
-    "tsd": "^0.28.1",
+    "tsd": "^0.29.0",
     "typescript": "^5.0.4",
     "xyz": "^4.0.0"
   },
