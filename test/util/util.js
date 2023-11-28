@@ -5,7 +5,7 @@ import {crash} from '../../src/future.js';
 import * as assert from '../assertions.js';
 export * from '../../src/internal/predicates.js';
 
-export var STACKSIZE = (function r (){try{return 1 + r()}catch(e){return 1}}());
+export var STACKSIZE = (function r (){ try{ return 1 + r() }catch(e){ return 1 } }());
 export var noop = function (){};
 export var add = function (a){ return function (b){ return a + b } };
 export var sub = function (a){ return function (b){ return a - b } };
@@ -19,7 +19,7 @@ export var throwing = function (){ throw error };
 
 export function test (name, impl){
   oletus(name, () => (
-    impl.length === 0 ? impl() : new Promise((res, rej) => impl(e => e ? rej(e) : res()))
+    impl.length === 0 ? impl() : new Promise((res, rej) => { impl(e => e ? rej(e) : res()) })
   ));
 }
 
@@ -78,7 +78,7 @@ export var promiseTimeout = function (t, p){
     p,
     new Promise((res, rej) => {
       setTimeout(rej, t, new Error(`Timeout of ${t}ms reached`));
-    })
+    }),
   ]);
 };
 

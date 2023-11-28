@@ -1,6 +1,6 @@
 var dependencies = {
   'sanctuary-show': 'sanctuaryShow',
-  'sanctuary-type-identifiers': 'sanctuaryTypeIdentifiers'
+  'sanctuary-type-identifiers': 'sanctuaryTypeIdentifiers',
 };
 
 export default {
@@ -10,6 +10,6 @@ export default {
     format: 'umd',
     file: 'index.cjs',
     name: 'Fluture',
-    globals: dependencies
-  }
+    globals: dependencies,
+  },
 };

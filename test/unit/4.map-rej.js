@@ -9,7 +9,7 @@ test('maps the rejection branch with the given function', function (){
   return Promise.all([
     assertRejected(mapRej(bang)(rejected), 'rejected!'),
     assertResolved(mapRej(bang)(resolved), 'resolved'),
-    assertCrashed(mapRej(throwing)(rejected), error)
+    assertCrashed(mapRej(throwing)(rejected), error),
   ]);
 });
 

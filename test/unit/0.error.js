@@ -10,7 +10,7 @@ import {
   invalidArity,
   invalidFutureArgument,
   wrapException,
-  contextToStackTrace
+  contextToStackTrace,
 } from '../../src/internal/error.js';
 
 function args (){

@@ -5,7 +5,7 @@ export {
   isNever,
   never,
   reject,
-  resolve
+  resolve,
 } from './src/future.js';
 
 export {after} from './src/after.js';

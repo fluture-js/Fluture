@@ -4,7 +4,7 @@ import {
   application1,
   createInterpreter,
   never,
-  positiveInteger
+  positiveInteger,
 } from './future.js';
 
 export var After = createInterpreter(2, 'after', function After$interpret(rec, rej, res){

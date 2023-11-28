@@ -19,7 +19,7 @@ test('applies the Function on the right to the value on the left', function (){
     assertRejected(pap(resolve(add(1)))(reject('err')), 'err'),
     assertRejected(pap(reject('err'))(resolve(add(1))), 'err'),
     assertResolved(pap(after(20)(1))(resolve(add(1))), 2),
-    assertResolved(pap(resolve(1))(after(20)(add(1))), 2)
+    assertResolved(pap(resolve(1))(after(20)(add(1))), 2),
   ]);
 });
 

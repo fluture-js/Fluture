@@ -28,7 +28,19 @@
     "no-console": 2,
     "eqeqeq": [2, "smart"],
     "no-eq-null": ["off"],
-    "no-param-reassign": ["off"]
+    "no-param-reassign": ["off"],
+    "no-shadow": ["off"],
+    "keyword-spacing": ["off"],
+    "no-plusplus": ["off"],
+    "operator-assignment": ["off"],
+    "one-var": ["off"],
+    "generator-star-spacing": ["error", {"before": false, "after": false}],
+    "no-mixed-operators": ["off"],
+    "capitalized-comments": ["off"],
+    "init-declarations": ["off"],
+    "function-call-argument-newline": ["off"],
+    "no-multi-assign": ["off"],
+    "no-invalid-this": ["off"]
   },
   "overrides": [
     {

@@ -66,7 +66,7 @@ export function createParallelTransformation(name, rec, rej, res, prototype){
         function Parallel$res(x){ res(Parallel$early, x) }
       );
       return transformation;
-    }
+    },
   }, prototype));
   return ParallelTransformation;
 }

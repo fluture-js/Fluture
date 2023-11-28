@@ -4,7 +4,7 @@ import {
   application1,
   createInterpreter,
   never,
-  positiveInteger
+  positiveInteger,
 } from './future.js';
 
 export var RejectAfter =

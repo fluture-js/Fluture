@@ -2,7 +2,7 @@ import {
   createParallelTransformation,
   earlyCrash,
   earlyReject,
-  earlyResolve
+  earlyResolve,
 } from './internal/parallel.js';
 import {application1, application, future} from './future.js';
 

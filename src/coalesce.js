@@ -7,7 +7,7 @@ export var CoalesceTransformation = createTransformation(2, 'coalesce', {
   },
   resolved: function CoalesceTransformation$resolved(x){
     return new Resolve(this.context, call(this.$2, x));
-  }
+  },
 });
 
 export function coalesce(f){

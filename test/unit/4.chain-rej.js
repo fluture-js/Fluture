@@ -19,7 +19,7 @@ test('calls the function with the rejection reason and sequences the returned Fu
     assertResolved(chainRej(resolve)(rejectedSlow), 'rejectedSlow'),
     assertResolved(chainRej(reject)(resolved), 'resolved'),
     assertRejected(chainRej(reject)(rejected), 'rejected'),
-    assertCrashed(chainRej(throwing)(rejected), error)
+    assertCrashed(chainRej(throwing)(rejected), error),
   ]);
 });
 

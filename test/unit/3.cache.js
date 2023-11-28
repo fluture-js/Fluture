@@ -68,7 +68,7 @@ test('interpret it iinterpret nterprets the internal Future again when interpret
   var m = cache(Future(function (rej, res){
     var o = {cancelled: false};
     var id = setTimeout(res, 20, o);
-    return function (){ return (o.cancelled = true, clearTimeout(id)) };
+    return function (){ o.cancelled = true; clearTimeout(id) };
   }));
   var clear = m._interpret(done, noop, noop);
   setTimeout(function (){

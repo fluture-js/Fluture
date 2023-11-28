@@ -4,7 +4,7 @@ import {
   debug,
   captureContext,
   captureApplicationContext,
-  captureStackTraceFallback
+  captureStackTraceFallback,
 } from '../../src/internal/debug.js';
 import {nil} from '../../src/internal/list.js';
 

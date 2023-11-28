@@ -45,6 +45,7 @@ export function captureStackTraceFallback(x){
   var e = new Error;
   if(typeof e.stack === 'string'){
     x.stack = x.name + '\n' + e.stack.split('\n').slice(1).join('\n');
+
   /* c8 ignore next 3 */
   }else{
     x.stack = x.name;

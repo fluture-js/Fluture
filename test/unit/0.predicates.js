@@ -10,8 +10,8 @@ test('isThenable', function (){
     Promise.resolve(1),
     new Promise(noop),
     {then: noop},
-    {then: function (a){ return a }},
-    {then: function (a, b){ return b }}
+    {then (a){ return a }},
+    {then (a, b){ return b }},
   ];
 
   var values = [NaN, 1, true, undefined, null, [], {}];
@@ -29,8 +29,8 @@ test('isFunction', function (){
 });
 
 test('isUnsigned', function (){
-  var is = [1, 2, 99999999999999999999, Infinity];
-  var xs = [NaN, 0, -0, -1, -99999999999999999, -Infinity, '1', [], {}];
+  var is = [1, 2, 999999999999999, Infinity];
+  var xs = [NaN, 0, -0, -1, -999999999999999, -Infinity, '1', [], {}];
   is.forEach(function (i){ return expect(util.isUnsigned(i)).to.equal(true) });
   xs.forEach(function (x){ return expect(util.isUnsigned(x)).to.equal(false) });
 });
@@ -44,7 +44,7 @@ test('isObject', function (){
 });
 
 test('isIterator', function (){
-  var is = [{next: function (){}}, {next: function (x){ return x }}, (function*(){}())];
+  var is = [{next (){}}, {next (x){ return x }}, (function*(){}())];
   var xs = [1, true, NaN, null, undefined, '', {}, {next: 1}];
   is.forEach(function (i){ return expect(util.isIterator(i)).to.equal(true) });
   xs.forEach(function (x){ return expect(util.isIterator(x)).to.equal(false) });

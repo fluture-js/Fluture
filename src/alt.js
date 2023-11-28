@@ -6,7 +6,7 @@ import {
   application,
   application1,
   future,
-  isFuture
+  isFuture,
 } from './future.js';
 
 export var alternative = {pred: isAlt, error: invalidArgumentOf('have Alt implemented')};

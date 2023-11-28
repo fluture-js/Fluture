@@ -7,7 +7,7 @@ import {
   resolve,
   application1,
   positiveInteger,
-  application
+  application,
 } from './future.js';
 
 function isFutureArray(xs){
@@ -20,11 +20,10 @@ function isFutureArray(xs){
 
 export var futureArray = {
   pred: isFutureArray,
-  error: invalidArgumentOf('be an Array of valid Futures')
+  error: invalidArgumentOf('be an Array of valid Futures'),
 };
 
 export var Parallel = createInterpreter(2, 'parallel', function Parallel$interpret(rec, rej, res){
-
   var _this = this, futures = this.$2, length = futures.length;
   var max = Math.min(this.$1, length), cancels = new Array(length), out = new Array(length);
   var cursor = 0, running = 0, blocked = false, cont = noop;
@@ -67,7 +66,6 @@ export var Parallel = createInterpreter(2, 'parallel', function Parallel$interpr
   Parallel$drain();
 
   return Parallel$cancel;
-
 });
 
 var emptyArray = resolve([]);

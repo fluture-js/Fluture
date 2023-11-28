@@ -28,7 +28,7 @@ test('always rejects with the rejection reason of the second', function (){
   var actualRejected = lastly(reject(2))(reject(1));
   return Promise.all([
     assertRejected(actualResolved, 2),
-    assertRejected(actualRejected, 2)
+    assertRejected(actualRejected, 2),
   ]);
 });
 

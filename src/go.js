@@ -1,4 +1,4 @@
-/*eslint consistent-return: 0 */
+/* eslint consistent-return: 0 */
 
 import {typeError, invalidFuture, invalidArgument, wrapException} from './internal/error.js';
 import {isIteration} from './internal/iteration.js';
@@ -22,7 +22,6 @@ export function invalidState(x){
 }
 
 export var Go = createInterpreter(1, 'go', function Go$interpret(rec, rej, res){
-
   var _this = this, timing = Undetermined, cancel = noop, state, value, iterator;
 
   function crash(e){
@@ -48,7 +47,7 @@ export var Go = createInterpreter(1, 'go', function Go$interpret(rec, rej, res){
   }
 
   function drain(){
-    //eslint-disable-next-line no-constant-condition
+    // eslint-disable-next-line no-constant-condition
     while(true){
       try{
         state = iterator.next(value);
@@ -57,12 +56,10 @@ export var Go = createInterpreter(1, 'go', function Go$interpret(rec, rej, res){
       }
       if(!isIteration(state)) return crash(invalidIteration(state));
       if(state.done) break;
-      if(!isFuture(state.value)){
-        return crash(invalidState(state.value));
-      }
+      if(!isFuture(state.value)) return crash(invalidState(state.value));
       timing = Undetermined;
       cancel = state.value._interpret(crash, rej, resolved);
-      if(timing === Undetermined) return timing = Asynchronous;
+      if(timing === Undetermined) return (timing = Asynchronous);
     }
     res(state.value);
   }
@@ -70,7 +67,6 @@ export var Go = createInterpreter(1, 'go', function Go$interpret(rec, rej, res){
   drain();
 
   return function Go$cancel(){ cancel() };
-
 });
 
 export function go(generator){

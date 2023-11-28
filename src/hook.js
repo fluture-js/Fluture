@@ -17,7 +17,6 @@ function invalidConsumption(m, f, x){
 }
 
 export var Hook = createInterpreter(3, 'hook', function Hook$interpret(rec, rej, res){
-
   var _this = this, _acquire = this.$1, _dispose = this.$2, _consume = this.$3;
   var cancel, cancelConsume = noop, resource, value, cont = noop;
 
@@ -101,7 +100,6 @@ export var Hook = createInterpreter(3, 'hook', function Hook$interpret(rec, rej,
     rec = raise;
     cancel();
   };
-
 });
 
 export function hook(acquire){
