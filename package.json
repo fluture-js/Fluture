@@ -95,7 +95,7 @@
     "sanctuary-type-classes": "^13.0.0",
     "tsd": "^0.30.0",
     "typescript": "^5.0.4",
-    "xyz": "^4.0.0"
+    "xyz": "^5.0.0"
   },
   "tsd": {
     "directory": "test/types"
